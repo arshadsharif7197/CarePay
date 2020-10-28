@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
@@ -281,12 +282,14 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
+        ((CarePayApplication) getApplicationContext()).setPaymentsModel(paymentsModel);
+        ((CarePayApplication) getApplicationContext()).setPaymentPlanPostModel(paymentPlanPostModel);
         replaceFragment(fragment, true);
     }
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PaymentsModel paymentsModel = ((CarePayApplication) getApplicationContext()).getPaymentsModel();
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);

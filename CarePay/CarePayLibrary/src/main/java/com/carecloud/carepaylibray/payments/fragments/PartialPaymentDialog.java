@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -70,7 +71,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
      */
     public static PartialPaymentDialog newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+        CarePayApplication.paymentsModel = paymentsDTO;
         DtoHelper.bundleDto(args, selectedBalance);
         PartialPaymentDialog dialog = new PartialPaymentDialog();
         dialog.setArguments(args);
@@ -94,9 +95,10 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        paymentsDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
+
         Bundle args = getArguments();
         if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
@@ -289,8 +291,8 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
+            hideDialog(true);
             payListener.onPayButtonClicked(amount, paymentsDTO);
-            dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();

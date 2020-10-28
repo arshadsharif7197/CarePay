@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -50,8 +51,9 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
+        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
         if (args != null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
         practiceId = selectedBalance.getMetadata().getPracticeId();

@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -55,8 +56,9 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                                                                   PaymentPlanPostModel paymentPlanPostModel,
                                                                   boolean onlySelectMode) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
-        DtoHelper.bundleDto(args, paymentPlanPostModel);
+        CarePayApplication.paymentPlanPostModel = paymentPlanPostModel;
+        CarePayApplication.paymentsModel = paymentsDTO;
+
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PaymentPlanChooseCreditCardFragment chooseCreditCardFragment = new PaymentPlanChooseCreditCardFragment();
@@ -75,6 +77,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                                                                   String selectedPaymentMethodLabel,
                                                                   PaymentPlanDTO paymentPlanDTO,
                                                                   boolean onlySelectMode) {
+        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
+        CarePayApplication.paymentsModel = paymentsDTO;
         return newInstance(paymentsDTO, selectedPaymentMethodLabel, paymentPlanDTO, onlySelectMode, null);
     }
 
@@ -92,8 +96,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                                                                   boolean onlySelectMode,
                                                                   Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
+        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
+        CarePayApplication.paymentsModel = paymentsDTO;
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         if (paymentDate != null) {
@@ -125,8 +129,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
-        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        paymentPlanPostModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanPostModel();
+        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
         onlySelectMode = args.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
 
         String dateString = args.getString(KEY_DATE);
@@ -203,7 +207,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                         onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
                     }
 
-                    if (paymentPlanDTO != null) {
+                    if (paymentPlanDTO != null && paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
                         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
                         postModel.setPapiPaymentMethod(papiPaymentMethod);
                         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);

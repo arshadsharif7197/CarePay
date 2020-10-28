@@ -2,9 +2,11 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
@@ -50,8 +53,8 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                                                        PaymentPlanDTO paymentPlanDTO,
                                                        ScheduledPaymentModel scheduledPaymentModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
+        CarePayApplication.paymentsModel = paymentsDTO;
+        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
         DtoHelper.bundleDto(args, scheduledPaymentModel);
         EditOneTimePaymentDialog dialog = new EditOneTimePaymentDialog();
         dialog.setArguments(args);
@@ -73,9 +76,9 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
+        paymentsDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
+        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
         if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-            paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
             scheduledPaymentModel = DtoHelper.getConvertedDTO(ScheduledPaymentModel.class, args);
         }
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();

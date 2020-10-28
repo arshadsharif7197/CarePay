@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
@@ -23,8 +24,11 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     public static PatientModePaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
                                                                  PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
+//        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentPlanDTO);
+
+        CarePayApplication.paymentsModel = paymentsModel;
+        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
 
         PatientModePaymentPlanEditFragment fragment = new PatientModePaymentPlanEditFragment();
         fragment.setArguments(args);

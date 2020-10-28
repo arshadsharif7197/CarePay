@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
@@ -80,7 +81,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                                                        String selectedPaymentMethodLabel,
                                                        double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+        CarePayApplication.paymentsModel = paymentsDTO;
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
@@ -115,10 +116,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
         Bundle arguments = getArguments();
         if (arguments != null) {
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             onlySelectMode = arguments.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
 

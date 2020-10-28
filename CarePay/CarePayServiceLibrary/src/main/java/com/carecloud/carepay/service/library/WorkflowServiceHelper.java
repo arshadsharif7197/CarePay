@@ -548,7 +548,11 @@ public class WorkflowServiceHelper {
         if (labels != null) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Label.putLabelAsync(prefix + entry.getKey(), entry.getValue().getAsString());
+                try {
+                    Label.putLabelAsync(prefix + entry.getKey(), entry.getValue().getAsString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             Label.applyAsyncLabels();
         }

@@ -2,15 +2,18 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -97,14 +100,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
 
     protected void getPaymentInformation() {
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            try {
-                paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-            } catch (Exception e) {
-                Log.e("PAYMENT_ERROR", e.getMessage());
-            }
-        }
+        paymentDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
     }
 
     /**
@@ -221,14 +217,14 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
         double adjustedBalance = SystemUtil.safeSubtract(balance, nonBalanceTotal);
-        if(adjustedBalance <= 0){
+        if (adjustedBalance <= 0) {
             return false;
         }
         if (practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
-                    if(!paymentPlanSettings.isPaymentPlansEnabled()){
+                    if (!paymentPlanSettings.isPaymentPlansEnabled()) {
                         return false;
                     }
 
@@ -240,10 +236,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                         if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                                 maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                             //found a valid rule that covers this balance
-                            if(paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                            if (paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
                                 //don't already have an existing plan so this is the first plan
                                 return true;
-                            }else if(paymentPlanSettings.isCanHaveMultiple()){
+                            } else if (paymentPlanSettings.isCanHaveMultiple()) {
                                 // already have a plan so need to see if I can create a new one
                                 return true;
                             }
@@ -256,7 +252,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                     if (minAllowablePayment > adjustedBalance) {
                         minAllowablePayment = adjustedBalance;
                     }
-                    if(paymentPlanSettings.isAddBalanceToExisting() &&
+                    if (paymentPlanSettings.isAddBalanceToExisting() &&
                             !paymentDTO.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
                         mustAddToExisting = true;
                         return true;

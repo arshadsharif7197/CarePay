@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
+
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -10,6 +12,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
@@ -50,8 +53,8 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
      */
     public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanPostModel);
+        CarePayApplication.paymentPlanPostModel = paymentPlanPostModel;
+        CarePayApplication.paymentsModel = paymentsModel;
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
         PaymentPlanAddCreditCardFragment fragment = new PaymentPlanAddCreditCardFragment();
@@ -83,10 +86,10 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
                                                                boolean onlySelectMode,
                                                                Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
+        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
+        CarePayApplication.paymentsModel = paymentsModel;
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -116,11 +119,11 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
-        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        paymentPlanPostModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanPostModel();
+        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
 
         String dateString = args.getString(KEY_DATE);
-        if(dateString != null){
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
@@ -134,7 +137,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         if (paymentPlanPostModel != null || onlySelectMode) {
             nextButton.setText(Label.getLabel("payment_plan_continue"));
         }
-        if(paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             setAsDefaultCheckBox.setChecked(true);
             setAsDefaultCheckBox.setEnabled(false);
         }
@@ -152,13 +155,13 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
         }
 
-        if (paymentPlanDTO != null) {
+        if (paymentPlanDTO != null && paymentsModel.getPaymentPayload().getPaymentPostModel()!= null) {
             IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             postModel.setPapiPaymentMethod(papiPaymentMethod);
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
             amountToMakePayment = postModel.getAmount();
 
-            if(paymentDate != null){
+            if (paymentDate != null) {
                 DateUtil.getInstance().setDate(paymentDate);
                 postModel.setPaymentDate(DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
             }
@@ -186,9 +189,9 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
 
-        if(paymentDate != null){
+        if (paymentDate != null) {
             getWorkflowServiceHelper().execute(transitionDTO, schedulePaymentCallback, paymentModelJson, queries, header);
-        }else {
+        } else {
             getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
         }
     }
@@ -214,7 +217,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            ((OneTimePaymentInterface)callback).showScheduledPaymentConfirmation(workflowDTO);
+            ((OneTimePaymentInterface) callback).showScheduledPaymentConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
@@ -228,8 +231,8 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     };
 
     @Override
-    protected void showConfirmation(WorkflowDTO workflowDTO){
-        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, false);
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
+        ((OneTimePaymentInterface) callback).showPaymentConfirmation(workflowDTO, false);
     }
 
     public void setChangePaymentMethodListener(LargeAlertDialogFragment.LargeAlertInterface largeAlertInterface) {
