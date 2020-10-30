@@ -9,9 +9,14 @@ import androidx.fragment.app.Fragment;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
@@ -23,6 +28,9 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler, FragmentActivityInterface,
         ToolbarInterface {
@@ -106,20 +114,41 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
-        boolean isTelehealthAppointment = presenter.getAppointment().getPayload().getVisitType().hasVideoOption();
-        String appointmentId = presenter.getAppointment().getPayload().getId();
-        Intent intent = new Intent();
-        intent.putExtra(NavigationStateConstants.APPOINTMENT_ID, appointmentId);
-        intent.putExtra(NavigationStateConstants.APPOINTMENT_TYPE, isTelehealthAppointment);
-        if (getCallingActivity() != null) {
-            if (isTelehealthAppointment) {
-                setResult(cancelled ? RESULT_CANCELED : RESULT_OK, intent);
-            } else {
-                setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
-            }
-        }
-        finish();
+        AppointmentDTO appointmentDTO = getAppointment();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO transition = paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(transition, completePlanCallback, queryMap);
     }
+
+    private WorkflowServiceCallback completePlanCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            Bundle info = new Bundle();
+            if (getAppointment() != null) {
+                DtoHelper.bundleDto(info, getAppointment());
+            }
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
+            setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
+            finish();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
     @Nullable
     @Override

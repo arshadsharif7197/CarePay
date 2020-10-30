@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.delegate.fragments.ProfileListFragment;
 import com.carecloud.carepay.patient.delegate.interfaces.ProfileManagementInterface;
 import com.carecloud.carepay.patient.delegate.model.DelegateDto;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -32,11 +33,8 @@ public class TelehealthAppoinmentActivity extends BasePatientActivity implements
         super.onCreate(icicle);
         setContentView(R.layout.activity_telehealth_appointment);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(NavigationStateConstants.APPOINTMENTS)) {
-            appointmentDto = DtoHelper.getConvertedDTO(AppointmentDTO.class, (Bundle) intent.getExtras().get(NavigationStateConstants.APPOINTMENTS));
-            replaceFragment(TelehealthAppointmentFragment.newInstance(appointmentDto), false);
-        }
+        appointmentDto = ((CarePayApplication) getApplicationContext()).getAppointmentDTO();
+        replaceFragment(TelehealthAppointmentFragment.newInstance(appointmentDto), false);
     }
 
     @Override
