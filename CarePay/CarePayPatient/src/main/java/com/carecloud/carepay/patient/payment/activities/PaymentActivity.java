@@ -60,6 +60,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
+            case CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST:
+                if (resultCode == RESULT_OK)
+                    setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
+                finish();
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -139,8 +144,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
-            setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
-            finish();
         }
 
         @Override

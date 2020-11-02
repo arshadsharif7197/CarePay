@@ -106,7 +106,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                 paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             case CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST:
-                setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
+                if (resultCode == RESULT_OK)
+                    setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
                 finish();
                 break;
             default:
@@ -297,8 +298,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
-            setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
-            finish();
         }
 
         @Override
