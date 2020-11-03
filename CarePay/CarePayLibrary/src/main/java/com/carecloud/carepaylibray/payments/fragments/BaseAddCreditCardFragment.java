@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
@@ -112,10 +113,11 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle arguments = getArguments();
+        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
+
         Gson gson = new Gson();
         String payloadString;
         if (arguments != null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }

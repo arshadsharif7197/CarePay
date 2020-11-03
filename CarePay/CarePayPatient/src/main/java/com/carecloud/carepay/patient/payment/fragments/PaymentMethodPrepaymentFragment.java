@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -39,7 +40,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     public static PaymentMethodPrepaymentFragment newInstance(PaymentsModel paymentsModel, double amount, String title) {
         PaymentMethodPrepaymentFragment fragment = new PaymentMethodPrepaymentFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+        CarePayApplication.paymentsModel = paymentsModel;
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         args.putString(KEY_TITLE, title);
         fragment.setArguments(args);

@@ -2,7 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.google.android.material.textfield.TextInputLayout;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,11 +58,8 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-            paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
-        }
+        paymentsDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
+        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
         DateUtil.getInstance().setDate(new Date());
         paymentDate = DateUtil.getInstance().getDate();
         minDate = System.currentTimeMillis();

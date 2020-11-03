@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payeeze.PayeezyCall;
@@ -105,7 +106,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                                                            boolean onlySelectMode) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+        CarePayApplication.paymentsModel = paymentsModel;
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         fragment.setArguments(args);
