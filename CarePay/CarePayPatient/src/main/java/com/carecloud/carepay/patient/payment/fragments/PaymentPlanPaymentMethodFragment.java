@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPay
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
@@ -61,8 +59,9 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
                                                                PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
-        CarePayApplication.paymentPlanPostModel = paymentPlanPostModel;
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentPlanPostModel);
+
         PaymentPlanPaymentMethodFragment fragment = new PaymentPlanPaymentMethodFragment();
         fragment.setArguments(args);
         return fragment;
@@ -80,8 +79,8 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
                                                                boolean onlySelectMode,
                                                                Date paymentDate) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
-        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
@@ -101,8 +100,6 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
                                                                PaymentPlanDTO paymentPlanDTO,
                                                                boolean onlySelectMode) {
-        CarePayApplication.paymentsModel = paymentsModel;
-        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
         return newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, null);
     }
 
@@ -128,11 +125,11 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentPlanPostModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanPostModel();
-        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
+        paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
+        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
 
-        if (args != null && args.getString(KEY_DATE) != null) {
-            String dateString = args.getString(KEY_DATE);
+        String dateString = args.getString(KEY_DATE);
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }

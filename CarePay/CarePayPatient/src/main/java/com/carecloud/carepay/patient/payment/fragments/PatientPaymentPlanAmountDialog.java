@@ -5,7 +5,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.ToolbarInterface;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
@@ -18,9 +17,11 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  */
 public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
 
-    public static PatientPaymentPlanAmountDialog newInstance(PendingBalanceDTO selectedBalance) {
+    public static PatientPaymentPlanAmountDialog newInstance(PaymentsModel paymentsModel,
+                                                             PendingBalanceDTO selectedBalance) {
 
         Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         PatientPaymentPlanAmountDialog dialog = new PatientPaymentPlanAmountDialog();
         dialog.setArguments(args);
@@ -37,12 +38,9 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
             BaseDialogFragment fragment;
             if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
                 fragment = PatientValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
-                ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentsModel);
                 addExisting = true;
             } else {
                 fragment = PatientPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
-                ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentsModel);
-                fragment.hideDialog();
                 fragment.setOnCancelListener(onDialogCancelListener);
             }
             fragment.setOnBackPressedListener(new OnBackPressedInterface() {

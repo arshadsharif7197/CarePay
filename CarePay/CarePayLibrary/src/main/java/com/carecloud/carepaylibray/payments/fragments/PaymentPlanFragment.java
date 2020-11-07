@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
@@ -104,7 +103,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
                                                   PendingBalanceDTO selectedBalance,
                                                   double paymentPlanAmount) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, paymentPlanAmount);
 
@@ -131,8 +130,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         super.onCreate(icicle);
         Bundle args = getArguments();
         if (paymentsModel == null) {
-            paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
-            ;
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         }
         if (selectedBalance == null) {
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);

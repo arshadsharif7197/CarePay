@@ -2,9 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
@@ -52,7 +49,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     public static AddNewCreditCardFragment newInstance(PaymentsModel paymentsDTO, double amount) {
         Bundle args = new Bundle();
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        CarePayApplication.paymentsModel = paymentsDTO;
+        DtoHelper.bundleDto(args, paymentsDTO);
         AddNewCreditCardFragment addNewCreditCardFragment = new AddNewCreditCardFragment();
         addNewCreditCardFragment.setArguments(args);
         return addNewCreditCardFragment;
@@ -85,10 +82,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
-
         if (arguments != null) {
 //            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
                     addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0)

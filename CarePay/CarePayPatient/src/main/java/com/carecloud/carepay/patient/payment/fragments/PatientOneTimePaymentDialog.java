@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.base.ToolbarInterface;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -23,8 +22,8 @@ public class PatientOneTimePaymentDialog extends OneTimePaymentDialog {
     public static PatientOneTimePaymentDialog newInstance(PaymentsModel paymentsDTO,
                                                           PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsDTO;
-        CarePayApplication.paymentPlanDTO = paymentPlanDTO;
+        DtoHelper.bundleDto(args, paymentsDTO);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
         PatientOneTimePaymentDialog dialog = new PatientOneTimePaymentDialog();
         dialog.setArguments(args);
         return dialog;
@@ -35,8 +34,6 @@ public class PatientOneTimePaymentDialog extends OneTimePaymentDialog {
         hideDialog(true);
         PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
                 .newInstance(paymentsDTO, paymentPlanDTO, false);
-        ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentsDTO);
-        ((CarePayApplication) getActivity().getApplicationContext()).setPaymentPlanDTO(paymentPlanDTO);
         fragment.setOnBackPressedListener(new OnBackPressedInterface() {
             @Override
             public void onBackPressed() {
@@ -53,8 +50,6 @@ public class PatientOneTimePaymentDialog extends OneTimePaymentDialog {
         hideDialog(true);
         PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
                 .newInstance(paymentsDTO, paymentPlanDTO, false, paymentDate);
-        ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentsDTO);
-        ((CarePayApplication) getActivity().getApplicationContext()).setPaymentPlanDTO(paymentPlanDTO);
         fragment.setOnBackPressedListener(new OnBackPressedInterface() {
             @Override
             public void onBackPressed() {

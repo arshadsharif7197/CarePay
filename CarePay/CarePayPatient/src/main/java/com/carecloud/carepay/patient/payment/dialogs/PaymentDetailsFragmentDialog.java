@@ -27,7 +27,6 @@ import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragm
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentPlanAmountDialog;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.models.PatientStatementDTO;
@@ -231,8 +230,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             PendingBalanceDTO reducedBalancesItem = paymentReceiptModel.getPaymentPayload()
                     .reduceBalanceItems(selectedBalance, false);
             PatientPaymentPlanAmountDialog fragment = PatientPaymentPlanAmountDialog
-                    .newInstance(reducedBalancesItem);
-            ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentReceiptModel);
+                    .newInstance(paymentReceiptModel, reducedBalancesItem);
             fragment.setOnCancelListener(dialogInterface -> showDialog(true));
             callback.displayDialogFragment(fragment, true);
             hideDialog(true);

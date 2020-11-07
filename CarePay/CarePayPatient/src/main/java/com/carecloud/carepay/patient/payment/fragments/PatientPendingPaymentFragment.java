@@ -14,7 +14,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentListItem;

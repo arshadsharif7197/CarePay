@@ -19,7 +19,6 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialo
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -49,7 +48,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                                                      boolean payLaterButtonVisibility,
                                                      String title) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsDTO;
+        DtoHelper.bundleDto(args, paymentsDTO);
         if (selectedBalance != null) {
             DtoHelper.bundleDto(args, selectedBalance);
         }
@@ -181,10 +180,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                     .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
             PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
                     .reduceBalanceItems(selectedBalancesItem, false);
-            ((CarePayApplication) getActivity().getApplicationContext()).setPaymentsModel(paymentDTO);
             actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
-                    .newInstance(reducedBalancesItem), true);
-
+                    .newInstance(paymentDTO, reducedBalancesItem), true);
         });
         if (mustAddToExisting) {
             TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
