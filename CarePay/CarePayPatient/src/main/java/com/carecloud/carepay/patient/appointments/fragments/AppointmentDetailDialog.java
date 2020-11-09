@@ -496,10 +496,10 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private void showCheckoutButton(Set<String> enabledLocations) {
-        DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime());
+        DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         if (isLocationWithBreezeEnabled(enabledLocations)
                 && appointmentDTO.getPayload().canCheckOut()
-                && DateUtil.getInstance().isWithinHours(24)
+                && DateUtil.getInstance().isToday()
                 && appointmentResultModel.getPayload()
                 .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
             actionsLayout.setVisibility(View.VISIBLE);
@@ -895,7 +895,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private void updateStartVideoVisitBtn() {
-        if (isTelehealthAppointment && !appointmentDTO.getPayload().isAppointmentOver()) {
+        if (isTelehealthAppointment) {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {

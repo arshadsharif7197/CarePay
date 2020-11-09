@@ -1451,7 +1451,7 @@ public class DateUtil {
     }
 
     public boolean isWithinHours(long hours) {
-        return getHoursElapsed(getDate(), Calendar.getInstance().getTime()) <= hours;
+        return getHoursElapsed(getDate(), Calendar.getInstance().getTime()) < hours;
     }
 
     public int getAge(Date dateOfBirth) {
