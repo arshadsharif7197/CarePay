@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
 
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -17,7 +16,7 @@ public class PatientValidPlansFragment extends ValidPlansFragment {
                                                         PendingBalanceDTO selectedBalance,
                                                         double amount) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
 

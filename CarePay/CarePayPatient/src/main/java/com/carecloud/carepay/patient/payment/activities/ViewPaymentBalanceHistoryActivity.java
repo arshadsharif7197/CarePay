@@ -27,7 +27,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -90,7 +89,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         super.onCreate(savedInstanceState);
         toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
-        paymentsDTO = ((CarePayApplication) getApplicationContext()).getPaymentsModel();
+        paymentsDTO = getConvertedDTO(PaymentsModel.class);
         inflateDrawer();
         if (paymentsDTO == null) {
             callPaymentsService();
@@ -377,8 +376,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         selectedUserPractice = paymentsModel.getPaymentPayload().getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
         patientPaymentPlanDetailsDialogFragment = PatientPaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlanDTO);
-        ((CarePayApplication) getApplicationContext()).setPaymentsModel(paymentsModel);
-        ((CarePayApplication) getApplicationContext()).setPaymentPlanDTO(paymentPlanDTO);
         displayDialogFragment(patientPaymentPlanDetailsDialogFragment, false);
     }
 

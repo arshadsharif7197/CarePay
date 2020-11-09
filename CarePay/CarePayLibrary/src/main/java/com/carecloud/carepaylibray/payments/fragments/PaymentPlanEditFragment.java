@@ -13,7 +13,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payeeze.PayeezyCall;
@@ -76,7 +75,8 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
-        paymentPlanDTO = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
+        Bundle args = getArguments();
+        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
         super.onCreate(icicle);
         setInterval();

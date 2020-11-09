@@ -15,7 +15,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
@@ -70,10 +69,9 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle bundle = getArguments();
-        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
-
         if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
             onlySelectMode = bundle.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
                 paymentMethodsList = getPaymentMethodList();

@@ -8,7 +8,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -44,9 +43,9 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
-        CarePayApplication.paymentPlanDTO = existingPlan;
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        DtoHelper.bundleDto(args, existingPlan);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         AddExistingPaymentPlanFragment fragment = new AddExistingPaymentPlanFragment();
@@ -58,7 +57,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     @Override
     public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
-        existingPlan = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentPlanDTO();
+        existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         super.onCreate(icicle);
         setInterval();
         paymentPlanBalanceRules = getPaymentPlanSettings(interval);

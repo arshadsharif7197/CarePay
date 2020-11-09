@@ -12,10 +12,6 @@ import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 
 /**
  * Created by pjohnson on 15/03/17
@@ -26,11 +22,6 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
     private AppAuthorizationHelper appAuthorizationHelper;
-    public static PaymentsModel paymentsModel;
-    public static PaymentPlanPostModel paymentPlanPostModel;
-    public static AppointmentsResultModel appointmentsResultModel;
-    public static PaymentPlanDTO paymentPlanDTO;
-
     private long lastInteraction;
     protected boolean isForeground;
 
@@ -81,37 +72,6 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
         applicationPreferences = null;
     }
 
-    public PaymentsModel getPaymentsModel() {
-        return paymentsModel;
-    }
-
-    public void setPaymentsModel(PaymentsModel paymentsModel) {
-        this.paymentsModel = paymentsModel;
-    }
-
-    public PaymentPlanPostModel getPaymentPlanPostModel() {
-        return paymentPlanPostModel;
-    }
-
-    public void setPaymentPlanPostModel(PaymentPlanPostModel paymentPlanPostModel) {
-        this.paymentPlanPostModel = paymentPlanPostModel;
-    }
-
-    public AppointmentsResultModel getAppointmentsResultModel() {
-        return appointmentsResultModel;
-    }
-
-    public void setAppointmentsResultModel(AppointmentsResultModel appointmentsResultModel) {
-        this.appointmentsResultModel = appointmentsResultModel;
-    }
-
-    public PaymentPlanDTO getPaymentPlanDTO() {
-        return paymentPlanDTO;
-    }
-
-    public void setPaymentPlanDTO(PaymentPlanDTO paymentPlanDTO) {
-        this.paymentPlanDTO = paymentPlanDTO;
-    }
 
     @Override
     public void setLastInteraction(long systemTime) {

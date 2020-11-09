@@ -2,12 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentPlanListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -47,7 +44,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
                                                  PendingBalanceDTO selectedBalance,
                                                  double amount) {
         Bundle args = new Bundle();
-        CarePayApplication.paymentsModel = paymentsModel;
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
 
@@ -79,7 +76,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = ((CarePayApplication) getActivity().getApplicationContext()).getPaymentsModel();
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         paymentPlanAmount = args.getDouble(KEY_PLAN_AMOUNT);
     }
