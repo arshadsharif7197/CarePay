@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -89,7 +90,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         setAdapter(view);
         TextView amount = view.findViewById(R.id.payment_plan_amount);
         if (amount != null) {
-            amount.setText(NumberFormat.getCurrencyInstance().format(paymentPlanAmount));
+            amount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(paymentPlanAmount));
         }
     }
 
