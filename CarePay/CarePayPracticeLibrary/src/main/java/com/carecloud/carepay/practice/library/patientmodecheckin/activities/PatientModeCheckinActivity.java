@@ -27,6 +27,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -107,7 +108,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeLeftNavigation();
         initializeLanguageSpinner();
 
-        startDOBVerification();
+        if (ApplicationPreferences.getInstance().isDobRequired()) {
+            startDOBVerification();
+        }
     }
 
     private void startDOBVerification() {
