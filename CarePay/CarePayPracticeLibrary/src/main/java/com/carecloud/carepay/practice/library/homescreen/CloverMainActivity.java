@@ -86,9 +86,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitions = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class,
                     homeScreenDTO.getMetadata().getTransitions());
             ApplicationPreferences.getInstance().setPatientModeTransition(transitions.getPatientMode());
+            ApplicationPreferences.getInstance().setDobRequired(true);
+
 
         } else {
             setContentView(R.layout.activity_main_patient_mode);
+            ApplicationPreferences.getInstance().setDobRequired(false);
         }
 
         // init UI fields
