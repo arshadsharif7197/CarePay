@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.appointments.createappointment.Availability
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
@@ -134,6 +135,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         } else {
             CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
             fragment.setCancelFeeDialogListener(() -> showCancellationReasons(appointmentDTO, cancellationFee));
+            fragment.setOnCancelListener(dialog -> AppointmentDetailDialog.getInstance().showDialog());
             viewHandler.displayDialogFragment(fragment, false);
         }
     }
@@ -142,6 +144,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                          final AppointmentCancellationFee cancellationFee) {
         CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
                 .newInstance(appointmentDTO, appointmentsResultModel);
+        dialog.setOnCancelListener(dialog1 -> CancelAppointmentFeeDialog.getInstance().showDialog());
         dialog.setsCancelReasonAppointmentDialogListener((appointmentDTO1, cancellationReason,
                                                           cancellationReasonComment) -> {
             cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
@@ -152,6 +155,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
             } else {
                 startCancelationFeePayment = true;
+                CancelReasonAppointmentDialog.isCancelReasonRequired = true;
+
                 PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
                 IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
                 postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
@@ -191,6 +196,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
             }
         });
+
         viewHandler.displayDialogFragment(dialog, false);
     }
 
@@ -432,6 +438,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void onPaymentCancel() {
+        startCancelationFeePayment = false;
+        CancelReasonAppointmentDialog.getInstance().showDialog();
+    }
+
+    @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         viewHandler.replaceFragment(fragment, true);
@@ -484,6 +496,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
         if (workflowDTO == null) {
             viewHandler.onAppointmentScheduleFlowFailure();
         } else {
@@ -525,6 +540,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel, String practiceId) {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
         new CustomMessageToast(getContext(), Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         viewHandler.confirmAppointment(false,
@@ -604,6 +622,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false, false);
