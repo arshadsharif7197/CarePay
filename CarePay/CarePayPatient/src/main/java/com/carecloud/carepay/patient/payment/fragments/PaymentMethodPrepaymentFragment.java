@@ -90,12 +90,11 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
             title.setText(titleString);
             toolbar.setTitle("");
 
-            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+            toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(view1 -> {
                 if (CancelReasonAppointmentDialog.isCancelReasonRequired) {
                     CancelReasonAppointmentDialog.isCancelReasonRequired = false;
                     callback.onPaymentCancel();
-                    ((PatientAppointmentPresenter) callback).displayToolbar(true, null);
                 } else {
                     getActivity().onBackPressed();
                     callback.onPaymentDismissed();

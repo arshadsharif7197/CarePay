@@ -981,7 +981,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CALENDAR_APP) {
             saveEventOnLocalDB();
-
         }
     }
 

@@ -5,18 +5,22 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/cancel_reasons_dialog_height"
+    android:layout_height="match_parent"
     android:background="@color/transparent_apt"
     android:orientation="vertical">
 
-    <ImageView
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+<!--    <ImageView
         android:id="@+id/dialogCloseHeaderImageView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/apt_imgview_ht"
         android:layout_gravity="start"
         android:layout_marginBottom="@dimen/dimen_8dp"
         android:gravity="end"
-        android:src="@drawable/icn_nav_back" />
+        android:src="@drawable/icn_nav_back" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
