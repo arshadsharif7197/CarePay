@@ -344,6 +344,34 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/join_video_visit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/apt_dl_margin"
+                    android:layout_marginTop="@dimen/apt_dl_margin"
+                    android:layout_marginRight="@dimen/apt_dl_margin"
+                    android:background="@drawable/button_green_fill_background"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                        android:id="@+id/join_video_visit_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:contentDescription="@string/content_description_join_video_visit"
+                        android:drawableRight="@drawable/join_video_visit_icon"
+                        android:drawablePadding="@dimen/dimen_10dp"
+                        android:text="Join Video Visit"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_13"
+                        app:customAssetFont="gotham_rounded_medium" />
+                </RelativeLayout>
+
                 <LinearLayout
                     android:id="@+id/appointment_actions_layout"
                     android:layout_width="match_parent"
@@ -398,34 +426,6 @@
                     </RelativeLayout>
 
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/join_video_visit_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/apt_dl_margin"
-                    android:layout_marginTop="@dimen/apt_dl_margin"
-                    android:layout_marginRight="@dimen/apt_dl_margin"
-                    android:background="@drawable/button_green_fill_background"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:visibility="gone">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/join_video_visit_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:clickable="false"
-                        android:contentDescription="@string/content_description_join_video_visit"
-                        android:drawableRight="@drawable/join_video_visit_icon"
-                        android:drawablePadding="@dimen/dimen_10dp"
-                        android:text="Join Video Visit"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_13"
-                        app:customAssetFont="gotham_rounded_medium" />
-                </RelativeLayout>
 
             </LinearLayout>
         </ScrollView>
