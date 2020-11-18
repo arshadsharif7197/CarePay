@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
 
-        String symbol = currencyFormat.getCurrency().getSymbol();
+        String symbol = ((DecimalFormat) currencyFormat).getDecimalFormatSymbols().getCurrencySymbol();
         amountSymbol.setText(symbol);
 
         View closeView = findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
@@ -271,7 +272,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
                 amountEditText = "0.";
             }
             double amountPay = Double.parseDouble(amountEditText);
-            if ((amountPay > 0) && (amountPay <= fullAmount)) {
+            if (amountPay > 0 && amountPay <= fullAmount && amountPay >= minimumPayment) {
                 payPartialButton.setEnabled(true);
             } else {
                 payPartialButton.setEnabled(false);

@@ -63,6 +63,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_REFRESH_TOKEN = "refresh_token";
     private static final String PREFERENCE_MESSAGE_ID = "message_id";
     private static final String PREFERENCE_NOTIFICATION_ID = "notification_id";
+    private static final String PREFERENCE_DOB_REQUIRED = "dob_required";
 
 
     private String patientId;
@@ -586,5 +587,13 @@ public class ApplicationPreferences {
 
     public String getNotificationId() {
         return readStringFromSharedPref(PREFERENCE_NOTIFICATION_ID, "0");
+    }
+
+    public boolean isDobRequired() {
+        return readBooleanFromSharedPref(PREFERENCE_DOB_REQUIRED, true);
+    }
+
+    public void setDobRequired(boolean isLatestVersion) {
+        writeBooleanToSharedPref(PREFERENCE_DOB_REQUIRED, isLatestVersion);
     }
 }

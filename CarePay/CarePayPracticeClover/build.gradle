@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 25
-        versionCode 173
-        versionName "1.2.43"
+        versionCode 177
+        versionName "1.2.44"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
@@ -145,5 +145,5 @@ dependencies {
     implementation 'com.clover.sdk:clover-android-sdk:248.4'
     implementation 'com.clover.sdk:clover-android-connector-sdk:168'
 
-    annotationProcessor 'androidx.room:room-compiler:2.2.3'
+    annotationProcessor 'androidx.room:room-compiler:2.2.5'
 }
