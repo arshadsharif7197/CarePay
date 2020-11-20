@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -113,6 +115,11 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
             boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple)
                     && hasApplicableRule(practiceId, planAmount));
             if (canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))) {
+                if (planAmount < 1) {
+                    payPartialButton.setEnabled(false);
+                } else {
+                    payPartialButton.setEnabled(true);
+                }
                 if (canCreatePlan) {
                     payPartialButton.setText(Label.getLabel("payment_create_payment_plan"));
                 } else {//must add to existing

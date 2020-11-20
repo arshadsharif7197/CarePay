@@ -107,8 +107,17 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
+        boolean isTelehealthAppointment = presenter.getAppointment().getPayload().getVisitType().hasVideoOption();
+        String appointmentId = presenter.getAppointment().getPayload().getId();
+        Intent intent = new Intent();
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_ID, appointmentId);
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_TYPE, isTelehealthAppointment);
         if (getCallingActivity() != null) {
-            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            if (isTelehealthAppointment) {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK, intent);
+            } else {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            }
         }
         finish();
     }

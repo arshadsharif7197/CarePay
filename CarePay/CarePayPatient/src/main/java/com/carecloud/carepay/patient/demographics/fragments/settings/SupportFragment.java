@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -22,13 +23,31 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.patient.menu.PatientHelpActivity;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 public class SupportFragment extends BaseFragment {
+    private FragmentActivityInterface callback;
 
     public static SupportFragment newInstance() {
         return new SupportFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            if (context instanceof DemographicsSettingsFragmentListener) {
+                callback = (DemographicsSettingsFragmentListener) context;
+            } else if (context instanceof PatientHelpActivity) {
+                callback = (PatientHelpActivity) context;
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement HelpFragmentListener");
+        }
     }
 
     @Override
@@ -51,12 +70,14 @@ public class SupportFragment extends BaseFragment {
 
         TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("support_label"));
+        callback.setToolbar(toolbar);
     }
 
     private void initializeHelpContent(View view) {
         TextView textView = view.findViewById(R.id.support_help_content);
         TextView bottomTextView = view.findViewById(R.id.support_help_content_bottom);
-        String html = Label.getLabel("support_help_content_top");
+        String html = Label.getLabel("support_help_content_1");
+//        String html = Label.getLabel("support_help_content_top");
         String bottomText = Label.getLabel("support_help_content_bottom");
 
         CharSequence sequence;

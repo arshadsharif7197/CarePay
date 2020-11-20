@@ -31,6 +31,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePartial
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -126,7 +127,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initializeLanguageSpinner();
         logCheckoutStarted();
 
-        startDOBVerification();
+        if (ApplicationPreferences.getInstance().isDobRequired()) {
+            startDOBVerification();
+        }
     }
 
     private void startDOBVerification() {
@@ -587,6 +590,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 getPaymentAmount(paymentConfirmationWorkflow),
                 surveyDTO.getPayload().getSurvey() != null,
                 completedPaymentPlan);
+        finish();
     }
 
     @Override
@@ -943,7 +947,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                             getPaymentAmount(paymentConfirmationWorkflow),
                             NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
                             completedPaymentPlan);
-
+                    finish();
                 }
             }
 

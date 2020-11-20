@@ -61,3 +61,4 @@ branches:
     - QA
     - development
     - SHMRK-TRAVIS
+    - development-1

@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
@@ -26,6 +27,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -105,6 +107,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
         initializeLanguageSpinner();
+
+        if (ApplicationPreferences.getInstance().isDobRequired()) {
+            startDOBVerification();
+        }
+    }
+
+    private void startDOBVerification() {
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(getConvertedDTO(WorkflowDTO.class));
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+        Intent intent = new Intent(getContext(), DoBVerificationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(getContext()));
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, CarePayConstants.DOB_VERIFICATION_REQUEST);
     }
 
     private void initializeLanguageSpinner() {
