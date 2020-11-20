@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,9 +20,11 @@ import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.patient.utils.payments.Constants;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
@@ -31,6 +34,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
@@ -42,6 +46,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     private boolean toolbarHidden = false;
     private AppointmentViewModel viewModel;
+    private AppointmentDTO appointmentDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,40 +107,48 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
-                presenter.forwardAndroidPayResult(requestCode, resultCode, data);
-                break;
-            case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE:
-                if (resultCode == RESULT_CANCELED) {
-                    new Handler().postDelayed(() -> {
-                        refreshAppointments();
-                        showRateDialogFragment();
-                    }, 100);
-                } else if (resultCode == RESULT_OK) {
-                    new Handler().postDelayed(() -> {
-                        refreshAppointments();
-                        showRateDialogFragment();
-                    }, 100);
-                }
-                break;
-            case PaymentConstants.REQUEST_CODE_CCLIVE:
-//                onBackPressed();
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-                break;
+    private void refreshUI() {
+        new Handler().postDelayed(() -> {
+            refreshAppointments();
+            showRateDialogFragment();
+        }, 100);
+    }
+
+    private AppointmentDTO getAppointmentInfo(String appointmentId) {
+        for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
+            if (appointmentDTO.getPayload().getId().equals(appointmentId)) {
+                return appointmentDTO;
+            }
         }
+        return null;
     }
 
     private void showRateDialogFragment() {
         if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
             displayDialogFragment(RateDialog.newInstance(), true);
         }
+    }
+
+    private boolean isTeleHealthAppointment(Intent data) {
+        boolean isTelehealthAppointment = false;
+        if (data != null && data.hasExtra(NavigationStateConstants.APPOINTMENT_ID) &&
+                data.hasExtra(NavigationStateConstants.APPOINTMENT_TYPE)) {
+            String appointmentId = data.getStringExtra(NavigationStateConstants.APPOINTMENT_ID);
+            isTelehealthAppointment = (boolean) data.getExtras().get(NavigationStateConstants.APPOINTMENT_TYPE);
+
+            appointmentDTO = getAppointmentInfo(appointmentId);
+            if (appointmentDTO != null) {
+                Bundle info = new Bundle();
+                DtoHelper.bundleDto(info, appointmentDTO);
+                startActivityForResult(new Intent(this, TelehealthAppoinmentActivity.class)
+                        .putExtra(NavigationStateConstants.APPOINTMENTS, info), CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST);
+
+            } else {
+                refreshUI();
+            }
+
+        }
+        return isTelehealthAppointment;
     }
 
     @Override
@@ -228,6 +241,44 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
+                presenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE: {
+                if (resultCode == RESULT_CANCELED) {
+                    if (!isTeleHealthAppointment(data)) {
+                        refreshUI();
+                    }
+                } else if (resultCode == RESULT_OK) {
+                    if (!isTeleHealthAppointment(data)) {
+                        refreshUI();
+                    }
+                }
+                break;
+            }
+            case CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    refreshAppointments();
+                    new Handler().postDelayed(() -> {
+                        presenter.startVideoVisit(appointmentDTO);
+                    }, 1000);
+                } else {
+                    refreshUI();
+                }
+                break;
+            case PaymentConstants.REQUEST_CODE_CCLIVE:
+//                onBackPressed();
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
     public void onAppointmentScheduleFlowFailure() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
