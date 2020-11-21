@@ -33,7 +33,9 @@ import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.BaseViewModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -98,8 +100,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         FragmentManager fm = getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             for (Fragment fragment : fm.getFragments()) {
-                if (fragment instanceof BaseDialogFragment) {
-                    ((BaseDialogFragment) fragment).hideDialog();
+                if (!(fragment instanceof ConfirmDialogFragment)) {
+                    if (fragment instanceof BaseDialogFragment) {
+                        ((BaseDialogFragment) fragment).hideDialog();
+                    }
                 }
             }
         }
