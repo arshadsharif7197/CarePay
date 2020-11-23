@@ -231,7 +231,12 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     private void hideShimmerEffect() {
         if (isAdded()) {
-            getChildFragmentManager().popBackStackImmediate();
+            //handle action after onSaveInstanceState
+            try {
+                getChildFragmentManager().popBackStackImmediate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
