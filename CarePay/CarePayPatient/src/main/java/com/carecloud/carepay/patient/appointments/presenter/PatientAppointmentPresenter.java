@@ -144,7 +144,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                          final AppointmentCancellationFee cancellationFee) {
         CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
                 .newInstance(appointmentDTO, appointmentsResultModel);
-
         dialog.setsCancelReasonAppointmentDialogListener(new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
             @Override
             public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO1, int cancellationReason, String cancellationReasonComment) {

@@ -265,8 +265,4 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
         this.callback = listener;
     }
-
-    @Override
-    public void onBackPressed() {
-    }
 }

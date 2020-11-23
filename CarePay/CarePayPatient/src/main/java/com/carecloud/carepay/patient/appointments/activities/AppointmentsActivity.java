@@ -160,16 +160,26 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
-            if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
-                displayToolbar(true, null);
-                getSupportActionBar().setElevation(0);
-                toolbarHidden = false;
+            if (!isFragmentVisible()) {
+                getSupportFragmentManager().popBackStackImmediate();
+                if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
+                    displayToolbar(true, null);
+                    getSupportActionBar().setElevation(0);
+                    toolbarHidden = false;
+                }
             }
         } else {
             // finish the app
             finishAffinity();
         }
+    }
+
+    private boolean isFragmentVisible() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CancelReasonAppointmentDialog.class.getName());
+        if (fragment != null && fragment.isVisible()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
