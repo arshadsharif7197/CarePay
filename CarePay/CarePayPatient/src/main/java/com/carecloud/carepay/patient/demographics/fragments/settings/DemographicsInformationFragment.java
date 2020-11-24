@@ -3,17 +3,23 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -252,6 +258,16 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 } else {
                     address2EditText.setEnabled(true);
                 }
+            }
+        });
+
+        addressEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && !StringUtil.isNullOrEmpty(v.getText().toString().trim())) {
+                    return false;
+                }
+                return true;
             }
         });
 
