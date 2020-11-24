@@ -861,6 +861,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     };
 
     private void clearDialogs() {
+        ((BaseActivity) viewHandler).clearFragments();
+
         if (CancelReasonAppointmentDialog.getInstance() != null) {
             CancelReasonAppointmentDialog.getInstance().dismiss();
         }
@@ -870,8 +872,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (AppointmentDetailDialog.getInstance() != null) {
             AppointmentDetailDialog.getInstance().dismiss();
         }
-
-        ((BaseActivity) viewHandler).clearFragments();
     }
 
 }
