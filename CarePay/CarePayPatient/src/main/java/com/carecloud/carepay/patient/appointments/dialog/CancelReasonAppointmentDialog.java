@@ -4,14 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatRadioButton;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -34,7 +31,6 @@ import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -178,7 +174,8 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         Toolbar toolbar = view.findViewById(com.carecloud.carepay.patient.R.id.toolbar_layout);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(com.carecloud.carepay.patient.R.id.respons_toolbar_title);
-            title.setText(Label.getLabel(""));
+//            title.setText(Label.getLabel("cancel_appointment_label"));
+            title.setText("Reason for Canceling");
             toolbar.setTitle("");
 
             toolbar.setNavigationIcon(com.carecloud.carepay.patient.R.drawable.icn_nav_back);

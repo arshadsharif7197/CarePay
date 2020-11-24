@@ -870,6 +870,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (AppointmentDetailDialog.getInstance() != null) {
             AppointmentDetailDialog.getInstance().dismiss();
         }
+
+        ((BaseActivity) viewHandler).clearFragments();
     }
 
 }
