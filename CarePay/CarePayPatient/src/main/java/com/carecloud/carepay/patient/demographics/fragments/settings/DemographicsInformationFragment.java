@@ -261,17 +261,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             }
         });
 
-        addressEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && !StringUtil.isNullOrEmpty(v.getText().toString().trim())) {
-                    return false;
-                }
-                return true;
-            }
-        });
-
-
         TextInputLayout zipCodeInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = view.findViewById(R.id.zipCodeId);
         setUpField(zipCodeInputLayout, zipCode,
