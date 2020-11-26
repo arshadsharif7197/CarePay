@@ -33,14 +33,17 @@ import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.BaseViewModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.session.SessionService;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.internal.Primitives;
+
+import java.util.ArrayList;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
@@ -53,7 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     protected boolean isVisible = false;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     protected void onResume() {
         super.onResume();
+        handleFragmentDialogs();
         getAppAuthorizationHelper();
         isVisible = true;
         isForeground = true;
@@ -91,6 +94,19 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
         expectingResult = false;
+    }
+
+    private void handleFragmentDialogs() {
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            for (Fragment fragment : fm.getFragments()) {
+                if (!(fragment instanceof ConfirmDialogFragment)) {
+                    if (fragment instanceof BaseDialogFragment) {
+                        ((BaseDialogFragment) fragment).hideDialog();
+                    }
+                }
+            }
+        }
     }
 
     public boolean isVisible() {

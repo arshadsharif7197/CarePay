@@ -40,4 +40,6 @@ public class NavigationStateConstants {
     public static final String SURVEYS = "surveys";
     public static final String SURVEYS_CHECKOUT = "surveys_checkout";
     public static final String DELEGATE_PROFILES = "delegate_profiles";
+    public static final String APPOINTMENT_ID = "appointments_id";
+    public static final String APPOINTMENT_TYPE = "appointments_type";
 }
