@@ -76,8 +76,8 @@ public class SupportFragment extends BaseFragment {
     private void initializeHelpContent(View view) {
         TextView textView = view.findViewById(R.id.support_help_content);
         TextView bottomTextView = view.findViewById(R.id.support_help_content_bottom);
-        String html = Label.getLabel("support_help_content_1");
-//        String html = Label.getLabel("support_help_content_top");
+//        String html = Label.getLabel("support_help_content_1");
+        String html = Label.getLabel("support_help_content_top");
         String bottomText = Label.getLabel("support_help_content_bottom");
 
         CharSequence sequence;
