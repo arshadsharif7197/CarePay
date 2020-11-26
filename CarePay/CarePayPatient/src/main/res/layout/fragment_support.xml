@@ -46,8 +46,9 @@
             android:id="@+id/support_help_content_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:textSize="@dimen/text_size_16"
-            android:visibility="gone"
+            android:visibility="visible"
             app:customAssetFont="proxima_nova_extra_bold" />
     </LinearLayout>
 
