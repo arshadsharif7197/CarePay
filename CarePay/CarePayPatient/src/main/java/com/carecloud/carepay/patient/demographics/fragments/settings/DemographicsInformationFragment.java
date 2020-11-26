@@ -251,15 +251,21 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             @Override
             public void afterTextChanged(Editable editable) {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    addressEditText.setNextFocusForwardId(R.id.zipCodeId);
                     address2EditText.setEnabled(false);
                     address2EditText.setText("");
                     address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText,
                             !StringUtil.isNullOrEmpty(address2EditText.getText().toString().trim()));
                 } else {
                     address2EditText.setEnabled(true);
+                    addressEditText.setNextFocusForwardId(R.id.addressEditText2Id);
                 }
             }
         });
+
+        if(!StringUtil.isNullOrEmpty(addressEditText.getText().toString())){
+            address2EditText.setEnabled(true);
+        }
 
         TextInputLayout zipCodeInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = view.findViewById(R.id.zipCodeId);
