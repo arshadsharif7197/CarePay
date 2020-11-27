@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -98,20 +99,18 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     private void handleFragmentDialogs() {
         FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            isLastDialogVisible = false;
-            List<BaseDialogFragment> baseDialogFragmentList = getBaseDialogs(fm.getFragments());
-            int stackSize = (isLastDialogVisible) ? baseDialogFragmentList.size() - 1 : baseDialogFragmentList.size(); // if any dialog visible not hide that one
-            for (int index = 0; index < stackSize; index++) {
-                baseDialogFragmentList.get(index).hideDialog();
-            }
+        isLastDialogVisible = false;
+        List<BaseDialogFragment> baseDialogFragmentList = getBaseDialogs(fm.getFragments());
+        int stackSize = (isLastDialogVisible) ? baseDialogFragmentList.size() - 1 : baseDialogFragmentList.size(); // if any dialog visible not hide that one
+        for (int index = 0; index < stackSize; index++) {
+            baseDialogFragmentList.get(index).hideDialog();
         }
     }
 
     private List<BaseDialogFragment> getBaseDialogs(List<Fragment> allFragments) {
         List<BaseDialogFragment> baseDialogFragmentList = new ArrayList<>();
         for (Fragment fragment : allFragments) {
-            if ((fragment instanceof BaseDialogFragment)) {
+            if ((fragment instanceof BaseDialogFragment) || (fragment instanceof PaymentPlanDetailsDialogFragment)) {
                 BaseDialogFragment baseFragment = (BaseDialogFragment) fragment;
                 baseDialogFragmentList.add(baseFragment);
                 if (baseFragment.isVisible) {

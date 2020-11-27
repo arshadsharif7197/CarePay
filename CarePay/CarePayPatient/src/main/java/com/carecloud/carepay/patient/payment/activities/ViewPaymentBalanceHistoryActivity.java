@@ -235,17 +235,38 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onBackPressed() {
-        if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
-            displayToolbar(true, toolBarTitle);
-        }
+        if (!isPaymenFragmentExist()) {
+            if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
+                displayToolbar(true, toolBarTitle);
+            }
 
-        if (patientPaymentPlanDetailsDialogFragment != null) {
-            Fragment currentFragment = patientPaymentPlanDetailsDialogFragment.getChildFragment();
-            if (currentFragment != null && currentFragment instanceof PatientPaymentPlanEditFragment) {
-                patientPaymentPlanDetailsDialogFragment.showDialog();
+            if (patientPaymentPlanDetailsDialogFragment != null) {
+                Fragment currentFragment = patientPaymentPlanDetailsDialogFragment.getChildFragment();
+                if (currentFragment != null && currentFragment instanceof PatientPaymentPlanEditFragment) {
+                    patientPaymentPlanDetailsDialogFragment.showDialog();
+                }
+            }
+            super.onBackPressed();
+        }
+    }
+
+    private boolean isPaymenFragmentExist() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof PaymentPlanPaymentMethodFragment) {
+                if (((PaymentPlanPaymentMethodFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanPaymentMethodFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PatientPaymentMethodFragment) {
+                if (((PatientPaymentMethodFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PatientPaymentMethodFragment) fragment).onBackPressed();
+                return true;
             }
         }
-        super.onBackPressed();
+        return false;
     }
 
     @Override
