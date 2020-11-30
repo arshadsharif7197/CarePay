@@ -93,6 +93,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     @PaymentSettingsBalanceRangeRule.IntervalRange
     protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
+    public boolean isOnBackPressCalled;
 
     /**
      * @param paymentsModel   the payment model
@@ -882,6 +883,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
     private interface ValueInputCallback {
         void onValueInput(String input);
+    }
+
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
     }
 
 }
