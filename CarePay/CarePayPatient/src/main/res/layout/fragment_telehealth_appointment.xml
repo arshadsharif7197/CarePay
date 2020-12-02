@@ -328,7 +328,7 @@
                     android:contentDescription="@string/content_description_join_video_visit"
                     android:drawableRight="@drawable/join_video_visit_icon"
                     android:drawablePadding="@dimen/dimen_10dp"
-                    android:text="Join Video Visit"
+                    breeze:textKey="appointment_video_visit_start"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_13"
