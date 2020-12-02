@@ -772,5 +772,10 @@ public class AppointmentsPayloadDTO {
                         hasAppointmentStarted());
     }
 
-
+    public boolean isTelehealthCheckinRequired(AppointmentsSettingDTO settingsInfo) {
+        if (settingsInfo.getCheckin().isRequire_checkin_telehealth()) {
+            return true;
+        }
+        return false;
+    }
 }

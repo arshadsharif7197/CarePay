@@ -118,8 +118,7 @@
                     style="@style/SigninSignupEditStyle"
                     android:digits="@string/restrict_address_characters"
                     android:imeOptions="actionNext"
-                    android:maxLength="50"
-                    android:nextFocusForward="@+id/addressEditText2Id" />
+                    android:maxLength="50" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -46,7 +46,9 @@
             android:id="@+id/support_help_content_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:textSize="@dimen/text_size_16"
+            android:visibility="visible"
             app:customAssetFont="proxima_nova_extra_bold" />
     </LinearLayout>
 
@@ -71,7 +73,7 @@
         android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginBottom="@dimen/dimen_16dp"
-        android:background="?selectableItemBackground"
+        android:background="@drawable/bg_blue_border"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="call_us_label" />
 

@@ -205,6 +205,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.editProfile).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.helpMenuItem).setOnClickListener(menuItemClickListener);
 
         profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         profileListTriggerIcon.setSelected(false);
@@ -435,6 +436,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                     callback = demographicsSettingsCallBack;
                     transition = transitionProfile;
                     editProfile = false;
+                    break;
+                case R.id.helpMenuItem:
+                    startActivity(PatientHelpActivity.class);
                     break;
                 case R.id.logOutMenuItem:
                     transition = transitionLogout;
