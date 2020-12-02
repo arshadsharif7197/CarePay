@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -38,8 +39,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
-import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 //import com.google.android.gms.wallet.MaskedWallet;
@@ -57,7 +58,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     private Fragment androidPayTargetFragment;
     private boolean paymentPlanCreated;
 
-    public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
+    public PatientPaymentPresenter(PaymentConnectivityHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
         super(viewHandler, paymentsModel, patientId);
     }
 
@@ -232,20 +233,24 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+        if (workflowDTO == null) {
+            viewHandler.onPaymentFlowFailure();
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
-            displayDialogFragment(confirmationFragment, false);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+            } else {
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+                displayDialogFragment(confirmationFragment, false);
+            }
         }
     }
 

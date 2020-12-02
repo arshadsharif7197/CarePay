@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,10 +18,12 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Ava
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
@@ -28,6 +31,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePartial
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -123,7 +127,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initializeLanguageSpinner();
         logCheckoutStarted();
 
-        startDOBVerification();
+        if (ApplicationPreferences.getInstance().isDobRequired()) {
+            startDOBVerification();
+        }
     }
 
     private void startDOBVerification() {
@@ -390,29 +396,36 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        String state = workflowDTO.getState();
-        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state) ||
-                (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
-            navigateToWorkflow(workflowDTO);
-        } else {
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-                StringBuilder builder = new StringBuilder();
-                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                    builder.append(processingError.getError());
-                    builder.append("\n");
-                }
-                int last = builder.lastIndexOf("\n");
-                builder.replace(last, builder.length(), "");
-                showErrorNotification(builder.toString());
+        if (workflowDTO != null) {
+            String state = workflowDTO.getState();
+            if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state) ||
+                    (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
+                navigateToWorkflow(workflowDTO);
             } else {
-                paymentConfirmationWorkflow = workflowDTO;
-                completePaymentProcess(workflowDTO);
+                PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+                if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                    StringBuilder builder = new StringBuilder();
+                    for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                        builder.append(processingError.getError());
+                        builder.append("\n");
+                    }
+                    int last = builder.lastIndexOf("\n");
+                    builder.replace(last, builder.length(), "");
+                    showErrorNotification(builder.toString());
+                } else {
+                    paymentConfirmationWorkflow = workflowDTO;
+                    completePaymentProcess(workflowDTO);
 
-                //this is a prepayment
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                    //this is a prepayment
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                }
             }
+        } else {
+            new Handler().postDelayed(() -> {
+                setResult(PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT);
+                finish();
+            }, 2000);
         }
     }
 
@@ -577,6 +590,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 getPaymentAmount(paymentConfirmationWorkflow),
                 surveyDTO.getPayload().getSurvey() != null,
                 completedPaymentPlan);
+        finish();
     }
 
     @Override
@@ -933,7 +947,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                             getPaymentAmount(paymentConfirmationWorkflow),
                             NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
                             completedPaymentPlan);
-
+                    finish();
                 }
             }
 
@@ -1093,5 +1107,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        hideProgressDialog();
+        super.onStop();
     }
 }

@@ -10,7 +10,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 public abstract class PaymentPresenter implements PaymentNavigationCallback {
 
     protected PaymentsModel paymentsModel;
-    protected PaymentViewHandler viewHandler;
+    protected PaymentConnectivityHandler viewHandler;
     protected String patientId;
 
     /**
@@ -19,13 +19,13 @@ public abstract class PaymentPresenter implements PaymentNavigationCallback {
      * @param paymentsModel Payment Model DTO
      * @param patientId Selected Patient ID
      */
-    public PaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId){
+    public PaymentPresenter(PaymentConnectivityHandler viewHandler, PaymentsModel paymentsModel, String patientId){
         this.viewHandler = viewHandler;
         this.paymentsModel = paymentsModel;
         this.patientId = patientId;
     }
 
-    public void setPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId){
+    public void setPaymentPresenter(PaymentConnectivityHandler viewHandler, PaymentsModel paymentsModel, String patientId){
         this.viewHandler = viewHandler;
         this.paymentsModel = paymentsModel;
         this.patientId = patientId;

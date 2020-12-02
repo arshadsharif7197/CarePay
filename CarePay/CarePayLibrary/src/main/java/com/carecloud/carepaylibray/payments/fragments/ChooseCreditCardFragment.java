@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -372,6 +373,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+
+            // on Payment error go to Appointment screen
+            showConfirmation(null);
         }
     };
 

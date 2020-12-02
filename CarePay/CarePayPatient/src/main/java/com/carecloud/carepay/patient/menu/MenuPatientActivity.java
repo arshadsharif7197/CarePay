@@ -32,6 +32,7 @@ import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
+import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.session.PatientSessionService;
@@ -643,9 +644,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         return transitionMessaging;
     }
 
-    protected void displayMessagesScreen() {
+    protected void displayMessagesScreen(NotificationItem notificationItem) {
         //backward compat for pending notification merge
-        startActivity(MessagesActivity.class);
+        Intent intent = new Intent(this, MessagesActivity.class);
+        intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, notificationItem.getMetadata().getEvent().getPayload().getMessageId());
+        startActivity(intent);
     }
 
     /**
