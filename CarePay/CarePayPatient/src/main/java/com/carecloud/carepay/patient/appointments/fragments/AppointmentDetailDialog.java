@@ -43,6 +43,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -168,6 +169,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+        ((CarePayApplication) getActivity().getApplicationContext()).setAppointmentDTO(appointmentDTO);
 
         viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();

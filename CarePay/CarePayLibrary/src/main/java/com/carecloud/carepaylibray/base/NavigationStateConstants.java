@@ -9,6 +9,7 @@ public class NavigationStateConstants {
     public static final String DEMOGRAPHICS = "demographics";
     public static final String INTAKE_FORMS = "intake_forms";
     public static final String PAYMENTS = "payments";
+    public static final String TELEHEALTH = "telehealth";
     public static final String PROFILE_UPDATE = "profile_update";
     public static final String PURCHASE = "retail";
     public static final String NOTIFICATION = "notifications";

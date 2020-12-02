@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.utils.payments.Constants;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
@@ -49,7 +50,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     private boolean toolbarHidden = false;
     private AppointmentViewModel viewModel;
-    private AppointmentDTO appointmentDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,28 +130,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
             displayDialogFragment(RateDialog.newInstance(), true);
         }
-    }
-
-    private boolean isTeleHealthAppointment(Intent data) {
-        boolean isTelehealthAppointment = false;
-        if (data != null && data.hasExtra(NavigationStateConstants.APPOINTMENT_ID) &&
-                data.hasExtra(NavigationStateConstants.APPOINTMENT_TYPE)) {
-            String appointmentId = data.getStringExtra(NavigationStateConstants.APPOINTMENT_ID);
-            isTelehealthAppointment = (boolean) data.getExtras().get(NavigationStateConstants.APPOINTMENT_TYPE);
-
-            appointmentDTO = getAppointmentInfo(appointmentId);
-            if (appointmentDTO != null) {
-                Bundle info = new Bundle();
-                DtoHelper.bundleDto(info, appointmentDTO);
-                startActivityForResult(new Intent(this, TelehealthAppoinmentActivity.class)
-                        .putExtra(NavigationStateConstants.APPOINTMENTS, info), CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST);
-
-            } else {
-                refreshUI();
-            }
-
-        }
-        return isTelehealthAppointment;
     }
 
     @Override
@@ -264,14 +242,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE: {
-                if (resultCode == RESULT_CANCELED) {
-                    if (!isTeleHealthAppointment(data)) {
-                        refreshUI();
-                    }
-                } else if (resultCode == RESULT_OK) {
-                    if (!isTeleHealthAppointment(data)) {
-                        refreshUI();
-                    }
+                refreshAppointments();
+                if (resultCode == CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE) {
+                    new Handler().postDelayed(() -> {
+                        presenter.startVideoVisit(((CarePayApplication) getApplicationContext()).getAppointmentDTO());
+                    }, 1000);
                 }
                 break;
             }
@@ -279,21 +254,17 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 if (resultCode == RESULT_OK) {
                     refreshAppointments();
                     new Handler().postDelayed(() -> {
-                        presenter.startVideoVisit(appointmentDTO);
+                        presenter.startVideoVisit(((CarePayApplication) getApplicationContext()).getAppointmentDTO());
                     }, 1000);
                 } else {
                     refreshUI();
                 }
-                break;
-            case PaymentConstants.REQUEST_CODE_CCLIVE:
-//                onBackPressed();
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
-
     public void onAppointmentScheduleFlowFailure() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
