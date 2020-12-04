@@ -380,6 +380,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                                 rightButton.setContentDescription(getContext().getString(R.string.content_description_checkin_appointment_button));
                             } else {
+                                isCheckInAlertNeeded = false;
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }
                             rightButton.setOnClickListener(checkInClick);
@@ -454,6 +455,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                             } else {
+                                isCheckInAlertNeeded = false;
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }
                             rightButton.setOnClickListener(checkInClick);
