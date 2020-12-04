@@ -118,6 +118,12 @@
                 app:labelTextKey="navigation_link_settings" />
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/helpMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelTextKey="help_label" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/logOutMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

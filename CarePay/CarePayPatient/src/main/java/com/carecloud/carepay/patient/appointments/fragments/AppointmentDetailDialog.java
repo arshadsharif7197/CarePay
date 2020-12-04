@@ -82,6 +82,7 @@ import java.util.concurrent.Executors;
 public class AppointmentDetailDialog extends BaseDialogFragment {
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
     private static final int OPEN_CALENDAR_APP = 100;
+    private static AppointmentDetailDialog detailDialog;
 
     private AppointmentDTO appointmentDTO;
 
@@ -135,8 +136,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
+        detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
+        return detailDialog;
+    }
+
+    public static AppointmentDetailDialog getInstance() {
         return detailDialog;
     }
 
@@ -663,7 +668,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener cancelAppointmentClick = view -> {
         callback.onCancelAppointment(appointmentDTO);
-        dismiss();
+        hideDialog();
     };
 
     private View.OnClickListener mapClick = view -> {
@@ -896,7 +901,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private void updateStartVideoVisitBtn(boolean isCheckinComplete) {
-        if (isTelehealthAppointment && !appointmentDTO.getPayload().isAppointmentOver()) {
+        if (isTelehealthAppointment) {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {
@@ -986,7 +991,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CALENDAR_APP) {
             saveEventOnLocalDB();
-
         }
     }
 

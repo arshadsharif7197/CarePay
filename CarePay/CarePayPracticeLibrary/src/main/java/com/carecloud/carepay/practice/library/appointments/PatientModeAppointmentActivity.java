@@ -314,4 +314,9 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     public TransitionDTO getLogoutTransition() {
         return appointmentsResultModel.getMetadata().getTransitions().getLogout();
     }
+
+    @Override
+    public void onPaymentCancel() {
+
+    }
 }
