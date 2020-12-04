@@ -56,6 +56,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -105,6 +106,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
     private AppointmentDTO cancelAppointmentDTO;
+    private CancelReasonAppointmentDialog cancelReasonDialog;
 
     public PatientAppointmentPresenter(AppointmentConnectivityHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -142,9 +144,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO,
                                          final AppointmentCancellationFee cancellationFee) {
-        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
+        cancelReasonDialog = CancelReasonAppointmentDialog
                 .newInstance(appointmentDTO, appointmentsResultModel);
-        dialog.setsCancelReasonAppointmentDialogListener(new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+        cancelReasonDialog.setsCancelReasonAppointmentDialogListener(new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
             @Override
             public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO1, int cancellationReason, String cancellationReasonComment) {
                 cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
@@ -181,6 +183,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                             .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
                                     Label.getLabel("appointment_cancellation_fee_title"));
+                    cancelReasonDialog.hideDialog();
                     viewHandler.addFragment(prepaymentFragment, true);
 
                     String[] params = {getString(R.string.param_payment_amount),
@@ -207,7 +210,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 displayToolbar(true, null);
             }
         });
-        viewHandler.addFragment(dialog, true);
+        viewHandler.addFragment(cancelReasonDialog, false);
     }
 
     @Override
@@ -450,7 +453,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPaymentCancel() {
         startCancelationFeePayment = false;
-        CancelReasonAppointmentDialog.getInstance().showDialog();
+        if (CancelReasonAppointmentDialog.getInstance() != null &&
+                CancelReasonAppointmentDialog.isCancelReasonRequired) {
+            CancelReasonAppointmentDialog.getInstance().showDialog();
+            CancelReasonAppointmentDialog.isCancelReasonRequired = false;
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -35,6 +36,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
         FragmentActivityInterface {
@@ -174,13 +177,27 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
     }
 
+
     private boolean isFragmentVisible() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(CancelReasonAppointmentDialog.class.getName());
-        if (fragment != null && fragment.isVisible()) {
-            ((CancelReasonAppointmentDialog) fragment).onBackPressed();
-            return true;
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof PaymentMethodPrepaymentFragment) {
+                ((PaymentMethodPrepaymentFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof CancelReasonAppointmentDialog) {
+                ((CancelReasonAppointmentDialog) fragment).onBackPressed();
+                return true;
+            }
         }
         return false;
+    }
+
+    private Fragment getTopFragment() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (!fragmentList.isEmpty()) {
+            return fragmentList.get(fragmentList.size() - 1);
+        }
+        return null;
     }
 
     @Override

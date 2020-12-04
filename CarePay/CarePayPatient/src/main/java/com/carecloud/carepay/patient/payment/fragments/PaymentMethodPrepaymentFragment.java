@@ -91,21 +91,21 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
             toolbar.setTitle("");
 
             toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-            toolbar.setNavigationOnClickListener(view1 -> {
-                if (CancelReasonAppointmentDialog.isCancelReasonRequired) {
-                    CancelReasonAppointmentDialog.isCancelReasonRequired = false;
-                    callback.onPaymentCancel();
-                } else {
-                    getActivity().onBackPressed();
-                    callback.onPaymentDismissed();
-                }
-                cancel();
-            });
+            toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
             if (callback instanceof PatientAppointmentPresenter) {
                 ((PatientAppointmentPresenter) callback).displayToolbar(false, null);
             }
         }
-
     }
 
+    @Override
+    public void onBackPressed() {
+        if (CancelReasonAppointmentDialog.isCancelReasonRequired) {
+            callback.onPaymentCancel();
+        } else {
+            getActivity().onBackPressed();
+            callback.onPaymentDismissed();
+        }
+        cancel();
+    }
 }
