@@ -177,6 +177,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private boolean isFragmentVisible() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(CancelReasonAppointmentDialog.class.getName());
         if (fragment != null && fragment.isVisible()) {
+            ((CancelReasonAppointmentDialog) fragment).onBackPressed();
             return true;
         }
         return false;

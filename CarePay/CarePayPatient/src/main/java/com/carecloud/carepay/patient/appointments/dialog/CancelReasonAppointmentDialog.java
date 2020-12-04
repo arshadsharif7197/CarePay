@@ -180,8 +180,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
 
             toolbar.setNavigationIcon(com.carecloud.carepay.patient.R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(view1 -> {
-                callback.onBackClick();
-                dismiss();
+                onBackPressed();
             });
         }
     }
@@ -261,5 +260,11 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
 
     public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
         this.callback = listener;
+    }
+
+    @Override
+    public void onBackPressed() {
+        callback.onBackClick();
+        dismiss();
     }
 }

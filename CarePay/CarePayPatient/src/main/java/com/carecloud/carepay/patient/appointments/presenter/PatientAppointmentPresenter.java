@@ -199,11 +199,15 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
             @Override
             public void onBackClick() {
-                CancelAppointmentFeeDialog.getInstance().showDialog();
+                if (cancellationFee != null) {
+                    CancelAppointmentFeeDialog.getInstance().showDialog();
+                } else {
+                    AppointmentDetailDialog.getInstance().showDialog();
+                }
                 displayToolbar(true, null);
             }
         });
-        viewHandler.addFragment(dialog, false);
+        viewHandler.addFragment(dialog, true);
     }
 
     @Override
