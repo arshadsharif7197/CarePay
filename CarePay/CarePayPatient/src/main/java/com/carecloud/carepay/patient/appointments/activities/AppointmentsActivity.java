@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
@@ -182,10 +183,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         Fragment fragment = getTopFragment();
         if (fragment != null) {
             if (fragment instanceof PaymentMethodPrepaymentFragment) {
-                ((PaymentMethodPrepaymentFragment) fragment).onBackPressed();
+                // skip backpress
                 return true;
             } else if (fragment instanceof CancelReasonAppointmentDialog) {
-                ((CancelReasonAppointmentDialog) fragment).onBackPressed();
+                // skip backpress
+                return true;
+            }else if (fragment instanceof AvailabilityHourFragment) {
+                // skip backpress
                 return true;
             }
         }
@@ -195,7 +199,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private Fragment getTopFragment() {
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
         if (!fragmentList.isEmpty()) {
-            return fragmentList.get(fragmentList.size() - 1);
+            Fragment topFragment = (fragmentList.get(fragmentList.size() - 1).getTag().equals("SupportLifecycleFragmentImpl")) ? fragmentList.get(fragmentList.size() - 2) : fragmentList.get(fragmentList.size() - 1);
+            return topFragment;
         }
         return null;
     }

@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
+import com.carecloud.carepay.patient.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -184,6 +185,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
                                     Label.getLabel("appointment_cancellation_fee_title"));
                     cancelReasonDialog.hideDialog();
+                    prepaymentFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+                        @Override
+                        public void onBackPressed() {
+                            cancelReasonDialog.showDialog();
+                        }
+                    });
                     viewHandler.addFragment(prepaymentFragment, true);
 
                     String[] params = {getString(R.string.param_payment_amount),
@@ -475,6 +482,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
+        prepaymentFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                if (RequestAppointmentDialogFragment.getInstance() != null) {
+                    RequestAppointmentDialogFragment.getInstance().showDialog();
+                }
+            }
+        });
         viewHandler.addFragment(prepaymentFragment, true);
     }
 
@@ -708,8 +723,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void appointmentScheduledSuccessfully() {
-        getSupportFragmentManager().popBackStackImmediate();
-        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
         showRateDialogFragment();
         viewHandler.refreshAppointments();
     }
@@ -744,7 +759,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentAvailabilityDataDTO.setMetadata(metadataDTO);
         appointmentAvailabilityDataDTO.setPayload(payloadList);
         appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
-        showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+        AvailabilityHourFragment availabilityHourFragment = AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE);
+        availabilityHourFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                if (AppointmentDetailDialog.getInstance() != null) {
+                    AppointmentDetailDialog.getInstance().showDialog();
+                }
+            }
+        });
+        showFragment(availabilityHourFragment);
     }
 
     @Override
@@ -874,6 +898,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private void clearDialogs() {
         ((BaseActivity) viewHandler).clearFragments();
 
+        if (RequestAppointmentDialogFragment.getInstance() != null) {
+            RequestAppointmentDialogFragment.getInstance().dismiss();
+        }
         if (CancelReasonAppointmentDialog.getInstance() != null) {
             CancelReasonAppointmentDialog.getInstance().dismiss();
         }

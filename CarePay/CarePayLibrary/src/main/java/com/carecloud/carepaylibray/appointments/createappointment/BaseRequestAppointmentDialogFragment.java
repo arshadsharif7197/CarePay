@@ -124,7 +124,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
                         logMixPanelAppointmentRequestedEvent(appointmentDTO);
                         callback.appointmentScheduledSuccessfully();
-                        dismiss();
+                        cancel();
                     }
 
                     @Override
@@ -200,7 +200,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     private void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount) {
-        dismiss();
+        hideDialog();
         callback.startPrepaymentProcess(appointmentRequestDto, amount, selectedPractice.getPracticeId());
         logMixPanelPrepaymentAppointmentRequestedEvent(appointmentDTO);
     }

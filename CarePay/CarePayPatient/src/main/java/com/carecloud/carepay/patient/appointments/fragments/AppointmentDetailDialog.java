@@ -860,7 +860,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener rescheduleClick = view -> {
-        dismiss();
+        hideDialog();
         callback.rescheduleAppointment(appointmentDTO);
     };
 
