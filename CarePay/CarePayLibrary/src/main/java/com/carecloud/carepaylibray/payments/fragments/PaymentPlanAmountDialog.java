@@ -115,11 +115,6 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
             boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple)
                     && hasApplicableRule(practiceId, planAmount));
             if (canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))) {
-                if (planAmount < 1) {
-                    payPartialButton.setEnabled(false);
-                } else {
-                    payPartialButton.setEnabled(true);
-                }
                 if (canCreatePlan) {
                     payPartialButton.setText(Label.getLabel("payment_create_payment_plan"));
                 } else {//must add to existing
