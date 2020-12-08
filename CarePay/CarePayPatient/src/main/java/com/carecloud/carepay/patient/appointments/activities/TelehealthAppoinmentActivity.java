@@ -69,6 +69,7 @@ public class TelehealthAppoinmentActivity extends BasePatientActivity implements
 
     @Override
     public void onVideoVisit() {
+        AppointmentsActivity.isFromTelehealthScreen = true;
         setResult(RESULT_OK);
         finish();
     }
