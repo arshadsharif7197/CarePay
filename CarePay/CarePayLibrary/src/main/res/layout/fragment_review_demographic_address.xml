@@ -28,7 +28,6 @@
                 android:imeOptions="actionNext"
                 android:inputType="textPostalAddress"
                 android:maxLength="50"
-                android:nextFocusForward="@+id/addressEditText2Id"
                 app:customAssetFont="proxima_nova_regular"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_address_line1"
