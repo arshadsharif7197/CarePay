@@ -50,6 +50,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     private boolean toolbarHidden = false;
     private AppointmentViewModel viewModel;
+    public static boolean isFromTelehealthScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,7 +244,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
             case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE: {
                 refreshAppointments();
-                if (resultCode == CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE) {
+                if (isFromTelehealthScreen) {
+                    isFromTelehealthScreen = false;
                     new Handler().postDelayed(() -> {
                         presenter.startVideoVisit(((CarePayApplication) getApplicationContext()).getAppointmentDTO());
                     }, 1000);
@@ -265,6 +267,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
         }
     }
+
     public void onAppointmentScheduleFlowFailure() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
