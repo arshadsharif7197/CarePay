@@ -31,6 +31,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
 
     private AppointmentPrepaymentCallback callback;
     private String titleString;
+    public boolean isBackPressCalled;
 
     /**
      * @param paymentsModel the payments DTO
@@ -92,20 +93,17 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
 
             toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(view1 -> {
-                if (CancelReasonAppointmentDialog.isCancelReasonRequired) {
-                    CancelReasonAppointmentDialog.isCancelReasonRequired = false;
-                    callback.onPaymentCancel();
-                } else {
-                    getActivity().onBackPressed();
-                    callback.onPaymentDismissed();
-                }
-                cancel();
+                onBackPressed();
             });
             if (callback instanceof PatientAppointmentPresenter) {
                 ((PatientAppointmentPresenter) callback).displayToolbar(false, null);
             }
         }
-
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        cancel();
+    }
 }
