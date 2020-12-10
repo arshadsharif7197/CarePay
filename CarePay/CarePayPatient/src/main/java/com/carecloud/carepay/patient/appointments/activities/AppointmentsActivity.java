@@ -227,6 +227,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void refreshAppointments() {
         clearDialogs();
         viewModel.getAppointments(getTransitionAppointments(), true);
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
     }
 
     private void showAppointmentConfirmation(boolean isAutoScheduled) {
