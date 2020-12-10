@@ -44,7 +44,7 @@ script:
   - chmod +x ./scripts/*
   # separating compile command in case it fails, so it doesnt run the rest of commands in file
   - ./scripts/compile || travis_terminate 1;
-  - ./runner testfairy
+  # - ./runner testfairy
 # after_script:
 #   # Emulator Management: Create, Start and Wait
 #   - cp -r ./skins/tablet  $ANDROID_HOME/platforms/android-22/skins/
@@ -61,3 +61,4 @@ branches:
     - QA
     - development
     - SHMRK-TRAVIS
+    - development-1
