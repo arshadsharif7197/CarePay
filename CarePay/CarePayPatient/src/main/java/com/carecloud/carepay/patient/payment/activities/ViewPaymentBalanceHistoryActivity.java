@@ -576,6 +576,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
         }
         showSuccessToast(message);
+        clearFragments();
         initFragments();
         refreshBalance(true);
     }
@@ -596,6 +597,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        clearFragments();
         showRateDialogFragment();
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();

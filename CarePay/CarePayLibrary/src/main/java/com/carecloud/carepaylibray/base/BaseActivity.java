@@ -56,7 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     protected boolean isVisible = false;
-    private boolean isLastDialogVisible;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,9 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     private void handleFragmentDialogs() {
         FragmentManager fm = getSupportFragmentManager();
-        isLastDialogVisible = false;
         List<BaseDialogFragment> baseDialogFragmentList = getBaseDialogs(fm.getFragments());
-        int stackSize = (isLastDialogVisible) ? baseDialogFragmentList.size() - 1 : baseDialogFragmentList.size(); // if any dialog visible not hide that one
+        int stackSize = (BaseDialogFragment.isVisible) ? baseDialogFragmentList.size() - 1 : baseDialogFragmentList.size(); // if any dialog visible not hide that one
         for (int index = 0; index < stackSize; index++) {
             baseDialogFragmentList.get(index).hideDialog();
         }
@@ -113,9 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             if ((fragment instanceof BaseDialogFragment) || (fragment instanceof PaymentPlanDetailsDialogFragment)) {
                 BaseDialogFragment baseFragment = (BaseDialogFragment) fragment;
                 baseDialogFragmentList.add(baseFragment);
-                if (baseFragment.isVisible) {
-                    isLastDialogVisible = true;
-                }
             }
         }
         return baseDialogFragmentList;
@@ -358,6 +353,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         FragmentManager fm = getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
+        }
+
+        for(Fragment baseFragment: fm.getFragments()){
+            if(baseFragment instanceof BaseDialogFragment){
+                ((BaseDialogFragment) baseFragment).cancel();
+            }
         }
     }
 

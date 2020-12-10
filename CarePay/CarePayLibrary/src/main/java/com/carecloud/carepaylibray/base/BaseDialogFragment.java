@@ -122,6 +122,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     }
 
     public void cancel() {
+        isVisible = false;
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
@@ -257,12 +258,14 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
      */
     public void showDialog() {
         if (getDialog() != null) {
+            isVisible = true;
             getDialog().show();
         }
     }
 
     public void showDialog(boolean showBlur) {
         if (getDialog() != null) {
+            isVisible = true;
             getDialog().show();
         }
         super.showDialog(showBlur);
@@ -273,11 +276,11 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
      */
     public void hideDialog() {
         hideDialog(false);
-        isVisible = false;
     }
 
     public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
+            isVisible = false;
             getDialog().hide();
             super.hideDialog(hideBlur);
         }
