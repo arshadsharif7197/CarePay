@@ -310,6 +310,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         displayPage = PAGE_BALANCES;
         initFragments();
+        clearFragments();
         refreshBalance(true);
         showRateDialogFragment();
     }
