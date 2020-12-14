@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +43,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -60,7 +59,6 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.CalendarUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -84,6 +82,7 @@ import java.util.concurrent.Executors;
 public class AppointmentDetailDialog extends BaseDialogFragment {
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
     private static final int OPEN_CALENDAR_APP = 100;
+    private static AppointmentDetailDialog detailDialog;
 
     private AppointmentDTO appointmentDTO;
 
@@ -137,8 +136,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
+        detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
+        return detailDialog;
+    }
+
+    public static AppointmentDetailDialog getInstance() {
         return detailDialog;
     }
 
@@ -166,6 +169,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+        ((CarePayApplication) getActivity().getApplicationContext()).setAppointmentDTO(appointmentDTO);
 
         viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();
@@ -347,7 +351,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
                             && !appointmentDTO.getPayload().isAppointmentOver());
 
-                    updateStartVideoVisitBtn();
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case PENDING: {
@@ -376,13 +380,14 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                                 rightButton.setContentDescription(getContext().getString(R.string.content_description_checkin_appointment_button));
                             } else {
+                                isCheckInAlertNeeded = false;
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
-                    updateStartVideoVisitBtn();
+                    updateStartVideoVisitBtn(false);
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -450,13 +455,14 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                             } else {
+                                isCheckInAlertNeeded = false;
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
-                    updateStartVideoVisitBtn();
+                    updateStartVideoVisitBtn(false);
                     break;
                 }
                 case CHECKED_OUT: {
@@ -661,7 +667,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener cancelAppointmentClick = view -> {
         callback.onCancelAppointment(appointmentDTO);
-        dismiss();
+        hideDialog();
     };
 
     private View.OnClickListener mapClick = view -> {
@@ -854,7 +860,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener rescheduleClick = view -> {
-        dismiss();
+        hideDialog();
         callback.rescheduleAppointment(appointmentDTO);
     };
 
@@ -893,7 +899,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         confirmDialogFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), null);
     }
 
-    private void updateStartVideoVisitBtn() {
+    private void updateStartVideoVisitBtn(boolean isCheckinComplete) {
         if (isTelehealthAppointment) {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
@@ -903,6 +909,15 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                 leftButton.setText(Label.getLabel("appointment_video_visit_start"));
                 leftButton.setVisibility(View.VISIBLE);
                 leftButton.setOnClickListener(joinVideoVisitClick);
+
+                if (!isCheckinComplete && appointmentDTO.getPayload().isTelehealthCheckinRequired(callback
+                        .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
+                    leftButton.setEnabled(false);
+                    leftButton.setTextColor(Color.WHITE);
+                } else {
+                    leftButton.setEnabled(true);
+                    leftButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }
             }
         }
     }
@@ -975,7 +990,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPEN_CALENDAR_APP) {
             saveEventOnLocalDB();
-
         }
     }
 

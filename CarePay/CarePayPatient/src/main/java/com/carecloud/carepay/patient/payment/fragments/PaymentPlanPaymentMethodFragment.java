@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,7 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     private PaymentPlanPostModel paymentPlanPostModel;
     private PaymentPlanDTO paymentPlanDTO;
     private Date paymentDate;
+    public boolean isOnBackPressCalled = false;
 
     /**
      * @param paymentsModel        the payments DTO
@@ -289,4 +292,9 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(rawResponse), paymentModelJson, queries, header);
     }
 
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
+    }
 }

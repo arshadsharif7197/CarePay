@@ -1,6 +1,12 @@
 #!/bin/bash
 # # Compile the code before starting the rest of the build
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    echo "Compile apps"
+if [ "$TRAVIS_BRANCH" == "development" ] || [ "$TRAVIS_BRANCH" == "development-1" ]; then
+    echo "Compile development apps"
     ./gradlew compileDevelopmentDebugSources
+elif [ "$TRAVIS_BRANCH" == "QA" ]; then
+    echo "Compile QA apps"
+    ./gradlew compileQaDebugSources
+elif [ "$TRAVIS_BRANCH" == "Staging" ]; then
+    echo "Compile Staging apps"
+    ./gradlew compileStagingDebugSources
 fi

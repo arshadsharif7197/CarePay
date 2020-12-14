@@ -188,4 +188,6 @@ public class CarePayConstants {
     //Video Visit
     public static final int VIDEO_START_OFFSET_SECONDS = 60 * 30; //10 min
     public static final int DOB_VERIFICATION_REQUEST = 007;
+    public static final int TELEHEALTH_APPOINTMENT_REQUEST = 101;
+    public static final int TELEHEALTH_APPOINTMENT_RESULT_CODE = 102;
 }

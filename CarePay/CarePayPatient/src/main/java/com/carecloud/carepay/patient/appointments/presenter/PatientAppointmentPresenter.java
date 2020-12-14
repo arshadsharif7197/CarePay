@@ -19,9 +19,11 @@ import com.carecloud.carepay.patient.appointments.createappointment.Availability
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
+import com.carecloud.carepay.patient.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -55,6 +57,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -104,6 +107,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
     private AppointmentDTO cancelAppointmentDTO;
+    private CancelReasonAppointmentDialog cancelReasonDialog;
 
     public PatientAppointmentPresenter(AppointmentConnectivityHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -134,64 +138,86 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         } else {
             CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
             fragment.setCancelFeeDialogListener(() -> showCancellationReasons(appointmentDTO, cancellationFee));
+            fragment.setOnCancelListener(dialog -> AppointmentDetailDialog.getInstance().showDialog());
             viewHandler.displayDialogFragment(fragment, false);
         }
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO,
                                          final AppointmentCancellationFee cancellationFee) {
-        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
+        cancelReasonDialog = CancelReasonAppointmentDialog
                 .newInstance(appointmentDTO, appointmentsResultModel);
-        dialog.setsCancelReasonAppointmentDialogListener((appointmentDTO1, cancellationReason,
-                                                          cancellationReasonComment) -> {
-            cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
-            cancelAppointmentDTO = appointmentDTO1;
-            practiceName = getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
-                    appointmentDTO.getMetadata().getPracticeId()).getPracticeName();
-            if (cancellationFee == null) {
-                onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
-            } else {
-                startCancelationFeePayment = true;
-                PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
-                IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-                postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-                paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
-                paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
-                paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
+        cancelReasonDialog.setsCancelReasonAppointmentDialogListener(new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+            @Override
+            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO1, int cancellationReason, String cancellationReasonComment) {
+                cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
+                cancelAppointmentDTO = appointmentDTO1;
+                practiceName = getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
+                        appointmentDTO.getMetadata().getPracticeId()).getPracticeName();
+                if (cancellationFee == null) {
+                    onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
+                } else {
+                    startCancelationFeePayment = true;
+                    CancelReasonAppointmentDialog.isCancelReasonRequired = true;
+
+                    PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
+                    IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+                    postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                    IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                    paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                    paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
+                    paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
 
 
-                postModel.addLineItem(paymentLineItem);
-                postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
-                postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
+                    postModel.addLineItem(paymentLineItem);
+                    postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
+                    postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
 
-                SignInPayloadMetadata queryMetadata = new SignInPayloadMetadata();
-                queryMetadata.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
-                queryMetadata.setPatientId(appointmentDTO.getMetadata().getPatientId());
-                queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
-                postModel.setQueryMetadata(queryMetadata);
+                    SignInPayloadMetadata queryMetadata = new SignInPayloadMetadata();
+                    queryMetadata.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+                    queryMetadata.setPatientId(appointmentDTO.getMetadata().getPatientId());
+                    queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+                    postModel.setQueryMetadata(queryMetadata);
 
-                paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-                PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                        .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
-                                Label.getLabel("appointment_cancellation_fee_title"));
-                viewHandler.addFragment(prepaymentFragment, true);
+                    paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+                    PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                            .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+                                    Label.getLabel("appointment_cancellation_fee_title"));
+                    cancelReasonDialog.hideDialog();
+                    prepaymentFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+                        @Override
+                        public void onBackPressed() {
+                            cancelReasonDialog.showDialog();
+                        }
+                    });
+                    viewHandler.addFragment(prepaymentFragment, true);
 
-                String[] params = {getString(R.string.param_payment_amount),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_practice_id),
-                        getString(R.string.param_location_id)
-                };
-                Object[] values = {cancellationFee.getAmount(),
-                        appointmentDTO1.getPayload().getProvider().getGuid(),
-                        appointmentDTO1.getMetadata().getPracticeId(),
-                        appointmentDTO1.getPayload().getLocation().getGuid()
-                };
-                MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
+                    String[] params = {getString(R.string.param_payment_amount),
+                            getString(R.string.param_provider_id),
+                            getString(R.string.param_practice_id),
+                            getString(R.string.param_location_id)
+                    };
+                    Object[] values = {cancellationFee.getAmount(),
+                            appointmentDTO1.getPayload().getProvider().getGuid(),
+                            appointmentDTO1.getMetadata().getPracticeId(),
+                            appointmentDTO1.getPayload().getLocation().getGuid()
+                    };
+                    MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
+                }
+            }
+
+            @Override
+            public void onBackClick() {
+                if (cancellationFee != null) {
+                    CancelAppointmentFeeDialog.getInstance().showDialog();
+                } else {
+                    AppointmentDetailDialog.getInstance().showDialog();
+                }
+                displayToolbar(true, null);
             }
         });
-        viewHandler.displayDialogFragment(dialog, false);
+        viewHandler.addFragment(cancelReasonDialog, false);
     }
 
     @Override
@@ -432,6 +458,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void onPaymentCancel() {
+        startCancelationFeePayment = false;
+        if (CancelReasonAppointmentDialog.getInstance() != null &&
+                CancelReasonAppointmentDialog.isCancelReasonRequired) {
+            CancelReasonAppointmentDialog.getInstance().showDialog();
+            CancelReasonAppointmentDialog.isCancelReasonRequired = false;
+        }
+    }
+
+    @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         viewHandler.replaceFragment(fragment, true);
@@ -446,6 +482,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
+        prepaymentFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                if (RequestAppointmentDialogFragment.getInstance() != null) {
+                    RequestAppointmentDialogFragment.getInstance().showDialog();
+                }
+            }
+        });
         viewHandler.addFragment(prepaymentFragment, true);
     }
 
@@ -484,6 +528,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        clearDialogs();
         if (workflowDTO == null) {
             viewHandler.onAppointmentScheduleFlowFailure();
         } else {
@@ -525,6 +570,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel, String practiceId) {
+        clearDialogs();
         new CustomMessageToast(getContext(), Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         viewHandler.confirmAppointment(false,
@@ -604,6 +650,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        clearDialogs();
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false, false);
@@ -676,8 +723,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void appointmentScheduledSuccessfully() {
-        getSupportFragmentManager().popBackStackImmediate();
-        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
         showRateDialogFragment();
         viewHandler.refreshAppointments();
     }
@@ -712,7 +759,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentAvailabilityDataDTO.setMetadata(metadataDTO);
         appointmentAvailabilityDataDTO.setPayload(payloadList);
         appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
-        showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+        AvailabilityHourFragment availabilityHourFragment = AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE);
+        availabilityHourFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                if (AppointmentDetailDialog.getInstance() != null) {
+                    AppointmentDetailDialog.getInstance().showDialog();
+                }
+            }
+        });
+        showFragment(availabilityHourFragment);
     }
 
     @Override
@@ -838,4 +894,22 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.showErrorNotification(exceptionMessage);
         }
     };
+
+    private void clearDialogs() {
+        ((BaseActivity) viewHandler).clearFragments();
+
+        if (RequestAppointmentDialogFragment.getInstance() != null) {
+            RequestAppointmentDialogFragment.getInstance().dismiss();
+        }
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
+        if (CancelAppointmentFeeDialog.getInstance() != null) {
+            CancelAppointmentFeeDialog.getInstance().dismiss();
+        }
+        if (AppointmentDetailDialog.getInstance() != null) {
+            AppointmentDetailDialog.getInstance().dismiss();
+        }
+    }
+
 }

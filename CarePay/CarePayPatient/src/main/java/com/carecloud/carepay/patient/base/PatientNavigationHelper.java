@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.appointments.activities.TelehealthAppoinmentActivity;
 import com.carecloud.carepay.patient.checkout.AppointmentCheckoutActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
 import com.carecloud.carepay.patient.delegate.ProfilesActivity;
@@ -21,6 +22,7 @@ import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.patient.survey.SurveyActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -223,6 +225,14 @@ public class PatientNavigationHelper {
                 intent = new Intent(context, ProfilesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
+
+            case NavigationStateConstants.TELEHEALTH: {
+                intent = new Intent(context, TelehealthAppoinmentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                requestCode = CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST;
+                expectsResult = true;
+                break;
+            }
 
             default: {
                 intent = new Intent(context, AppointmentsActivity.class);
