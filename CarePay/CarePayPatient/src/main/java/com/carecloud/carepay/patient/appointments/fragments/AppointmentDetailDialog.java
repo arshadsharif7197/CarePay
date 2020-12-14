@@ -477,7 +477,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     if (isAPastAppointment()) {
                         showVisitSummaryButton();
                     }
-                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case DENIED: {
