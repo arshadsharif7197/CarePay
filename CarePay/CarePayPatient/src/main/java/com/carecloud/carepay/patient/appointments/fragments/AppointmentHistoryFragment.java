@@ -103,7 +103,11 @@ public class AppointmentHistoryFragment extends BaseFragment
                 getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
             }
 
-            hideShimmerEffect();
+            try {
+                hideShimmerEffect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             showLoadingInAdapter(false);
 
             if (appointments.size() > 0) {
@@ -231,7 +235,12 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     private void hideShimmerEffect() {
         if (isAdded()) {
-            getChildFragmentManager().popBackStackImmediate();
+            //handle action after onSaveInstanceState
+            try {
+                getChildFragmentManager().popBackStackImmediate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

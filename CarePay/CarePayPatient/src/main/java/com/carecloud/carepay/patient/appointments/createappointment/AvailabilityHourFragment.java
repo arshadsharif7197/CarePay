@@ -50,7 +50,7 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
         toolbarTitle = toolbar.findViewById(R.id.add_appointment_toolbar_title);
         toolbarTitle.setText(Label.getLabel("next_5_days_option"));
         callback.displayToolbar(false, null);
@@ -64,5 +64,12 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
     @Override
     protected void selectDateRange() {
         callback.addFragment(DateRangeDialogFragment.newInstance(startDate, endDate), true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        callback.displayToolbar(true, null);
+        super.onBackPressed();
+        cancel();
     }
 }

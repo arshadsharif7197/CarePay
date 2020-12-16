@@ -4,12 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +12,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -34,6 +38,8 @@ import java.util.List;
 
 public class CancelReasonAppointmentDialog extends BaseDialogFragment implements View.OnClickListener {
 
+    private static CancelReasonAppointmentDialog fragment;
+    public static boolean isCancelReasonRequired;
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
 
@@ -43,11 +49,14 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
+    private AppointmentPrepaymentCallback mainCallback;
 
     public interface CancelReasonAppointmentDialogListener {
         void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
                                                           int cancellationReason,
                                                           String cancellationReasonComment);
+
+        void onBackClick();
     }
 
     private CancelReasonAppointmentDialogListener callback;
@@ -59,12 +68,16 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
      * @param appointmentInfo Appointment Info data
      */
     public static CancelReasonAppointmentDialog newInstance(AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
+                                                            AppointmentsResultModel appointmentInfo) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
         DtoHelper.bundleDto(args, appointmentInfo);
-        CancelReasonAppointmentDialog fragment = new CancelReasonAppointmentDialog();
+        fragment = new CancelReasonAppointmentDialog();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CancelReasonAppointmentDialog getInstance() {
         return fragment;
     }
 
@@ -89,6 +102,15 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         super.onViewCreated(view, savedInstanceState);
         onInitialization();
         onSetListener();
+        setupTitleViews(view);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AppointmentViewHandler) {
+            mainCallback = (AppointmentPrepaymentCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
+        }
     }
 
     private void onInitialization() {
@@ -137,7 +159,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     }
 
     private void onSetListener() {
-        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
+//        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
 
         cancelReasonRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             AppCompatRadioButton checkedRadioButton = group.findViewById(checkedId);
@@ -148,14 +170,37 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         cancelAppointmentButton.setOnClickListener(this);
     }
 
+    public void setupTitleViews(View view) {
+        Toolbar toolbar = view.findViewById(com.carecloud.carepay.patient.R.id.toolbar_layout);
+        if (toolbar != null) {
+            TextView title = toolbar.findViewById(com.carecloud.carepay.patient.R.id.respons_toolbar_title);
+//            title.setText(Label.getLabel("cancel_appointment_label"));
+            title.setText("Reason for Canceling");
+            toolbar.setTitle("");
+
+            toolbar.setNavigationIcon(com.carecloud.carepay.patient.R.drawable.icn_nav_back);
+            toolbar.setNavigationOnClickListener(view1 -> {
+                onBackPressed();
+            });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainCallback instanceof PatientAppointmentPresenter) {
+            ((PatientAppointmentPresenter) mainCallback).displayToolbar(false, null);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
+            hideDialog();
             onCancelAppointment();
-            cancel();
         }
     }
 
@@ -186,7 +231,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
                         ContextCompat.getColor(getContext(), R.color.colorPrimary),
                 }
         );
-        appCompatRadioButton.setSupportButtonTintList(colorStateList);
+        appCompatRadioButton.setButtonTintList(colorStateList);
         appCompatRadioButton.setTextColor(colorStateList);
     }
 
@@ -217,4 +262,9 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         this.callback = listener;
     }
 
+    @Override
+    public void onBackPressed() {
+        callback.onBackClick();
+        cancel();
+    }
 }
