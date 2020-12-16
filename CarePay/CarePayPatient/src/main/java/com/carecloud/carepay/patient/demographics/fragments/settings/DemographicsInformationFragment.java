@@ -3,17 +3,23 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -245,16 +251,21 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             @Override
             public void afterTextChanged(Editable editable) {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    addressEditText.setNextFocusForwardId(R.id.zipCodeId);
                     address2EditText.setEnabled(false);
                     address2EditText.setText("");
                     address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText,
                             !StringUtil.isNullOrEmpty(address2EditText.getText().toString().trim()));
                 } else {
                     address2EditText.setEnabled(true);
+                    addressEditText.setNextFocusForwardId(R.id.addressEditText2Id);
                 }
             }
         });
 
+        if(!StringUtil.isNullOrEmpty(addressEditText.getText().toString())){
+            address2EditText.setEnabled(true);
+        }
 
         TextInputLayout zipCodeInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = view.findViewById(R.id.zipCodeId);

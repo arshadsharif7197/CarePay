@@ -601,6 +601,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void onPaymentCancel() {
+
+    }
+
+    @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
         Fragment targetFragment = getAndroidPayTargetFragment();
         if (targetFragment != null) {

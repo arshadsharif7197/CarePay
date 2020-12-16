@@ -95,6 +95,9 @@
             android:name=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".appointments.activities.TelehealthAppoinmentActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -107,6 +110,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
         </activity>
+
+        <activity
+            android:name=".menu.PatientHelpActivity"
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
