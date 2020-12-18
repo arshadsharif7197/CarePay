@@ -69,7 +69,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("appointments_heading"));
         callback.displayToolbar(false, null);
@@ -108,7 +108,14 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     @Override
     protected void showAvailabilityFragment() {
-        callback.showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+        AvailabilityHourFragment availabilityHourFragment = AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE);
+        availabilityHourFragment.setOnBackPressedListener(new OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                callback.displayToolbar(false, null);
+            }
+        });
+        callback.showFragment(availabilityHourFragment);
     }
 
     protected void showLocationList(UserPracticeDTO selectedPractice,

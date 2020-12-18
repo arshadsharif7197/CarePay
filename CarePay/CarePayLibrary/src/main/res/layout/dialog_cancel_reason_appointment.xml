@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    tools:ignore="MissingPrefix"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/cancel_reasons_dialog_height"
+    android:layout_height="match_parent"
     android:background="@color/transparent_apt"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
-    <ImageView
-        android:id="@+id/dialogCloseHeaderImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/apt_imgview_ht"
-        android:layout_gravity="start"
-        android:layout_marginBottom="@dimen/dimen_8dp"
-        android:gravity="end"
-        android:src="@drawable/icn_patient_mode_nav_close" />
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <!--    <ImageView
+            android:id="@+id/dialogCloseHeaderImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="start"
+            android:layout_marginBottom="@dimen/dimen_8dp"
+            android:gravity="end"
+            android:src="@drawable/icn_nav_back" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,13 +31,14 @@
             android:id="@+id/heading_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5dp"
             android:layout_marginTop="@dimen/cancel_margin_top"
+            android:layout_marginBottom="@dimen/dimen_5dp"
             android:gravity="center_horizontal"
             android:paddingLeft="@dimen/apt_imgview_ht"
             android:paddingRight="@dimen/apt_imgview_ht"
             android:textColor="@color/payne_gray"
             android:textSize="@dimen/cancel_text_size"
+            android:visibility="gone"
             app:customAssetFont="proxima_nova_regular" />
 
         <ScrollView
@@ -67,15 +72,15 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/reasonEditText"
-                android:layout_width="match_parent"
                 style="@style/EditTextStyle"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/cancel_radio_button_height"
                 android:layout_marginLeft="@dimen/apt_popup_parent_padding"
                 android:layout_marginRight="@dimen/apt_popup_parent_padding"
                 android:enabled="false"
                 android:imeOptions="flagNoExtractUi"
                 android:textSize="@dimen/cancel_edittext_size"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,10 +91,10 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/button_red_selector"
             android:enabled="false"
-            android:paddingBottom="@dimen/cancel_appointment_button_padding"
             android:paddingTop="@dimen/cancel_appointment_button_padding"
-            app:customAssetFont="proxima_nova_regular"
+            android:paddingBottom="@dimen/cancel_appointment_button_padding"
             android:textColor="@color/white"
-            android:textSize="@dimen/apt_dl_textview_size" />
+            android:textSize="@dimen/apt_dl_textview_size"
+            app:customAssetFont="proxima_nova_regular" />
     </RelativeLayout>
 </LinearLayout>
