@@ -698,4 +698,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             showErrorNotification(exceptionMessage);
         }
     };
+
+    @Override
+    public void onPaymentCancel() {
+
+    }
 }

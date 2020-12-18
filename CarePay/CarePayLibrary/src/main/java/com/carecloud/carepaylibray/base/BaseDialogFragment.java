@@ -33,6 +33,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     protected OnBackPressedInterface onBackPressedInterface;
 
     private long lastFullScreenSet;
+    public static boolean isVisible;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -58,6 +59,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     @Override
     public void onResume() {
         super.onResume();
+        isVisible = true;
         if (dialog != null) {
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
@@ -120,6 +122,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     }
 
     public void cancel() {
+        isVisible = false;
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
@@ -255,12 +258,14 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
      */
     public void showDialog() {
         if (getDialog() != null) {
+            isVisible = true;
             getDialog().show();
         }
     }
 
     public void showDialog(boolean showBlur) {
         if (getDialog() != null) {
+            isVisible = true;
             getDialog().show();
         }
         super.showDialog(showBlur);
@@ -275,6 +280,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
 
     public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
+            isVisible = false;
             getDialog().hide();
             super.hideDialog(hideBlur);
         }

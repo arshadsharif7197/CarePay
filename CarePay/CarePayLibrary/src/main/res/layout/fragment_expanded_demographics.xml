@@ -597,7 +597,6 @@
                     android:imeOptions="actionNext"
                     android:inputType="textPostalAddress"
                     android:maxLength="256"
-                    android:nextFocusForward="@+id/addressEditText2"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="address1_label"

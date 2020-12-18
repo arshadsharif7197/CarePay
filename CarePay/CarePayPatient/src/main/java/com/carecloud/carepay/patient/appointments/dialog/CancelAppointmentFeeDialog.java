@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
  */
 public class CancelAppointmentFeeDialog extends BaseDialogFragment {
 
+    private static CancelAppointmentFeeDialog fragment;
     private String cancellationFeeAmount;
 
     public interface CancelAppointmentFeeDialogListener {
@@ -34,8 +35,12 @@ public class CancelAppointmentFeeDialog extends BaseDialogFragment {
     public static CancelAppointmentFeeDialog newInstance(AppointmentCancellationFee cancellationFee) {
         Bundle args = new Bundle();
         args.putString("cancellationFeeAmount", cancellationFee.getAmount());
-        CancelAppointmentFeeDialog fragment = new CancelAppointmentFeeDialog();
+        fragment = new CancelAppointmentFeeDialog();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CancelAppointmentFeeDialog getInstance() {
         return fragment;
     }
 
@@ -61,9 +66,11 @@ public class CancelAppointmentFeeDialog extends BaseDialogFragment {
         Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointment);
         cancelAppointmentButton.setOnClickListener(view1 -> {
             callback.onCancelAppointmentFeeAccepted();
+            hideDialog();
+        });
+        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(view12 -> {
             cancel();
         });
-        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(view12 -> cancel());
     }
 
     public void setCancelFeeDialogListener(CancelAppointmentFeeDialogListener callback) {
