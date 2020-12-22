@@ -900,7 +900,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private void updateStartVideoVisitBtn(boolean isCheckinComplete) {
-        if (isTelehealthAppointment) {
+        if (isTelehealthAppointment && canShowTelehealthBtn()) {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {
@@ -920,6 +920,17 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                 }
             }
         }
+    }
+
+    private boolean canShowTelehealthBtn() {
+        Set<String> enabledLocations = ApplicationPreferences.getInstance()
+                .getPracticesWithBreezeEnabled(appointmentDTO.getMetadata().getPracticeId());
+        if (isLocationWithBreezeEnabled(enabledLocations)
+                && appointmentResultModel.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
+            return true;
+        }
+        return false;
     }
 
     @Override
