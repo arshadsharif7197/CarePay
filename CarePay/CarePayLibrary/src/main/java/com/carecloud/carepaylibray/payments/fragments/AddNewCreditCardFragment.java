@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,12 +112,12 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            showProgressDialog();
+//            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
+//            hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
@@ -135,7 +137,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     protected WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            showProgressDialog();
+//            showProgressDialog();
         }
 
         @Override
@@ -220,6 +222,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            hideProgressDialog();
         }
     }
 
@@ -247,6 +250,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            hideProgressDialog();
         }
 
     }
@@ -336,6 +340,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
     @Override
     public void onAuthorizeCreditCardFailed() {
+        hideProgressDialog();
         nextButton.setEnabled(true);
         LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_failed_error"),
                 Label.getLabel("payment_change_payment_label"),
