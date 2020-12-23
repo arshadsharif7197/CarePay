@@ -86,6 +86,7 @@
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/nameOnCardEditText"
                             style="@style/PaymentAddCreditCardInputStyle"
+                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ '"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLength="200"
