@@ -53,6 +53,7 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -615,7 +616,19 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(!isFragmentVisible()){
+            super.onBackPressed();
+        }    }
+
+    private boolean isFragmentVisible() {
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof PaymentPlanFragment) {
+                // skip backpress
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
