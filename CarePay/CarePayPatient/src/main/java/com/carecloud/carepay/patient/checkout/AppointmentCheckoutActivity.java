@@ -616,9 +616,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onBackPressed() {
-        if(!isFragmentVisible()){
+        if (!isFragmentVisible()) {
             super.onBackPressed();
-        }    }
+        }
+    }
 
     private boolean isFragmentVisible() {
         Fragment fragment = getTopFragment();
