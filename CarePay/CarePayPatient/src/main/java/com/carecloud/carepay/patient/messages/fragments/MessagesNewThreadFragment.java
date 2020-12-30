@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -178,8 +179,10 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
 
         View.OnClickListener bottomSheetClickListener = v -> {
             SystemUtil.hideSoftKeyboard(getActivity());
-            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
-            shadow.setClickable(true);
+            new Handler().postDelayed(() -> {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+                shadow.setClickable(true);
+            }, 1000);
         };
         view.findViewById(R.id.upload_button).setOnClickListener(bottomSheetClickListener);
         attachmentInput.setOnClickListener(bottomSheetClickListener);
