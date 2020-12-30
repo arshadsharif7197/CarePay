@@ -242,7 +242,11 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (creditCard != null) {
             setCreditCardInfo(creditCard, paymentMethodEditText);
         }
-        paymentMethodEditText.setOnClickListener(v -> onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO));
+        paymentMethodEditText.setOnClickListener(v -> {
+            // hide keyboard
+            SystemUtil.hideSoftKeyboard(getActivity());
+            onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
+        });
     }
 
     protected abstract void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);

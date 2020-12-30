@@ -149,6 +149,7 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
     protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
+            SystemUtil.hideSoftKeyboard(getActivity(), view.getRootView());
             hideDialog();
             showDatePickerFragment();
         }
