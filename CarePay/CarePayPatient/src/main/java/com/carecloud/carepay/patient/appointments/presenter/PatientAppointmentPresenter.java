@@ -264,6 +264,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         public void onFailure(String exceptionMessage) {
             viewHandler.hideProgressDialog();
             viewHandler.showErrorNotification(exceptionMessage);
+            viewHandler.refreshAppointments();
             Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -545,6 +546,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 int last = builder.lastIndexOf("\n");
                 builder.replace(last, builder.length(), "");
                 ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+                viewHandler.onAppointmentScheduleFlowFailure();
             } else {
                 String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
                 try {
