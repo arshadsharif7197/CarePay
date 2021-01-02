@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.adhocforms.fragments;
 
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -143,7 +144,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         View close = view.findViewById(R.id.closeViewLayout);
         close.setOnClickListener(view12 -> cancel());
         tvHeader = view.findViewById(R.id.header);
-        tvHeader.setBackground(getResources().getDrawable(R.drawable.patient_mode_dialog_header_bg));
+        GradientDrawable drawable = (GradientDrawable) tvHeader.getBackground();
+        drawable.setColor(getResources().getColor(R.color.colorPrimary));
+
     }
 
     private WorkflowServiceCallback sendFormsServiceCallback = new WorkflowServiceCallback() {
