@@ -26,7 +26,7 @@
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:background="?attr/selectableItemBackground"
             android:drawablePadding="@dimen/dimen_10dp"
-            android:drawableStart="@drawable/icn_arrow_left"
+            android:drawableStart="@drawable/icn_nav_back_white"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:textColor="@color/white"
