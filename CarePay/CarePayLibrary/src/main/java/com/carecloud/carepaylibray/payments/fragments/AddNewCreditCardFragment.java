@@ -342,11 +342,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     public void onAuthorizeCreditCardFailed() {
         hideProgressDialog();
         nextButton.setEnabled(true);
-        LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_failed_error"),
-                Label.getLabel("payment_change_payment_label"),
-                R.color.Feldgrau, R.drawable.icn_card_error, 18);
-        fragment.setLargeAlertInterface(getLargeAlertInterface());
-        fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
+        creditCardNoEditText.requestFocus();
+        SystemUtil.showErrorToast(getActivity(), Label.getLabel("payment_invalid_cc_error_text"));
     }
 
     protected LargeAlertDialogFragment.LargeAlertInterface getLargeAlertInterface() {
