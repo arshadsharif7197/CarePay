@@ -160,6 +160,8 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         editPaymentPlanButton.setOnClickListener(view1 -> {
             if (validateFields(true)) {
                 SystemUtil.hideSoftKeyboard(getContext(), view1);
+                showProgressDialog();
+
                 if (creditCard != null && creditCard.getCreditCardsId() == null) {
                     authorizeCreditCard();
                 } else {
@@ -331,7 +333,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         getWorkflowServiceHelper().execute(updatePaymentTransition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                showProgressDialog();
+//                showProgressDialog();
             }
 
             @Override
@@ -374,7 +376,6 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         String cardType = creditCard.getCardType();
         String number = creditCard.getCompleteNumber();
 
-        showProgressDialog();
         MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
             if (merchantService.getName().toLowerCase().contains("payeezy")) {
@@ -390,10 +391,9 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         creditCardDto.setExpDate(expiryDate);
         creditCardDto.setType(cardType);
 
-        showProgressDialog();
         PayeezyCall payeezyCall = new PayeezyCall();
         payeezyCall.doCall(creditCardDto, merchantServiceDTO, tokenizeResponse -> {
-            hideProgressDialog();
+//            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     creditCard.setToken(tokenizeResponse.getToken().getValue());
@@ -421,7 +421,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     public void onAuthorizeCreditCardFailed() {
         hideProgressDialog();
-        SystemUtil.showErrorToast(getContext(), "Choose a different payment method");
+        SystemUtil.showErrorToast(getContext(), Label.getLabel("payment_invalid_cc_error_text"));
     }
 
     private void addNewCreditCardCall() {
@@ -435,12 +435,12 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            showProgressDialog();
+//            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
+//            hideProgressDialog();
             PaymentsModel paymentsDto = new Gson().fromJson(workflowDTO.toString(), PaymentsModel.class);
             if (callback.getDto() instanceof PaymentsModel) {
                 ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto
