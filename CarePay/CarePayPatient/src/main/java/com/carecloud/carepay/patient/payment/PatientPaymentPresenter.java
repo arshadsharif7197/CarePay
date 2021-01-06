@@ -314,7 +314,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
         queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-        queryMap.put("payment_plan", "true");
+//        queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         viewHandler.getISession().getWorkflowServiceHelper().execute(transition, completePlanCallback, queryMap);
