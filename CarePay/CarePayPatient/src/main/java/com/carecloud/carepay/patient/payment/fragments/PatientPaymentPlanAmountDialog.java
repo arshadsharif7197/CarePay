@@ -47,7 +47,6 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
             fragment.setOnBackPressedListener(new OnBackPressedInterface() {
                 @Override
                 public void onBackPressed() {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                     showDialog(true);
                 }
             });
