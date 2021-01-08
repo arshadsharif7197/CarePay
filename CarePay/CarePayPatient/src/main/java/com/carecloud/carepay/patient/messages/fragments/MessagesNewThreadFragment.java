@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -142,7 +143,10 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
     }
 
     private void validateForm() {
@@ -174,8 +178,11 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         });
 
         View.OnClickListener bottomSheetClickListener = v -> {
-            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
-            shadow.setClickable(true);
+            SystemUtil.hideSoftKeyboard(getActivity());
+            new Handler().postDelayed(() -> {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+                shadow.setClickable(true);
+            }, 1000);
         };
         view.findViewById(R.id.upload_button).setOnClickListener(bottomSheetClickListener);
         attachmentInput.setOnClickListener(bottomSheetClickListener);

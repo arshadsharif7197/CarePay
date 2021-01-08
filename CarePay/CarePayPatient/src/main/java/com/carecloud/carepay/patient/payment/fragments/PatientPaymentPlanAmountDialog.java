@@ -38,6 +38,7 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
             BaseDialogFragment fragment;
             if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
                 fragment = PatientValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
+
                 addExisting = true;
             } else {
                 fragment = PatientPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
@@ -46,6 +47,7 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
             fragment.setOnBackPressedListener(new OnBackPressedInterface() {
                 @Override
                 public void onBackPressed() {
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                     showDialog(true);
                 }
             });

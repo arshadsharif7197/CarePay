@@ -100,7 +100,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
 
     @Override
     public void onBackPressed() {
-        if (!isFragmentVisible()) {
+        if(!isFragmentVisible()){
             super.onBackPressed();
         }
     }

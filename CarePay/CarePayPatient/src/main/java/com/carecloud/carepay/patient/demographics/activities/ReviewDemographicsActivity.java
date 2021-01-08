@@ -335,7 +335,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
-        if (!isFragmentVisible()) {
+        if(!isFragmentVisible()){
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
