@@ -493,4 +493,13 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     protected abstract void stopSessionService();
 
+    public Fragment getTopFragment() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (!fragmentList.isEmpty()) {
+            Fragment topFragment = (fragmentList.get(fragmentList.size() - 1).getTag().equals("SupportLifecycleFragmentImpl")) ? fragmentList.get(fragmentList.size() - 2) : fragmentList.get(fragmentList.size() - 1);
+            return topFragment;
+        }
+        return null;
+    }
+
 }
