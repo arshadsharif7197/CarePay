@@ -480,6 +480,7 @@
                                 style="@style/PaymentAddCreditCardInputStyle"
                                 android:digits="0123456789-"
                                 android:imeOptions="actionNext"
+                                android:inputType="numberDecimal"
                                 android:maxLength="10"
                                 android:nextFocusForward="@+id/cityId"
                                 android:padding="@dimen/creditCardFieldPadding"
