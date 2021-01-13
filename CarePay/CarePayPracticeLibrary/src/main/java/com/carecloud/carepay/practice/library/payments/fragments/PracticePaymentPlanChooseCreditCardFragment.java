@@ -266,6 +266,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
     };
 
     private void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        hideProgressDialog();
         PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
         fragment.setOnCancelListener(onDialogCancelListener);

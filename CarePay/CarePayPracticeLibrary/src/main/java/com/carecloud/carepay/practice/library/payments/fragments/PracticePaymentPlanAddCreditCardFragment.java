@@ -115,7 +115,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
-        if(isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+        if (isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
             swipeCardButton.setVisibility(View.VISIBLE);
         } else {
             swipeCardButton.setVisibility(View.GONE);
@@ -150,12 +150,13 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    protected void showConfirmation(WorkflowDTO workflowDTO){
-        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
+        ((OneTimePaymentInterface) callback).showPaymentConfirmation(workflowDTO, true);
     }
 
     @Override
     protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        hideProgressDialog();
         PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
         fragment.setOnCancelListener(onDialogCancelListener);
