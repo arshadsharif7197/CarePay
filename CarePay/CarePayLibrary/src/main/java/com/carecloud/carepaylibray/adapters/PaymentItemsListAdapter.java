@@ -35,7 +35,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
         BalanceItemDTO paymentDetailsItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
-        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getAmount()));
+        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getBalance()));
         holder.paymentEffectiveDate.setText(DateUtil.getInstance()
                 .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYearString());
     }
