@@ -515,7 +515,6 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         showProgressDialog();
         PayeezyCall payeezyCall = new PayeezyCall();
         payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
-            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
@@ -561,7 +560,6 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
             mainButtonAction();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         }

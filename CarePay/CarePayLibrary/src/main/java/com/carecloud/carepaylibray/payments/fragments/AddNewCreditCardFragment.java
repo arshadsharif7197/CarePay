@@ -115,7 +115,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
@@ -220,6 +219,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            hideProgressDialog();
         }
     }
 
@@ -247,6 +247,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            hideProgressDialog();
         }
 
     }
