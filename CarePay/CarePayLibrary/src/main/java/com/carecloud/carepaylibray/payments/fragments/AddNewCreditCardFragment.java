@@ -117,7 +117,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-//            hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
