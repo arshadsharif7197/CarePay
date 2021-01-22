@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -37,7 +38,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     protected double paymentPlanAmount;
-
+    public boolean isOnBackPressCalled;
 
     public static ValidPlansFragment newInstance(PaymentsModel paymentsModel,
                                                  PendingBalanceDTO selectedBalance,
@@ -86,7 +87,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         setAdapter(view);
         TextView amount = view.findViewById(R.id.payment_plan_amount);
         if (amount != null) {
-            amount.setText(NumberFormat.getCurrencyInstance().format(paymentPlanAmount));
+            amount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(paymentPlanAmount));
         }
     }
 
@@ -96,7 +97,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackNavigationClick();
+                onBackPressed();
             }
         });
         toolbar.setTitle("");
@@ -129,5 +130,11 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment
                 .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
         callback.replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
     }
 }

@@ -53,6 +53,8 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -601,6 +603,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void onPaymentCancel() {
+
+    }
+
+    @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
         Fragment targetFragment = getAndroidPayTargetFragment();
         if (targetFragment != null) {
@@ -610,7 +617,29 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (!isFragmentVisible()) {
+            super.onBackPressed();
+        }
+    }
+
+    private boolean isFragmentVisible() {
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof ValidPlansFragment) {
+                if (((ValidPlansFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((ValidPlansFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

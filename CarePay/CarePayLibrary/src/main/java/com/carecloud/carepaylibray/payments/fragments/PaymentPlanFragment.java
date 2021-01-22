@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -92,6 +93,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     @PaymentSettingsBalanceRangeRule.IntervalRange
     protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
+    public boolean isOnBackPressCalled;
 
     /**
      * @param paymentsModel   the payment model
@@ -859,15 +861,18 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
                 if (hasFocus) {
                     try {
                         Number number = currencyFormatter.parse(editText.getText().toString());
-
-                        editText.setText(String.valueOf(number.doubleValue()));
-                    } catch (ParseException e) {
+                        editText.setText(number.doubleValue() + "  ");
+                        new Handler().postDelayed(() -> {
+                            editText.setText(editText.getText().toString().trim());
+                            editText.setSelection(editText.getText().length());
+                        }, 500);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        editText.setText(currencyFormatter.format(Double.parseDouble(editText.getText().toString())));
-                    } catch (NumberFormatException nfe) {
+                        editText.setText(currencyFormatter.format(Double.parseDouble(editText.getText().toString().trim())));
+                    } catch (Exception nfe) {
                         nfe.printStackTrace();
                     }
                 }
@@ -878,6 +883,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
     private interface ValueInputCallback {
         void onValueInput(String input);
+    }
+
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
     }
 
 }

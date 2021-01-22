@@ -34,13 +34,16 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.session.SessionService;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.internal.Primitives;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
@@ -53,7 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     protected boolean isVisible = false;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     protected void onResume() {
         super.onResume();
+        handleFragmentDialogs();
         getAppAuthorizationHelper();
         isVisible = true;
         isForeground = true;
@@ -91,6 +94,26 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
         expectingResult = false;
+    }
+
+    private void handleFragmentDialogs() {
+        FragmentManager fm = getSupportFragmentManager();
+        List<BaseDialogFragment> baseDialogFragmentList = getBaseDialogs(fm.getFragments());
+        int stackSize = (BaseDialogFragment.isVisible) ? baseDialogFragmentList.size() - 1 : baseDialogFragmentList.size(); // if any dialog visible not hide that one
+        for (int index = 0; index < stackSize; index++) {
+            baseDialogFragmentList.get(index).hideDialog();
+        }
+    }
+
+    private List<BaseDialogFragment> getBaseDialogs(List<Fragment> allFragments) {
+        List<BaseDialogFragment> baseDialogFragmentList = new ArrayList<>();
+        for (Fragment fragment : allFragments) {
+            if ((fragment instanceof BaseDialogFragment) || (fragment instanceof PaymentPlanDetailsDialogFragment)) {
+                BaseDialogFragment baseFragment = (BaseDialogFragment) fragment;
+                baseDialogFragmentList.add(baseFragment);
+            }
+        }
+        return baseDialogFragmentList;
     }
 
     public boolean isVisible() {
@@ -331,6 +354,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+
+        for(Fragment baseFragment: fm.getFragments()){
+            if(baseFragment instanceof BaseDialogFragment){
+                ((BaseDialogFragment) baseFragment).cancel();
+            }
+        }
     }
 
     /**
@@ -463,5 +492,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
 
     protected abstract void stopSessionService();
+
+    public Fragment getTopFragment() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (!fragmentList.isEmpty()) {
+            Fragment topFragment = (fragmentList.get(fragmentList.size() - 1).getTag().equals("SupportLifecycleFragmentImpl")) ? fragmentList.get(fragmentList.size() - 2) : fragmentList.get(fragmentList.size() - 1);
+            return topFragment;
+        }
+        return null;
+    }
 
 }

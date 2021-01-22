@@ -140,7 +140,7 @@ public class DatePickerFragment extends BaseDialogFragment {
 
         TextView toolbarTitleTextView = toolbar.findViewById(R.id.add_appointment_toolbar_title);
         toolbarTitleTextView.setText(toolbarTitle);
-        toolbar.setNavigationOnClickListener(v -> dismiss());
+        toolbar.setNavigationOnClickListener(v -> cancel());
     }
 
     private void initCalendarView(View view) {
@@ -193,7 +193,7 @@ public class DatePickerFragment extends BaseDialogFragment {
         applyDateButton = view.findViewById(R.id.applyDateRangeButton);
         applyDateButton.setOnClickListener(v -> {
             listener.onDateSelected(selectedDate, flag);
-            dismiss();
+            cancel();
         });
         applyDateButton.setEnabled(false);
     }

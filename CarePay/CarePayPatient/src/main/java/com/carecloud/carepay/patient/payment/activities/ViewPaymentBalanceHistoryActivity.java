@@ -32,11 +32,14 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -235,17 +238,58 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onBackPressed() {
-        if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
-            displayToolbar(true, toolBarTitle);
+        if (!isPaymentFragmentExist()) {
+            if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
+                displayToolbar(true, toolBarTitle);
+            }
+            super.onBackPressed();
         }
+    }
 
-        if (patientPaymentPlanDetailsDialogFragment != null) {
-            Fragment currentFragment = patientPaymentPlanDetailsDialogFragment.getChildFragment();
-            if (currentFragment != null && currentFragment instanceof PatientPaymentPlanEditFragment) {
-                patientPaymentPlanDetailsDialogFragment.showDialog();
+    public Fragment getTopFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return getSupportFragmentManager().findFragmentByTag(fragmentTag);
+    }
+
+    private boolean isPaymentFragmentExist() {
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof PaymentPlanPaymentMethodFragment) {
+                if (((PaymentPlanPaymentMethodFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanPaymentMethodFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PatientPaymentMethodFragment) {
+                if (((PatientPaymentMethodFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PatientPaymentMethodFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof ValidPlansFragment) {
+                if (((ValidPlansFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((ValidPlansFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
             }
         }
-        super.onBackPressed();
+        return false;
     }
 
     @Override
@@ -280,6 +324,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         displayPage = PAGE_BALANCES;
         initFragments();
+        clearFragments();
         refreshBalance(true);
         showRateDialogFragment();
     }
@@ -546,6 +591,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
         }
         showSuccessToast(message);
+        clearFragments();
         initFragments();
         refreshBalance(true);
     }
@@ -566,6 +612,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        clearFragments();
         showRateDialogFragment();
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();

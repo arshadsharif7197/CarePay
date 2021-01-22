@@ -93,6 +93,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
     private PapiAccountsDTO papiAccount;
 
     protected boolean shouldInitAndroidPay = true;
+    public boolean isOnBackPressCalled = false;
 
     /**
      * @param paymentsModel  the payments DTO
@@ -720,5 +721,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             }
         }
         return null;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
     }
 }

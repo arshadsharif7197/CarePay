@@ -15,14 +15,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
@@ -33,12 +37,17 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
         PaymentConnectivityHandler, ConfirmationCallback, FragmentActivityInterface, ToolbarInterface {
@@ -98,6 +107,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            case CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST:
+                if (resultCode == RESULT_OK)
+                    setResult(CarePayConstants.TELEHEALTH_APPOINTMENT_RESULT_CODE);
+                finish();
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -262,13 +276,39 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
-        SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
-        if (getCallingActivity() != null) {
-            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
-        }
-        demographicsPresenter.logCheckinCompleted(paymentPlanCreated, paymentMade, paymentsModel);
-        finish();
+        AppointmentDTO appointmentDTO = getAppointment();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(transition, completePlanCallback, queryMap);
     }
+
+    private WorkflowServiceCallback completePlanCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            Bundle info = new Bundle();
+            if (getAppointment() != null) {
+                DtoHelper.bundleDto(info, getAppointment());
+            }
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
     @Nullable
     @Override
@@ -295,17 +335,39 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
-        try {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
-                    .findFragmentById(R.id.root_layout);
-            if (fragment == null || !fragment.navigateBack()) {
+        if(!isFragmentVisible()){
+            try {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
+                        .findFragmentById(R.id.root_layout);
+                if (fragment == null || !fragment.navigateBack()) {
+                    super.onBackPressed();
+                }
+            } catch (ClassCastException cce) {
+                cce.printStackTrace();
                 super.onBackPressed();
             }
-        } catch (ClassCastException cce) {
-            cce.printStackTrace();
-            super.onBackPressed();
         }
+    }
+
+    private boolean isFragmentVisible() {
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof ValidPlansFragment) {
+                if (((ValidPlansFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((ValidPlansFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

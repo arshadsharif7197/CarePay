@@ -139,7 +139,9 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+                toolbar.setNavigationOnClickListener(view1 -> {
+                    getActivity().onBackPressed();
+                });
             } else {
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;

@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/goBackHeight"
             android:background="@drawable/bg_blue_overlay"
-            android:drawableLeft="@drawable/icn_arrow_left"
+            android:drawableLeft="@drawable/icn_nav_back_white"
             android:drawablePadding="@dimen/dimen_10dp"
             android:paddingLeft="@dimen/dimen_15dp"
             android:paddingRight="@dimen/dimen_15dp"

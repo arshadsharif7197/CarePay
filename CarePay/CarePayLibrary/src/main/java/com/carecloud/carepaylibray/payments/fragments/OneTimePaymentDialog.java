@@ -1,8 +1,11 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -146,6 +149,8 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
     protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
+            SystemUtil.hideSoftKeyboard(getActivity(), view.getRootView());
+            hideDialog();
             showDatePickerFragment();
         }
     };
@@ -195,6 +200,12 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
                                 setSelectedDate(selectedDate);
                             }
                         });
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                showDialog();
+            }
+        });
         SystemUtil.hideSoftKeyboard(getActivity());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }

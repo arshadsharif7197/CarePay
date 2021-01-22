@@ -35,11 +35,17 @@ import java.util.Locale;
 public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDialogFragment {
 
 
+    private static RequestAppointmentDialogFragment fragment;
+
     public static RequestAppointmentDialogFragment newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        RequestAppointmentDialogFragment fragment = new RequestAppointmentDialogFragment();
+        fragment = new RequestAppointmentDialogFragment();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static RequestAppointmentDialogFragment getInstance() {
         return fragment;
     }
 
