@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.signin;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -87,7 +88,8 @@ public class SignInPracticeViewModel extends BaseViewModel {
                         @Override
                         public void onFailure(String exceptionMessage) {
                             setLoading(false);
-                            setErrorMessage(exceptionMessage);
+                            setErrorMessage(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+                            Log.e("Server Error", exceptionMessage);
                         }
                     }, gson.toJson(signInDTO),
                     queryParams, headers);

@@ -24,6 +24,8 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
@@ -98,7 +100,30 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(!isFragmentVisible()){
+            super.onBackPressed();
+        }
+    }
+
+
+    private boolean isFragmentVisible() {
+        Fragment fragment = getTopFragment();
+        if (fragment != null) {
+            if (fragment instanceof ValidPlansFragment) {
+                if (((ValidPlansFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((ValidPlansFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
+            }
+        }
+        return false;
     }
 
 

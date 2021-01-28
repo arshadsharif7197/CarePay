@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.adhocforms.fragments;
 
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.JsonArray;
@@ -49,6 +51,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     private Button fillNowFormButton;
     private Button sendFormButton;
     private String patientId;
+    private CarePayTextView tvHeader;
 
     public AdHocFormsListFragment() {
         // Required empty public constructor
@@ -140,6 +143,10 @@ public class AdHocFormsListFragment extends BaseDialogFragment
 
         View close = view.findViewById(R.id.closeViewLayout);
         close.setOnClickListener(view12 -> cancel());
+        tvHeader = view.findViewById(R.id.header);
+        GradientDrawable drawable = (GradientDrawable) tvHeader.getBackground();
+        drawable.setColor(getResources().getColor(R.color.colorPrimary));
+
     }
 
     private WorkflowServiceCallback sendFormsServiceCallback = new WorkflowServiceCallback() {

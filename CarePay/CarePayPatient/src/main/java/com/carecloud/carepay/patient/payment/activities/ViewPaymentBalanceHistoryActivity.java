@@ -32,12 +32,14 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -266,6 +268,18 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     return false;
                 }
                 ((PatientPaymentMethodFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof PaymentPlanFragment) {
+                if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((PaymentPlanFragment) fragment).onBackPressed();
+                return true;
+            } else if (fragment instanceof ValidPlansFragment) {
+                if (((ValidPlansFragment) fragment).isOnBackPressCalled) {
+                    return false;
+                }
+                ((ValidPlansFragment) fragment).onBackPressed();
                 return true;
             } else if (fragment instanceof PaymentPlanFragment) {
                 if (((PaymentPlanFragment) fragment).isOnBackPressCalled) {
