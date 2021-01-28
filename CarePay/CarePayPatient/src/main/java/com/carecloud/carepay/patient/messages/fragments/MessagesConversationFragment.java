@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,7 +161,10 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         title.setText(thread.getSubject());
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
     }
 
     private void setAdapter() {

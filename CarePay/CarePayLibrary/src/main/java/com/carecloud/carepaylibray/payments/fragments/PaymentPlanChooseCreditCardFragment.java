@@ -220,6 +220,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
     };
 
     private void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        hideProgressDialog();
         PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
         callback.replaceFragment(fragment, true);
     }

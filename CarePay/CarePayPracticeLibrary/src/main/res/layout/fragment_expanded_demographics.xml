@@ -984,7 +984,7 @@
                     style="@style/DemographicsReviewEditTextStyle"
                     android:digits="0123456789-"
                     android:imeOptions="actionNext"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:maxLength="10"
                     android:nextFocusForward="@+id/cityTextView"
                     app:customAssetFont="gotham_rounded_book"

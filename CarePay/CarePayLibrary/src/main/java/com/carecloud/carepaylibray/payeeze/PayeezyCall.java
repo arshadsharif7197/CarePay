@@ -38,35 +38,38 @@ public class PayeezyCall {
 
     public void doCall(CreditCard creditCard, MerchantServiceMetadataDTO merchantServiceDTO,
                        final AuthorizeCreditCardCallback callback) {
+        try {
+            TokenizeBody tokenizeBody = new TokenizeBody();
+            tokenizeBody.setAuth(merchantServiceDTO.getTokenizationAuth());
+            tokenizeBody.setType(merchantServiceDTO.getTokenType());
+            tokenizeBody.setTaToken(merchantServiceDTO.getMasterTaToken());
+            tokenizeBody.setCreditCard(creditCard);
 
-        TokenizeBody tokenizeBody = new TokenizeBody();
-        tokenizeBody.setAuth(merchantServiceDTO.getTokenizationAuth());
-        tokenizeBody.setType(merchantServiceDTO.getTokenType());
-        tokenizeBody.setTaToken(merchantServiceDTO.getMasterTaToken());
-        tokenizeBody.setCreditCard(creditCard);
+            Gson gson = new Gson();
+            Map<String, String> headers = getSecurityKeys(merchantServiceDTO.getApiKey(),
+                    merchantServiceDTO.getMasterMerchantToken(),
+                    merchantServiceDTO.getApiSecret(), gson.toJson(tokenizeBody));
+            String tokenizationPostPath = merchantServiceDTO.getUrlPostPath();
+            String tokenizationUrl = String.format("%s%s", merchantServiceDTO.getBaseUrl(), tokenizationPostPath);
+            Retrofit retrofit = getRetrofitService(merchantServiceDTO.getBaseUrl());
+            Call<TokenizeResponse> call = retrofit.create(PayeezyService.class)
+                    .tokenizeCard(tokenizationUrl, tokenizeBody, headers);
+            call.enqueue(new Callback<TokenizeResponse>() {
+                @Override
+                public void onResponse(Call<TokenizeResponse> call, Response<TokenizeResponse> response) {
+                    callback.onAuthorizeCreditCard(response.body());
+                }
 
-        Gson gson = new Gson();
-        Map<String, String> headers = getSecurityKeys(merchantServiceDTO.getApiKey(),
-                merchantServiceDTO.getMasterMerchantToken(),
-                merchantServiceDTO.getApiSecret(), gson.toJson(tokenizeBody));
-        String tokenizationPostPath = merchantServiceDTO.getUrlPostPath();
-        String tokenizationUrl = String.format("%s%s", merchantServiceDTO.getBaseUrl(), tokenizationPostPath);
-        Retrofit retrofit = getRetrofitService(merchantServiceDTO.getBaseUrl());
-        Call<TokenizeResponse> call = retrofit.create(PayeezyService.class)
-                .tokenizeCard(tokenizationUrl, tokenizeBody, headers);
-        call.enqueue(new Callback<TokenizeResponse>() {
-            @Override
-            public void onResponse(Call<TokenizeResponse> call, Response<TokenizeResponse> response) {
-                callback.onAuthorizeCreditCard(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<TokenizeResponse> call, Throwable t) {
-                callback.onAuthorizeCreditCard(null);
-                Log.e("Breeze", t.getMessage());
-                callback.onAuthorizeCreditCard(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<TokenizeResponse> call, Throwable t) {
+                    callback.onAuthorizeCreditCard(null);
+                    Log.e("Breeze", t.getMessage());
+                    callback.onAuthorizeCreditCard(null);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
