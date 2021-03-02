@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.notifications.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.R;
@@ -25,26 +26,30 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 public class NotificationProxyActivity extends MenuPatientActivity {
 
     private Bundle bundle;
+    private Intent actualIntent;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.dialog_progress);
 
+        actualIntent = getIntent();
+        handleDeepLink(actualIntent);
+
         if (getAppAuthorizationHelper().getAccessToken() == null) {
             Intent intent = new Intent(this, SplashActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(CarePayConstants.OPEN_NOTIFICATIONS, true);
 
-            if (getIntent().hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
-                ApplicationPreferences.getInstance().setMessageId(getIntent().getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
+            if (actualIntent.hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
+                ApplicationPreferences.getInstance().setMessageId(actualIntent.getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
                 intent.putExtra(CarePayConstants.OPEN_NOTIFICATIONS, false);
             }
             startActivity(intent);
         } else {
-            if (getIntent().hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
+            if (actualIntent.hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
                 Intent intent = new Intent(this, MessagesActivity.class);
-                intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, getIntent().getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
+                intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, actualIntent.getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -56,6 +61,17 @@ public class NotificationProxyActivity extends MenuPatientActivity {
             } else {
                 //disable notification click functionality when the user is on a different profile than the logged one
                 finish();
+            }
+        }
+    }
+
+    private void handleDeepLink(Intent intent) {
+        String appLinkAction = intent.getAction();
+        Uri appLinkData = intent.getData();
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
+            String messageId = appLinkData.getQueryParameter(MessagesActivity.KEY_MESSAGE_ID);             //Link: https://web.development.gobreeze.com/messages?messageId=121421342134
+            if (messageId != null || !messageId.isEmpty()) {
+                actualIntent.putExtra(MessagesActivity.KEY_MESSAGE_ID, messageId);
             }
         }
     }
