@@ -6,6 +6,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * @author pjohnson on 2019-05-03.
@@ -27,6 +28,7 @@ public class PatientPaymentPlanFragment extends PaymentPlanFragment {
 
     @Override
     protected void onAddBalanceToExistingPlan() {
+        SystemUtil.hideSoftKeyboard(getActivity());
         PatientValidPlansFragment fragment = PatientValidPlansFragment
                 .newInstance(paymentsModel, selectedBalance, paymentPlanAmount);
         callback.replaceFragment(fragment, true);

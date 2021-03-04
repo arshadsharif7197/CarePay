@@ -177,7 +177,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
+//            hideProgressDialog();
             callback.showAllDone(workflowDTO);
             nextButton.setEnabled(true);
         }
