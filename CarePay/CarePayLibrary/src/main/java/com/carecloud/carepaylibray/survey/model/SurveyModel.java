@@ -44,6 +44,9 @@ public class SurveyModel {
     @Expose
     @SerializedName("appointment")
     private AppointmentDTO appointment;
+    @Expose
+    @SerializedName("network_links")
+    private SocialNetworkLinksDTO networkLinks = new SocialNetworkLinksDTO();
 
     private transient boolean alreadyFilled;
     private transient boolean zeroAnswers;
@@ -150,5 +153,13 @@ public class SurveyModel {
 
     public void setAppointment(AppointmentDTO appointment) {
         this.appointment = appointment;
+    }
+
+    public SocialNetworkLinksDTO getNetworkLinks() {
+        return networkLinks;
+    }
+
+    public void setNetworkLinks(SocialNetworkLinksDTO networkLinks) {
+        this.networkLinks = networkLinks;
     }
 }
