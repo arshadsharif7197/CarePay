@@ -182,7 +182,9 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/successMessageBottomMargin"
             android:gravity="center"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal">
+
+        </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/noThanksButtonLinks"
@@ -191,11 +193,27 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/blue_border_rounded_button_selector"
             android:padding="@dimen/dimen_10dp"
+            android:visibility="gone"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_22sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="surveys_no_thank_you"
             tools:text="No, Thank You" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/doneLinksBtn"
+            android:layout_width="@dimen/surveyFeedbackButtonWidth"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_yellow_overlay"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="survey.form.button.title.done"
+            tools:text="Done" />
 
     </LinearLayout>
 

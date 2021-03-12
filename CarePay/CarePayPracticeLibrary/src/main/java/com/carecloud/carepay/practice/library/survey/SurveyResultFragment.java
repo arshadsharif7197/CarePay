@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -36,7 +34,6 @@ import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
-import com.carecloud.carepaylibray.survey.model.SurveySettings;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
@@ -54,8 +51,9 @@ public class SurveyResultFragment extends BaseFragment {
     private SurveyDTO surveyDto;
     private boolean showFeedBackLayout;
     private EditText feedbackEditText;
-    private TextView noThanksButtonLinks;
+    private TextView noThanksBtn, doneLinksBtn;
     private float average;
+    private LinearLayout socialNetworksLayout;
 
 
     public static SurveyResultFragment newInstance() {
@@ -78,12 +76,6 @@ public class SurveyResultFragment extends BaseFragment {
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
         average = getRateAverage(surveyModel);
-        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
-                || surveyModel.isZeroAnswers()) {
-            sendResponse(surveyModel, false);
-        } else {
-            showFeedBackLayout = true;
-        }
     }
 
     @Nullable
@@ -95,8 +87,17 @@ public class SurveyResultFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noThanksButtonLinks = view.findViewById(R.id.noThanksButtonLinks);
+        noThanksBtn = view.findViewById(R.id.noThanksButtonLinks);
+        doneLinksBtn = view.findViewById(R.id.doneLinksBtn);
+        socialNetworksLayout = view.findViewById(R.id.socialNetworksLayout);
         final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
+        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyModel.isZeroAnswers()) {
+            sendResponse(surveyModel, false);
+        } else {
+            showFeedBackLayout = true;
+        }
+
         if (showFeedBackLayout) {
             view.findViewById(R.id.negativeContainer).setVisibility(View.VISIBLE);
             feedbackEditText = view.findViewById(R.id.feedbackEditText);
@@ -134,7 +135,7 @@ public class SurveyResultFragment extends BaseFragment {
                 }
             });
         } else {
-            view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
+            socialNetworksLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -189,12 +190,12 @@ public class SurveyResultFragment extends BaseFragment {
                 hideProgressDialog();
                 logSurveyCompleted();
 
-                if (survey.isZeroAnswers()) {
-                    showDoneButton(workflowDTO);
-                } else if (submitFeedbackButtonPressed) {
+                if (submitFeedbackButtonPressed || showFeedBackLayout) {
                     PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-                } else {
+                } else if (!survey.isZeroAnswers() && survey.getNetworkLinks().isEnable()) {
                     displaySocialNetworksLinks(getView(), survey, workflowDTO);
+                } else {
+                    showDoneButton(workflowDTO);
                 }
             }
 
@@ -208,25 +209,15 @@ public class SurveyResultFragment extends BaseFragment {
     }
 
     protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
-        noThanksButtonLinks.setVisibility(View.VISIBLE);
+        noThanksBtn.setVisibility(View.VISIBLE);
         SurveyModel settings = surveyDto.getPayload().getSurvey();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()) {
-//            subtitleTextView.setVisibility(View.VISIBLE);
             createSocialLinkViews(view, settings);
-            noThanksButtonLinks.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-                }
-            });
+            noThanksBtn.setOnClickListener(v -> PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO));
+            doneLinksBtn.setOnClickListener(v -> PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO));
         } else {
-//            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
             showDoneButton(workflowDTO);
-//            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
-//            subtitleTextView.setVisibility(View.GONE);
-//            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
-            noThanksButtonLinks.setVisibility(View.GONE);
         }
     }
 
@@ -255,18 +246,12 @@ public class SurveyResultFragment extends BaseFragment {
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(link.getUrl()));
                     startActivity(intent);
-                    noThanksButtonLinks.setText(Label.getLabel("survey.form.button.title.done"));
+                    noThanksBtn.setVisibility(View.GONE);
+                    doneLinksBtn.setVisibility(View.VISIBLE);
                 }
             });
             child.setLayoutParams(lp);
             row.addView(child);
-           /* if (row.getChildCount() == 2) {
-                if (thereAre4) {
-                    row = secondRow;
-                }
-            } else if (row.getChildCount() > 2) {
-                row = secondRow;
-            }*/
         }
     }
 
@@ -293,7 +278,8 @@ public class SurveyResultFragment extends BaseFragment {
     }
 
     private void showDoneButton(final WorkflowDTO workflowDTO) {
-        noThanksButtonLinks.setVisibility(View.GONE);
+        noThanksBtn.setVisibility(View.GONE);
+        socialNetworksLayout.setVisibility(View.GONE);
         TextView okButton = getView().findViewById(R.id.okButton);
         okButton.setVisibility(View.VISIBLE);
         okButton.setOnClickListener(new View.OnClickListener() {
