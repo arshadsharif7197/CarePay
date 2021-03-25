@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dimen_20dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_40sp"
+        app:customAssetFont="gotham_rounded_bold" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pms_partners"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/list_padding" />
+
+    </FrameLayout>
+
+    <!--    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:id="@+id/item_pm_carecloud"
+                android:layout_width="@dimen/home_select_mode_button_width"
+                android:layout_height="@dimen/home_select_mode_button_height"
+                android:background="@drawable/home_left_rounded_background"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_140dp"
+                    android:layout_height="@dimen/dimen_140dp"
+                    android:src="@drawable/carecloud_profile_image" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_20"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="practice_management_carecloud"
+                    tools:text="CareCloud" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="1.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:id="@+id/item_pm_eagle"
+                android:layout_width="@dimen/home_select_mode_button_width"
+                android:layout_height="@dimen/home_select_mode_button_height"
+                android:background="@drawable/home_right_rounded_background"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_140dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/carecloud_eagle_logo_blue"
+                        android:visibility="visible" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:maxLines="1"
+                        android:textColor="@color/eagle_blue"
+                        android:textSize="@dimen/text_size_40sp"
+                        app:customAssetFont="proxima_nova_extra_bold"
+                        breeze:textKey="practice_management_eagle_short"
+                        tools:text="GO" />
+
+                </FrameLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_20"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="practice_management_eagle"
+                    tools:text="CareCloud Go" />
+
+            </LinearLayout>
+
+        </LinearLayout>-->
+
+</LinearLayout>

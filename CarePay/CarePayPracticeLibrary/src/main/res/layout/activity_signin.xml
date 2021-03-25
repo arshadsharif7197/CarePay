@@ -219,4 +219,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/partner_btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:background="@drawable/background_very_round_white"
+        android:padding="@dimen/dimen_10dp">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/carecloud_eagle_logo_blue"
+            android:visibility="visible" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/tv_partner_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_3dp"
+            android:maxLines="1"
+            android:text="Go"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_24sp"
+            app:customAssetFont="proxima_nova_extra_bold" />
+
+    </FrameLayout>
+
 </RelativeLayout>
