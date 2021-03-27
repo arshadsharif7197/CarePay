@@ -39,6 +39,7 @@ public class SignInPracticeViewModel extends BaseViewModel {
     private MutableLiveData<UnifiedSignInResponse> signInDtoObservable = new MutableLiveData<>();
     private MutableLiveData<PracticeSelectionDTO> practicesInfoDtoObservable = new MutableLiveData<>();
     private MutableLiveData<WorkflowDTO> authenticateDtoObservable = new MutableLiveData<>();
+    private MutableLiveData<Boolean> signInButtonStatus = new MutableLiveData<>();
     private WorkflowDTO uniquePracticeWorkflow;
 
     public SignInPracticeViewModel(@NonNull Application application) {
@@ -87,6 +88,7 @@ public class SignInPracticeViewModel extends BaseViewModel {
 
                         @Override
                         public void onFailure(String exceptionMessage) {
+                            signInButtonStatus.postValue(true);
                             setLoading(false);
                             setErrorMessage(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
                             Log.e("Server Error", exceptionMessage);
@@ -101,6 +103,7 @@ public class SignInPracticeViewModel extends BaseViewModel {
     public void getPracticesInfo(TransitionDTO transitionDTO) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", ApplicationPreferences.getInstance().getUserLanguage());
+        queryMap.put("practice_mgmt", ApplicationPreferences.getInstance().getStartPracticeManagement());
         getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -122,6 +125,7 @@ public class SignInPracticeViewModel extends BaseViewModel {
 
             @Override
             public void onFailure(String exceptionMessage) {
+                signInButtonStatus.postValue(true);
                 setLoading(false);
                 setErrorMessage(exceptionMessage);
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
@@ -197,9 +201,14 @@ public class SignInPracticeViewModel extends BaseViewModel {
 
             @Override
             public void onFailure(String exceptionMessage) {
+                signInButtonStatus.postValue(true);
                 setLoading(false);
                 setErrorMessage(exceptionMessage);
             }
         }, queryMap);
+    }
+
+    public MutableLiveData<Boolean> getSignInButtonStatus() {
+        return signInButtonStatus;
     }
 }

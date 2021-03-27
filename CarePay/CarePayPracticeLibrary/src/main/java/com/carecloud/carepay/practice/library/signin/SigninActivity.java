@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.practice.library.R;
@@ -209,6 +210,13 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             setSignInButtonClickable(true);
             getApplicationPreferences().setAppointmentCounts(null);
             navigateToWorkFlow(workflowDTO);
+        });
+
+        viewModel.getSignInButtonStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isEnable) {
+                setSignInButtonClickable(isEnable);
+            }
         });
     }
 
