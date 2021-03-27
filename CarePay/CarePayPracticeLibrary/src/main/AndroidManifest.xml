@@ -24,6 +24,9 @@
             android:name=".session.PracticeWarningSessionActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/WarningTimeoutTheme" />
+        <activity
+            android:name=".splash.ChoosePracticeManagementActivity"
+            android:screenOrientation="sensorLandscape" />
 
         <service
             android:name=".payments.IntegratedPaymentsQueueUploadService"

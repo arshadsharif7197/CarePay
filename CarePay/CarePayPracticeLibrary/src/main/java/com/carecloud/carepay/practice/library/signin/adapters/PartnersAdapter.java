@@ -50,7 +50,14 @@ public class PartnersAdapter extends RecyclerView.Adapter<PartnersAdapter.Practi
 
     @Override
     public void onBindViewHolder(PracticeViewHolder holder, int position) {
-        holder.tvPartnerLabel.setText(partnersList.get(position).getLabel());
+        String labels[] = partnersList.get(position).getLabel().split("\\s");
+        holder.tvPartnerLabel.setText(labels[labels.length - 1]);
+
+        if (position < partnersList.size() - 1) {
+            holder.divider.setVisibility(View.VISIBLE);
+        } else {
+            holder.divider.setVisibility(View.GONE);
+        }
 
         holder.partnerLayout.setOnClickListener(view -> {
             if (callback != null) {
@@ -73,12 +80,14 @@ public class PartnersAdapter extends RecyclerView.Adapter<PartnersAdapter.Practi
         private ImageView ivPartner;
         private TextView tvPartnerLabel;
         private LinearLayout partnerLayout;
+        private View divider;
 
         public PracticeViewHolder(View itemView) {
             super(itemView);
             this.ivPartner = itemView.findViewById(R.id.iv_partner_image);
             this.tvPartnerLabel = itemView.findViewById(R.id.tv_partner_label);
             this.partnerLayout = itemView.findViewById(R.id.item_partner);
+            this.divider = itemView.findViewById(R.id.divider_view);
         }
     }
 }

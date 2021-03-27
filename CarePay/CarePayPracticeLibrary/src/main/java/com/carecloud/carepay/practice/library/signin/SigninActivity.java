@@ -33,10 +33,12 @@ import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFra
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.PracticeManagementSignInInterface;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
+import com.carecloud.carepay.practice.library.splash.ChoosePracticeManagementActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -73,12 +75,13 @@ import java.util.Map;
  * On failed showing the authentication failure dialog with no navigation
  */
 public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback,
-        ConfirmationCallback, FragmentActivityInterface, PracticeManagementSignInInterface {
+        ConfirmationCallback, FragmentActivityInterface {
 
     private static final int RESET_PASSWORD = 100;
     private ApplicationMode.ApplicationType appType;
     private TextView tvPartnerBtn;
     private FrameLayout partnerBtnLayout;
+    private SignInScreenMode signinScreenMode;
 
     private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -105,9 +108,19 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         signinDTO = getConvertedDTO(SignInDTO.class);
         appType = getApplicationMode().getApplicationType();
-        SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
-        initPartnerView();
+        signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+        practiceManagement = getApplicationPreferences().getStartPracticeManagement();
 
+        initView();
+    }
+
+    private void initView() {
+        if (StringUtil.isNullOrEmpty(practiceManagement)) {
+            if (isMorePartnerEnable()) {
+                startActivityForResult(new Intent(this, ChoosePracticeManagementActivity.class)
+                        .putExtra(Defs.partnersInfo, (Serializable) signinDTO.getPayload().getPmsPartners()), Defs.CHOOSE_PARTNERS_REQUEST);
+            }
+        }
         setContentView(R.layout.activity_signin);
         setSystemUiVisibility();
         initViews(signinScreenMode);
@@ -116,18 +129,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         changeScreenMode(signinScreenMode);
         setUpViewModel();
         manageCrashMessage();
-    }
-
-    private void initPartnerView() {
-        practiceManagement = getApplicationPreferences().getStartPracticeManagement();
-        if (StringUtil.isNullOrEmpty(practiceManagement)) {
-            if (isMorePartnerEnable()) {
-                ChoosePracticeManagementSystemFragment fragment = ChoosePracticeManagementSystemFragment.newInstance(
-                        (Serializable) signinDTO.getPayload().getPmsPartners());
-                displayDialogFragment(fragment, false);
-                return;
-            }
-        }
     }
 
     private boolean isMorePartnerEnable() {
@@ -367,14 +368,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         });
 
         tvPartnerBtn.setOnClickListener(view -> {
-            ChoosePracticeManagementSystemFragment fragment = ChoosePracticeManagementSystemFragment.newInstance(
-                    (Serializable) signinDTO.getPayload().getPmsPartners());
-            displayDialogFragment(fragment, false);
+            startActivityForResult(new Intent(this, ChoosePracticeManagementActivity.class)
+                    .putExtra(Defs.partnersInfo, (Serializable) signinDTO.getPayload().getPmsPartners()), Defs.CHOOSE_PARTNERS_REQUEST);
         });
 
         partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                 View.GONE : View.VISIBLE);
-        tvPartnerBtn.setText(practiceManagement);
+        if (practiceManagement == null) {
+            tvPartnerBtn.setText(signinDTO.getPayload().getPmsPartners().get(0).getPracticeMgmt());
+        } else {
+            tvPartnerBtn.setText(practiceManagement);
+        }
 
     }
 
@@ -416,7 +420,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_mgmt", getApplicationPreferences().getStartPracticeManagement());
             queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
@@ -548,6 +552,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         } else if (requestCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT &&
                 resultCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT) {
             finish();
+        } else if (requestCode == Defs.CHOOSE_PARTNERS_REQUEST && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(Defs.partnersInfo)) {
+                practiceManagement = data.getStringExtra(Defs.partnersInfo);
+                tvPartnerBtn.setText(practiceManagement);
+                getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+            }
         }
     }
 
@@ -588,11 +598,4 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
-
-    @Override
-    public void onPracticeManagementSelected(String practiceManagement) {
-        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
-        recreate();
-    }
-
 }

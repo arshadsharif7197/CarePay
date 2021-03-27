@@ -20,7 +20,7 @@
             android:id="@+id/iv_partner_image"
             android:layout_width="@dimen/dimen_140dp"
             android:layout_height="@dimen/dimen_140dp"
-            android:src="@drawable/icon_care_team" />
+            android:src="@drawable/carecloud_eagle_logo_blue" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/tv_partner_label"
