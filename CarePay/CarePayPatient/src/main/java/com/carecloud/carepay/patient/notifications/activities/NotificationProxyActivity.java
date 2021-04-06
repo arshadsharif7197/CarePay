@@ -69,7 +69,7 @@ public class NotificationProxyActivity extends MenuPatientActivity {
         String appLinkAction = intent.getAction();
         Uri appLinkData = intent.getData();
         if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
-            String messageId = appLinkData.getQueryParameter(MessagesActivity.KEY_MESSAGE_ID);             //Link: https://web.development.gobreeze.com/messages?messageId=121421342134
+            String messageId = appLinkData.getQueryParameter(MessagesActivity.KEY_MESSAGE_DEEPLINK_ID);             //Link: https://web.development.gobreeze.com/messages?message_id=121421342134
             if (messageId != null || !messageId.isEmpty()) {
                 actualIntent.putExtra(MessagesActivity.KEY_MESSAGE_ID, messageId);
             }
