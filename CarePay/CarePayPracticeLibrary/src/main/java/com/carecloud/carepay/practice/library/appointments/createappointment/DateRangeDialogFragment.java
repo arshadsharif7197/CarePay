@@ -53,7 +53,7 @@ public class DateRangeDialogFragment extends BaseDateRangeDialogFragment {
     private void inflateToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(Label.getLabel("pick_date_heading"));
+        toolbarTitle.setText(Label.getLabel("date_range_picker_dialog_title"));
 
         view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> dismiss());
 
