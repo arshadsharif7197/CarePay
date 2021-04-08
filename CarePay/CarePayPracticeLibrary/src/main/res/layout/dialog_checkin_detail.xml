@@ -378,7 +378,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/pageButton"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/signInButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
                 android:background="@drawable/primary_rounded_button_selector"
@@ -395,7 +395,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/assistButton"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/signInButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_marginStart="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
@@ -413,7 +413,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/paymentButton"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/signInButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
