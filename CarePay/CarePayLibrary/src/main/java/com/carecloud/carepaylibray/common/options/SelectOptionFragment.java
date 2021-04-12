@@ -69,7 +69,6 @@ public class SelectOptionFragment extends BlurDialogFragment implements OnOption
 
         TextView dialogTitleTextView = view.findViewById(R.id.dialogTitleTextView);
 
-       //  https://jira.carecloud.com/browse/BREEZ-239 bug fixation of key title capitalization by Saleem Haider
         if(getArguments().getString("title").equalsIgnoreCase("Relación"))
         dialogTitleTextView.setText(getArguments().getString("title"));
         else
