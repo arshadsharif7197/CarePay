@@ -122,6 +122,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         initToolbar(view);
         recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setHasFixedSize(true);
         recyclerView.addOnLayoutChangeListener((view1, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (recyclerView.getAdapter() != null) {
                 recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
