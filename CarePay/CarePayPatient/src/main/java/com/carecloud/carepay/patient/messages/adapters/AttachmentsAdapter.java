@@ -119,7 +119,7 @@ public class AttachmentsAdapter extends RecyclerView.Adapter<AttachmentsAdapter.
             holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
         }
 
-        holder.fileAttachmentLayout.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
+        setAttachmentClickListener(holder.fileAttachmentLayout, attachment, attachmentFormat);
         holder.imageAttachment.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
 
     }
@@ -159,6 +159,10 @@ public class AttachmentsAdapter extends RecyclerView.Adapter<AttachmentsAdapter.
             });
             return true;
         };
+    }
+
+    private void setAttachmentClickListener(View view, final MessageAttachment attachment, final String attachmentFormat) {
+        view.setOnClickListener(view1 -> callback.downloadAttachment(attachment, attachmentFormat));
     }
 
     @Override
