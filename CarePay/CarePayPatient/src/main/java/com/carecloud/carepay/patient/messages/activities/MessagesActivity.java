@@ -36,6 +36,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     private MessagingModelDto messagingDto;
     private MessagesViewModel viewModel;
     public static final String KEY_MESSAGE_ID = "messageId";
+    public static final String KEY_MESSAGE_DEEPLINK_ID = "message_id";
     private String practiceName = "";
 
     @Override

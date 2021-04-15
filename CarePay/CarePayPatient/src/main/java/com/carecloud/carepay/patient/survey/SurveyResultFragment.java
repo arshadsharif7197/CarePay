@@ -223,7 +223,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         });
     }
 
-    private void createSocialLinkViews(View view, SurveySettings settings) {
+    private void createSocialLinkViews(View view, SurveyModel settings) {
         boolean thereAre4 = false;
         if (settings.getNetworkLinks().getLinks().size() == 4) {
             thereAre4 = true;
@@ -367,7 +367,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
     protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
         noThanksButton.setVisibility(View.VISIBLE);
-        SurveySettings settings = surveyDto.getPayload().getSurveySettings();
+        SurveyModel settings = surveyDto.getPayload().getSurvey();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()) {
             subtitleTextView.setVisibility(View.VISIBLE);

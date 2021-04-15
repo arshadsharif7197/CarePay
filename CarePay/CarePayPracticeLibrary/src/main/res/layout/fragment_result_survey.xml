@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lemonGreen">
+    android:background="@color/white"
+    android:gravity="center">
 
     <View
         android:id="@+id/fakeView"
@@ -19,11 +20,12 @@
         android:layout_height="@dimen/checkImageSize"
         android:layout_below="@id/fakeView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/checkImageVerticalMargin"
         android:layout_marginTop="@dimen/checkImageVerticalMargin"
+        android:layout_marginBottom="@dimen/successMessageBottomMargin"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/icn_payment_confirm_check_white" />
+        android:src="@drawable/icn_payment_confirm_check_white"
+        android:tint="@color/lemonGreen" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/successMessage"
@@ -32,7 +34,7 @@
         android:layout_below="@+id/checkImage"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/successMessageBottomMargin"
-        android:textColor="@color/white"
+        android:textColor="@color/textview_default_textcolor"
         android:textSize="@dimen/successMessageTextSize"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="surveys_thank_you_feedback"
@@ -45,10 +47,10 @@
         android:layout_below="@id/successMessage"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/negativeContainerTopMargin"
-        android:background="@drawable/button_rounded_white"
+        android:layout_marginTop="@dimen/successMessageBottomMargin"
+        android:background="@drawable/bg_yellow_overlay"
         android:padding="@dimen/dimen_10dp"
-        android:textColor="@color/lemonGreen"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_size_22sp"
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
@@ -61,80 +63,157 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/successMessage"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/negativeContainerTopMargin"
         android:orientation="vertical"
         android:visibility="gone">
 
         <View
             android:layout_width="@dimen/divider1Width"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/white" />
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:background="@color/lightSlateGray" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/giveDeviceBackMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:textColor="@color/textview_default_textcolor"
             android:textSize="17sp"
             app:customAssetFont="gotham_rounded_light"
             breeze:textKey="surveys_let_us_know"
             tools:text="Please let us know why you weren'' as satisfied as possible." />
 
-        <View
-            android:layout_width="@dimen/divider1Width"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/white" />
-
         <EditText
             android:id="@+id/feedbackEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="@dimen/negativeContainerTopMargin"
-            android:background="@drawable/round_white_background"
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:background="@drawable/button_rounded_pastel_background"
             android:gravity="start|top"
+            android:hint="123"
             android:lines="7"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/lightSlateGray"
-            android:textColorHint="@color/pastel_blue"
+            android:textColor="@color/textview_default_textcolor"
+            android:textColorHint="@color/lightSlateGray"
             android:textSize="16sp"
             breeze:hintKey="surveys_your_opinion"
             tools:ignore="MissingPrefix"
             tools:text="Hello, the only thing that i didnt like was that everyone seemed really distracted." />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/submitButton"
-            android:layout_width="@dimen/surveyFeedbackButtonWidth"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/selector_round_white_background"
-            android:padding="@dimen/dimen_10dp"
-            android:enabled="false"
-            android:textColor="@drawable/selector_lemon_green"
-            android:textSize="@dimen/text_size_22sp"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="survey.form.button.title.submit"
-            tools:text="Submit" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/noThanksButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.47"
+                android:background="@drawable/blue_border_rounded_button_selector"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="surveys_no_thank_you"
+                tools:text="No, Thank You" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.06" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/submitButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_weight="0.47"
+                android:background="@drawable/bg_yellow_overlay"
+                android:enabled="false"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="survey.form.button.title.submit"
+                tools:text="Submit" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/socialNetworksLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/successMessage"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="@dimen/divider1Width"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:background="@color/lightSlateGray" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/noThanksButton"
-            android:layout_width="@dimen/surveyFeedbackButtonWidth"
+            android:id="@+id/socialLinkMessage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/bottom_rounded_white_alpha"
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="17sp"
+            app:customAssetFont="gotham_rounded_light"
+            breeze:textKey="surveys_click_spread_word"
+            tools:text="Click on the links below to spread the word" />
+
+
+        <LinearLayout
+            android:id="@+id/firstRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/successMessageBottomMargin"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/noThanksButtonLinks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/blue_border_rounded_button_selector"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/white"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_22sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="surveys_no_thank_you"
             tools:text="No, Thank You" />
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/doneLinksBtn"
+            android:layout_width="@dimen/surveyFeedbackButtonWidth"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_yellow_overlay"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="survey.form.button.title.done"
+            tools:text="Done" />
 
     </LinearLayout>
 
