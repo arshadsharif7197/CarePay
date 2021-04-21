@@ -108,68 +108,11 @@
                 app:customAssetFont="proxima_nova_regular"
                 tools:text="Hey. I'm sorry ... I was in the shower. I have 20 minutes to be at the shooting of the film Suicide Squad" />
 
-            <LinearLayout
-                android:id="@+id/attachmentFileLayout"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/message_attachments_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_15dp"
-                android:background="@drawable/message_received_file_background"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/attachmentExtension"
-                    android:layout_width="@dimen/dimen_48dp"
-                    android:layout_height="@dimen/dimen_48dp"
-                    android:layout_margin="@dimen/dimen_8dp"
-                    android:background="@drawable/round_white_background"
-                    android:textAllCaps="true"
-                    android:textColor="@color/emerald"
-                    android:textSize="@dimen/text_size_12sp"
-                    app:customAssetFont="gotham_rounded_medium"
-                    tools:text="pdf" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/attachmentName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_8dp"
-                    android:ellipsize="middle"
-                    android:gravity="start"
-                    android:singleLine="true"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14"
-                    app:customAssetFont="proxima_nova_regular"
-                    tools:text="FileName.pdf" />
-
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_60dp">
-
-                <ImageView
-                    android:id="@+id/attachmentImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_15dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:visibility="gone"
-                    tools:src="@mipmap/ic_launcher" />
-
-                <ProgressBar
-                    android:id="@+id/attachmentProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"
-                    android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
-                    android:visibility="gone" />
-
-            </FrameLayout>
+                android:nestedScrollingEnabled="true" />
         </LinearLayout>
 
     </LinearLayout>
