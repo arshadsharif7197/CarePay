@@ -17,37 +17,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.MessageAttachment;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingMetadataDTO;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.LinkMovementCallbackMethod;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PicassoHelper;
-import com.carecloud.carepaylibray.utils.PicassoRoundedCornersExifTransformation;
 import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.google.android.gms.common.util.ArrayUtils;
-import com.squareup.picasso.Callback;
 
 import org.xml.sax.XMLReader;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lmenendez on 7/5/17
@@ -59,7 +51,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
 
-    private static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg",
+    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg",
             "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff", "bmp", "image/bmp"};
 
     private static final String USER_TYPE_PROVIDER = "provider";
@@ -140,10 +132,14 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         String time = DateUtil.getInstance().getDateAsMonthDayTime();
         holder.timeStamp.setText(time);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            holder.messageText.setText(Html.fromHtml(message.getBody(), null, new ConversationTagHandler()));
-        } else {
-            holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                holder.messageText.setText(Html.fromHtml(message.getBody(), null, new ConversationTagHandler()));
+            } else {
+                holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ReLinkify.addLinks(holder.messageText, ReLinkify.ALL);
@@ -164,64 +160,25 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             }
         }
 
-        holder.fileAttachmentLayout.setVisibility(View.GONE);
-        holder.imageAttachment.setVisibility(View.GONE);
+        holder.rvAttachments.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        holder.rvAttachments.setHasFixedSize(true);
         if (!message.getAttachments().isEmpty()) {
-            //currently only supporting one attachment
-            final MessageAttachment attachment = message.getAttachments().get(0);
-            String attachmentFormat = attachment.getDocument().getDocumentFormat();
-            if (attachmentFormat != null && attachmentFormat.contains("/")) {
-                attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
-            }
-            if (attachmentFormat == null) {
-                attachmentFormat = MimeTypeMap.getFileExtensionFromUrl(attachment.getDocument().getName());
-            }
+            holder.rvAttachments.setVisibility(View.VISIBLE);
+            AttachmentsAdapter attachmentsAdapter = new AttachmentsAdapter(context, message.getAttachments(), new AttachmentsAdapter.ConversationCallback() {
+                @Override
+                public void downloadAttachment(MessageAttachment attachment, String attachmentFormat) {
+                    callback.downloadAttachment(attachment, attachmentFormat);
+                }
 
-            holder.fileAttachmentExtension.setText(attachmentFormat);
-            holder.fileAttachmentName.setText(attachment.getDocument().getName());
+                @Override
+                public void openImageDetailView(MessageAttachment attachment) {
+                    callback.openImageDetailView(attachment);
+                }
+            }, messagingMetadata);
 
-            if (ArrayUtils.contains(FORMAT_IMAGE, attachmentFormat)) {
-                TransitionDTO fetchAttachment = messagingMetadata.getLinks().getFetchAttachment();
-
-                Map<String, String> headers = new HashMap<>();
-                headers.put("x-api-key", HttpConstants.getApiStartKey());
-                headers.put("username", iSession.getAppAuthorizationHelper().getCurrUser());
-                headers.put("Authorization", iSession.getAppAuthorizationHelper().getIdToken());
-
-                Uri uri = Uri.parse(fetchAttachment.getUrl());
-                uri = uri.buildUpon()
-                        .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())
-                        .build();
-
-                PicassoHelper.setHeaders(headers);
-                PicassoHelper.getPicassoInstance(context)
-                        .load(uri)
-                        .placeholder(R.drawable.bg_glitter_rounded)
-                        .transform(new PicassoRoundedCornersExifTransformation(24, 10, uri.toString(), headers))
-                        .into(holder.imageAttachment, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                holder.imageAttachment.setVisibility(View.VISIBLE);
-                                holder.attachmentProgress.setVisibility(View.GONE);
-                                holder.imageAttachment.setOnClickListener(getImageClickListener(attachment));
-                            }
-
-                            @Override
-                            public void onError() {
-                                holder.imageAttachment.setVisibility(View.GONE);
-                                holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
-                                holder.attachmentProgress.setVisibility(View.GONE);
-                            }
-                        });
-                holder.imageAttachment.setVisibility(View.VISIBLE);
-                holder.attachmentProgress.setVisibility(View.VISIBLE);
-            } else {
-                holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
-            }
-
-            holder.fileAttachmentLayout.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
-            holder.imageAttachment.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
-
+            holder.rvAttachments.setAdapter(attachmentsAdapter);
+        } else {
+            holder.rvAttachments.setVisibility(View.GONE);
         }
     }
 
@@ -342,6 +299,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         TextView fileAttachmentName;
         ImageView imageAttachment;
         View attachmentProgress;
+        RecyclerView rvAttachments;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -358,6 +316,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             fileAttachmentName = itemView.findViewById(R.id.attachmentName);
             imageAttachment = itemView.findViewById(R.id.attachmentImage);
             attachmentProgress = itemView.findViewById(R.id.attachmentProgress);
+            rvAttachments = itemView.findViewById(R.id.message_attachments_recycler);
         }
     }
 
