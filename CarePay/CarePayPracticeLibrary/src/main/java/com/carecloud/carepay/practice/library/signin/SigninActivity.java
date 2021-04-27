@@ -526,7 +526,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     private boolean checkEmail(String email) {
         boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
-        boolean isEmailValid = ValidationHelper.isValidEmail(email);
+        boolean isEmailValid = true;
+        if (isEmailValidationNeeded()) {
+            isEmailValid = ValidationHelper.isValidEmail(email);
+        }
         if (isEmptyEmail || !isEmailValid) {
             if (isEmptyEmail) {
                 setEmailError(getString(R.string.signin_signup_error_empty_email));
@@ -545,6 +548,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             setPasswordError(error);
         }
         return !isEmptyPassword;
+    }
+
+    private boolean isEmailValidationNeeded() {
+        return !practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR);
     }
 
     @Override

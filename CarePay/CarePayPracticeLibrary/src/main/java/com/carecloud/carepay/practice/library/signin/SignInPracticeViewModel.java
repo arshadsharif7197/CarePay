@@ -69,6 +69,8 @@ public class SignInPracticeViewModel extends BaseViewModel {
         signInDTO.setUser(user);
 
         Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("practice_mgmt", ApplicationPreferences.getInstance().getStartPracticeManagement());
+
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();

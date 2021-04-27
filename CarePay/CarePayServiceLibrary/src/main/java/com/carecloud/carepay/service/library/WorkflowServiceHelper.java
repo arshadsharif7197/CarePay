@@ -459,8 +459,10 @@ public class WorkflowServiceHelper {
 
         Gson gson = new Gson();
         String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", applicationPreferences.getStartPracticeManagement());
 
-        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, null, getApplicationStartHeaders());
+        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, queryMap, getApplicationStartHeaders());
     }
 
     private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,
