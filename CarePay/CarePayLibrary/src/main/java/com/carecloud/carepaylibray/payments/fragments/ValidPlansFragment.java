@@ -38,7 +38,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     protected double paymentPlanAmount;
-
+    public boolean isOnBackPressCalled;
 
     public static ValidPlansFragment newInstance(PaymentsModel paymentsModel,
                                                  PendingBalanceDTO selectedBalance,
@@ -97,7 +97,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackNavigationClick();
+                onBackPressed();
             }
         });
         toolbar.setTitle("");
@@ -130,5 +130,11 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment
                 .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
         callback.replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        isOnBackPressCalled = true;
+        super.onBackPressed();
     }
 }

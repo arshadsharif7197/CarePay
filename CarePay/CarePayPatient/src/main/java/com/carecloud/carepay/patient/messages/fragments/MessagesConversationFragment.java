@@ -1,16 +1,23 @@
 package com.carecloud.carepay.patient.messages.fragments;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -27,13 +34,16 @@ import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.common.DocumentDetailFragment;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +71,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     private String practiceName;
     private MessagingModelDto messagingDto;
     private MessagesViewModel viewModel;
+    private long enqueueId;
 
     /**
      * Get new instance of MessagesConversationFragment
@@ -121,6 +132,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         initToolbar(view);
         recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setHasFixedSize(true);
         recyclerView.addOnLayoutChangeListener((view1, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (recyclerView.getAdapter() != null) {
                 recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
@@ -160,7 +172,10 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         title.setText(thread.getSubject());
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
     }
 
     private void setAdapter() {
@@ -268,7 +283,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
                 .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())
                 .build();
 
-        FileDownloadUtil.downloadFile(getContext(),
+        enqueueId = FileDownloadUtil.downloadFile(getContext(),
                 uri.toString(),
                 attachment.getDocument().getName(),
                 attachmentFormat,
@@ -277,6 +292,8 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
         selectedAttachment = null;
         selectedAttachmentFormat = null;
+        new CustomMessageToast(getContext(), Label.getLabel("loading_message"),
+                CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
     }
 
     @Override
@@ -288,5 +305,63 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
                 .build();
         DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(uri.toString(), true);
         fragment.show(getFragmentManager(), "detail");
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            String action = intent.getAction();
+            //TODO:Implement this listner if required
+
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                new CustomMessageToast(getContext(), "Download Completed.",
+                        CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+
+                /*DownloadManager.Query query = new DownloadManager.Query();
+                DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+
+                query.setFilterById(enqueueId);
+                final Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
+                        String downloadLocalUri = cursor
+                                .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                        if (downloadLocalUri != null) {
+                            String downloadMimeType = cursor.getString(cursor
+                                    .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                            cursor.close();
+                            FileDownloadUtil
+                                    .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                        }
+                        enqueueId = -1;
+                    } else if (DownloadManager.STATUS_PAUSED == cursor.getInt(columnIndex)) {
+                        //TODO: test if this can occur
+                    } else {
+                        Log.e("DownloadManager", "Status: " + cursor.getInt(columnIndex));
+                    }
+                }
+                cursor.close();*/
+            } else {
+                new CustomMessageToast(getContext(), Label.getLabel("messaging.conversation.attachment.image.retry"),
+                        CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+            }
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(receiver);
+        if (enqueueId > 0) {
+            DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.remove(enqueueId);
+        }
+        super.onStop();
     }
 }

@@ -303,6 +303,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             new Handler().postDelayed(() -> {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        webView.scrollTo(0, 0);
                         enableNextButton(true);
                         hideProgressDialog();
                     });

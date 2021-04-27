@@ -310,6 +310,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     }
 
     protected int getCancelImageResource() {
-        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_left;
+        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up_practice;
     }
 }

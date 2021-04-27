@@ -437,7 +437,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         showProgressDialog();
         PayeezyCall payeezyCall = new PayeezyCall();
         payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
-            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());

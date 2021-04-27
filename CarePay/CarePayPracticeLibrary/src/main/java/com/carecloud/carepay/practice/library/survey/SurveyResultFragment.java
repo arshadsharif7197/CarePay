@@ -1,9 +1,15 @@
 package com.carecloud.carepay.practice.library.survey;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -18,9 +26,11 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
@@ -41,7 +51,9 @@ public class SurveyResultFragment extends BaseFragment {
     private SurveyDTO surveyDto;
     private boolean showFeedBackLayout;
     private EditText feedbackEditText;
+    private TextView noThanksBtn, doneLinksBtn;
     private float average;
+    private LinearLayout socialNetworksLayout;
 
 
     public static SurveyResultFragment newInstance() {
@@ -64,12 +76,6 @@ public class SurveyResultFragment extends BaseFragment {
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
         average = getRateAverage(surveyModel);
-        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
-                || surveyModel.isZeroAnswers()) {
-            sendResponse(surveyModel, false);
-        } else {
-            showFeedBackLayout = true;
-        }
     }
 
     @Nullable
@@ -81,7 +87,17 @@ public class SurveyResultFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        noThanksBtn = view.findViewById(R.id.noThanksButtonLinks);
+        doneLinksBtn = view.findViewById(R.id.doneLinksBtn);
+        socialNetworksLayout = view.findViewById(R.id.socialNetworksLayout);
         final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
+        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyModel.isZeroAnswers()) {
+            sendResponse(surveyModel, false);
+        } else {
+            showFeedBackLayout = true;
+        }
+
         if (showFeedBackLayout) {
             view.findViewById(R.id.negativeContainer).setVisibility(View.VISIBLE);
             feedbackEditText = view.findViewById(R.id.feedbackEditText);
@@ -119,7 +135,7 @@ public class SurveyResultFragment extends BaseFragment {
                 }
             });
         } else {
-            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            socialNetworksLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -173,10 +189,13 @@ public class SurveyResultFragment extends BaseFragment {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 logSurveyCompleted();
-                if (!showFeedBackLayout || survey.isZeroAnswers()) {
-                    showDoneButton(workflowDTO);
-                } else {
+
+                if (submitFeedbackButtonPressed || showFeedBackLayout) {
                     PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                } else if (!survey.isZeroAnswers() && survey.getNetworkLinks().isEnable()) {
+                    displaySocialNetworksLinks(getView(), survey, workflowDTO);
+                } else {
+                    showDoneButton(workflowDTO);
                 }
             }
 
@@ -189,10 +208,81 @@ public class SurveyResultFragment extends BaseFragment {
         }, jsonResponse, query, header);
     }
 
+    protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
+        noThanksBtn.setVisibility(View.VISIBLE);
+        SurveyModel settings = surveyDto.getPayload().getSurvey();
+        if (settings.getNetworkLinks().isEnable()
+                && !settings.getNetworkLinks().getLinks().isEmpty()) {
+            createSocialLinkViews(view, settings);
+            noThanksBtn.setOnClickListener(v -> PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO));
+            doneLinksBtn.setOnClickListener(v -> PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO));
+        } else {
+            showDoneButton(workflowDTO);
+        }
+    }
+
+    private void createSocialLinkViews(View view, SurveyModel settings) {
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        LinearLayout firstRow = view.findViewById(R.id.firstRow);
+        firstRow.removeAllViews();
+        LinearLayout row = firstRow;
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT);
+        lp.weight = 1.0f;
+        for (final SocialNetworkLink link : settings.getNetworkLinks().getLinks()) {
+            View child = layoutInflater
+                    .inflate(R.layout.layout_survey_social_network, null, false);
+            TextView socialNetworkNameTextView = child.findViewById(R.id.socialNetworkNameTextView);
+            socialNetworkNameTextView.setText(Label
+                    .getLabel("survey.successScreen.socialLink.label." + link.getId()));
+            int linkImageId = getLinkImageResource(link);
+            if (linkImageId != -1) {
+                ImageView linkImageView = child.findViewById(R.id.socialNetworkImageView);
+                linkImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), linkImageId));
+            }
+            child.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(link.getUrl()));
+                    startActivity(intent);
+                    noThanksBtn.setVisibility(View.GONE);
+                    doneLinksBtn.setVisibility(View.VISIBLE);
+                }
+            });
+            child.setLayoutParams(lp);
+            row.addView(child);
+        }
+    }
+
+    private int getLinkImageResource(SocialNetworkLink link) {
+        int linkImageId = -1;
+        switch (link.getId()) {
+            case "facebook":
+                linkImageId = R.drawable.logo_survey_facebook;
+                break;
+            case "vitals":
+                linkImageId = R.drawable.logo_survey_vitals;
+                break;
+            case "yelp":
+                linkImageId = R.drawable.logo_survey_yelp;
+                break;
+            case "healthgrades":
+                linkImageId = R.drawable.logo_survey_healthgrades;
+                break;
+            case "google":
+                linkImageId = R.drawable.logo_survey_google;
+                break;
+        }
+        return linkImageId;
+    }
+
     private void showDoneButton(final WorkflowDTO workflowDTO) {
-        TextView doneButton = getView().findViewById(R.id.okButton);
-        doneButton.setVisibility(View.VISIBLE);
-        doneButton.setOnClickListener(new View.OnClickListener() {
+        noThanksBtn.setVisibility(View.GONE);
+        socialNetworksLayout.setVisibility(View.GONE);
+        TextView okButton = getView().findViewById(R.id.okButton);
+        okButton.setVisibility(View.VISIBLE);
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);

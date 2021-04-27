@@ -314,7 +314,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
         queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-        queryMap.put("payment_plan", "true");
+//        queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         viewHandler.getISession().getWorkflowServiceHelper().execute(transition, completePlanCallback, queryMap);
@@ -329,19 +329,19 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            viewHandler.getISession().hideProgressDialog();
+//            viewHandler.getISession().hideProgressDialog();
             Bundle info = new Bundle();
             if (getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             paymentPlanCreated = paymentsModel.getPaymentPayload().isPaymentPlanCreated();
-            if (workflowDTO.getState().equals(NavigationStateConstants.PAYMENTS)) {
+            /*if (workflowDTO.getState().equals(NavigationStateConstants.PAYMENTS)) {
                 PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO, info);
             } else {
                 viewHandler.exitPaymentProcess(false, paymentPlanCreated, false);
-            }
-
+            }*/
+            PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO, info);
         }
 
         @Override

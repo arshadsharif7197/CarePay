@@ -288,6 +288,7 @@
                 android:digits="0123456789-"
                 android:imeOptions="actionNext"
                 android:maxLength="10"
+                android:inputType="numberDecimal"
                 android:nextFocusForward="@+id/cityTextView"
                 app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"

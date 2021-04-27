@@ -188,15 +188,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         return false;
     }
 
-    private Fragment getTopFragment() {
-        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-        if (!fragmentList.isEmpty()) {
-            Fragment topFragment = (fragmentList.get(fragmentList.size() - 1).getTag().equals("SupportLifecycleFragmentImpl")) ? fragmentList.get(fragmentList.size() - 2) : fragmentList.get(fragmentList.size() - 1);
-            return topFragment;
-        }
-        return null;
-    }
-
     @Override
     public AppointmentPresenter getAppointmentPresenter() {
         return presenter;

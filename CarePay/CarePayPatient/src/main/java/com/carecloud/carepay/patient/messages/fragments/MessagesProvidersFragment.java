@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -84,7 +85,10 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_providers_title"));
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
+        });
     }
 
     private void setAdapter() {
