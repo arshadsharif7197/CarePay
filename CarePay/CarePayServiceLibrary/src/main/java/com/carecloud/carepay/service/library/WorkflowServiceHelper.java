@@ -80,6 +80,7 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
 
         if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
                 && (ApplicationPreferences.getInstance().getProfileId() != null)

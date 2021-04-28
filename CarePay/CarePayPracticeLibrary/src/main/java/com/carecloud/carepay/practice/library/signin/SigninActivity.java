@@ -163,7 +163,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             TransitionDTO transition = null;
             TransitionDTO refreshTransition = null;
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                transition = signinDTO.getMetadata().getTransitions().getAuthenticate();
+                transition = unifiedSignInResponse.getMetadata().getTransitions().getAuthenticate();
                 refreshTransition = signinDTO.getMetadata().getTransitions().getRefresh();
             } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType
                     .PRACTICE_PATIENT_MODE) {
@@ -572,6 +572,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 practiceManagement = data.getStringExtra(Defs.partnersInfo);
                 tvPartnerBtn.setText(practiceManagement);
                 getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+                passwordEditText.setText("");
+                emailEditText.setText("");
             }
         }
     }
