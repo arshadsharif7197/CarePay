@@ -47,6 +47,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     protected boolean autoScheduleAppointments;
     protected String patientId;
     protected Button requestAppointmentButton;
+    private boolean isFromPostExecute;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -111,11 +112,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
+                        isFromPostExecute = false;
                         showProgressDialog();
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
+                        isFromPostExecute = true;
                         hideProgressDialog();
                         requestAppointmentButton.setEnabled(true);
                         String appointmentRequestSuccessMessage = Label.getLabel(autoScheduleAppointments ?
@@ -134,6 +137,12 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         showErrorNotification(exceptionMessage);
                         if (isVisible()) {
                             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                        }
+
+                        if (isFromPostExecute) {
+                            isFromPostExecute = false;
+                            callback.appointmentScheduledSuccessfully();
+                            cancel();
                         }
                     }
                 },

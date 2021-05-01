@@ -12,10 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
@@ -725,10 +727,23 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void appointmentScheduledSuccessfully() {
-//        getSupportFragmentManager().popBackStackImmediate();
-//        getSupportFragmentManager().popBackStackImmediate();
+        popOutFragments();
         showRateDialogFragment();
         viewHandler.refreshAppointments();
+    }
+
+    private void popOutFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+        for (int i = 1; i < fragmentList.size(); i++) {
+            try {
+                fragmentTransaction.remove(fragmentList.get(i));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private void showRateDialogFragment() {
