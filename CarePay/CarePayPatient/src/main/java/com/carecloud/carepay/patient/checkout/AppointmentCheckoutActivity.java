@@ -348,7 +348,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 builder.replace(last, builder.length(), "");
                 showErrorNotification(builder.toString());
             } else {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
 
@@ -457,6 +457,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     queryMap,
                     header);
         } else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
             extra.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
