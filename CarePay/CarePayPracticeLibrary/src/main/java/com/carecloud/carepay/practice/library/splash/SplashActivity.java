@@ -19,12 +19,18 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.base.models.DeviceVersionModel;
 import com.carecloud.carepaylibray.base.models.LatestVersionDTO;
 import com.carecloud.carepaylibray.base.models.LatestVersionModel;
+import com.carecloud.carepaylibray.base.models.SessionTimeInfo;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SplashActivity extends BasePracticeActivity {
@@ -91,6 +97,16 @@ public class SplashActivity extends BasePracticeActivity {
                 getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
                         .getAsJsonObject("language_metadata").get("code").getAsString());
             }
+            if (workflowDTO.getPayload().has("timeouts")) {
+                JsonArray practiceTimeOut = workflowDTO.getPayload().getAsJsonObject("timeouts")
+                        .getAsJsonArray("practice");
+                //set default timeout for practice.
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<SessionTimeInfo>>() {
+                }.getType();
+                List<SessionTimeInfo> timeList = gson.fromJson(practiceTimeOut, type);
+                getApplicationPreferences().setPracticeSessionTime(getDefaultSession(timeList));
+            }
 
             LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
             checkLatestVersion(latestVersionDTO.getMetadata().getLinks().getCheckLatestVersion());
@@ -102,6 +118,15 @@ public class SplashActivity extends BasePracticeActivity {
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private String getDefaultSession(List<SessionTimeInfo> timeList) {
+        for (SessionTimeInfo sessionTimeInfo : timeList) {
+            if (sessionTimeInfo.isDefault()) {
+                return sessionTimeInfo.getName();
+            }
+        }
+        return "2";
+    }
 
     private void checkLatestVersion(TransitionDTO versionCheckLink) {
         try {
