@@ -307,6 +307,29 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         currentFragment = fragment;
     }
 
+
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack,String tag) {
+        navigateToFragment(fragment, addToBackStack, false,tag);
+    }
+
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack, boolean clearPrevious,String newtag) {
+        String tag = fragment.getClass().getName();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        Fragment prev = fm.findFragmentByTag(tag);
+        if (prev != null) {
+            fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+        }
+
+        transaction.replace(R.id.root_layout, fragment, tag);
+        if (addToBackStack && !startCheckIn) {
+            transaction.addToBackStack(tag+newtag);
+        }
+        transaction.commitAllowingStateLoss();
+        currentFragment = fragment;
+    }
+
     @Override
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
         FormsFragment fragment = FormsFragment.newInstance(workflowDTO);
@@ -348,13 +371,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
         Fragment fragment;
+        boolean emptyfragment=false;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
                     MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
+            emptyfragment=true;
         } else {
             fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO);
         }
-        navigateToFragment(fragment, true);
+
+        if(!emptyfragment)
+           navigateToFragment(fragment, true);
+       else
+           navigateToFragment(fragment, true,"Medications");
 
         if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
                 && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
@@ -369,13 +398,18 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
         Fragment fragment;
+        boolean emptyfragment=false;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
                     MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
+            emptyfragment=true;
         } else {
             fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
         }
-        navigateToFragment(fragment, true);
+        if(!emptyfragment)
+            navigateToFragment(fragment, true);
+        else
+            navigateToFragment(fragment, true,"Allergy");
 
         if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);

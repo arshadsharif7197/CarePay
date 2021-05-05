@@ -25,7 +25,8 @@ import java.util.Set;
 public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
     private List<AppointmentDTO> appointmentItems;
-
+    private long mLastClickTime = System.currentTimeMillis();
+    private static final long CLICK_TIME_INTERVAL = 600;
     /**
      * Constructor
      *
@@ -71,6 +72,13 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
         holder.itemView.setOnClickListener(view -> {
             if (callback != null) {
+
+                long now = System.currentTimeMillis();
+                if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
+                    return;
+                }
+                mLastClickTime = now;
+
                 callback.onItemTapped(sortedAppointments.get(position));
             }
         });

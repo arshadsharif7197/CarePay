@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -398,7 +400,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
+           List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
             if (!modifiedMeds.isEmpty() || (hasPhoto() && !StringUtil.isNullOrEmpty(photoPath))) {
                 String[] params = {getString(R.string.param_meds_count),
                         getString(R.string.param_meds_photo)
@@ -408,6 +410,13 @@ public class MedicationsFragment extends BaseCheckinFragment implements
                 };
 
                 MixPanelUtil.logEvent(getString(R.string.event_updated_meds), params, values);
+              //  getChildFragmentManager().popBackStackImmediate("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentMedications", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                getActivity().getSupportFragmentManager().getFragments().set(getIndex("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentAllergy"), null);
+
+
+
+
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_medications));
@@ -423,6 +432,15 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         }
     };
 
+    private int getIndex(String tagname) {
+        FragmentManager manager = getFragmentManager();
+        for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+            if (manager.getBackStackEntryAt(i).getName().equalsIgnoreCase(tagname)) {
+                return i;
+            }
+        }
+        return 0;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (!handleActivityResult(requestCode, resultCode, data)) {
