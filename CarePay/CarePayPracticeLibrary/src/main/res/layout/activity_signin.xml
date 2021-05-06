@@ -69,20 +69,61 @@
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="welcome_signin_text" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/mainLayout"
             android:layout_width="@dimen/signin_main_width"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/layout_shadow"
-            android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/signInMainLayoutPadding">
+
+            <LinearLayout
+                android:id="@+id/partner_btn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_alignParentTop="true"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/tv_partner_btn"
+                        style="@style/EditTextStyle"
+                        android:padding="@dimen/dimen_16dp"
+                        android:contentDescription="@string/content_description_email"
+                        android:drawableRight="@drawable/icon_drop_down"
+                        android:editable="false"
+                        android:inputType="none"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="practice_management_system" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+                    android:id="@+id/cb_practice_management"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_16dp"
+                    android:layout_marginEnd="@dimen/dimen_16dp"
+                    android:layout_marginBottom="@dimen/dimen_16dp"
+                    android:background="@null"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableStart="@drawable/cell_checkbox"
+                    android:drawablePadding="@dimen/dimen_10dp"
+                    android:text="Remember this preference"
+                    android:textColor="@color/colorAccent"
+                    breeze:textKey="practice_management_remember" />
+            </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/signInEmailTextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/emailFieldTopMargin"
                 app:customAssetFont="proxima_nova_semi_bold"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
@@ -101,8 +142,7 @@
             <FrameLayout
                 android:id="@+id/passwordContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/signInEmailTextInputLayout">
+                android:layout_height="wrap_content">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/passwordTextInputLayout"
@@ -136,7 +176,6 @@
                 android:id="@+id/signinButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/signInButtonHeight"
-                android:layout_below="@id/passwordContainer"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="@dimen/signInButtonMarginTop"
                 android:layout_marginEnd="2dp"
@@ -150,7 +189,7 @@
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="signin_button" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/signinTitleTextview"
@@ -218,36 +257,5 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <FrameLayout
-        android:id="@+id/partner_btn_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/dimen_10dp"
-        android:visibility="gone"
-        android:background="@drawable/background_very_round_white"
-        android:padding="@dimen/dimen_10dp">
-
-        <ImageView
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/carecloud_eagle_logo_blue"
-            android:visibility="visible" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/tv_partner_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dimen_3dp"
-            android:maxLines="1"
-            android:text="Go"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_24sp"
-            app:customAssetFont="proxima_nova_extra_bold" />
-
-    </FrameLayout>
 
 </RelativeLayout>

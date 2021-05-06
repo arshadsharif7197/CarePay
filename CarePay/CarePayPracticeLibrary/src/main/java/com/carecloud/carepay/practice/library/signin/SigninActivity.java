@@ -9,14 +9,14 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,14 +32,12 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
-import com.carecloud.carepay.practice.library.signin.interfaces.PracticeManagementSignInInterface;
+import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeManagementFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
-import com.carecloud.carepay.practice.library.splash.ChoosePracticeManagementActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -48,7 +46,6 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTo
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
-import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -63,7 +60,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +77,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private static final int RESET_PASSWORD = 100;
     private ApplicationMode.ApplicationType appType;
     private TextView tvPartnerBtn;
-    private FrameLayout partnerBtnLayout;
+    private LinearLayout partnerBtnLayout;
     private SignInScreenMode signinScreenMode;
+    private CheckBox cbPracticeManagement;
+    private String practiceManagementTitle;
 
     private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -111,17 +109,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         appType = getApplicationMode().getApplicationType();
         signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
         practiceManagement = getApplicationPreferences().getStartPracticeManagement();
+        practiceManagementTitle = getApplicationPreferences().getPracticeManagementTitle();
 
         initView();
     }
 
     private void initView() {
-        if (StringUtil.isNullOrEmpty(practiceManagement)) {
-            if (isMorePartnerEnable()) {
-                startActivityForResult(new Intent(this, ChoosePracticeManagementActivity.class)
-                        .putExtra(Defs.partnersInfo, (Serializable) signinDTO.getPayload().getPmsPartners()), Defs.CHOOSE_PARTNERS_REQUEST);
-            }
-        }
         setContentView(R.layout.activity_signin);
         setSystemUiVisibility();
         initViews(signinScreenMode);
@@ -261,6 +254,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         showPasswordButton = findViewById(R.id.show_password_button);
         partnerBtnLayout = findViewById(R.id.partner_btn_layout);
         tvPartnerBtn = findViewById(R.id.tv_partner_btn);
+        cbPracticeManagement = findViewById(R.id.cb_practice_management);
 
 
         setUpLanguageSpinner();
@@ -376,17 +370,26 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         });
 
         tvPartnerBtn.setOnClickListener(view -> {
-            startActivityForResult(new Intent(this, ChoosePracticeManagementActivity.class)
-                    .putExtra(Defs.partnersInfo, (Serializable) signinDTO.getPayload().getPmsPartners()), Defs.CHOOSE_PARTNERS_REQUEST);
+            showPracticeManagementFragment();
         });
 
         partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                 View.GONE : View.VISIBLE);
-        if (practiceManagement == null) {
-            tvPartnerBtn.setText(signinDTO.getPayload().getPmsPartners().get(0).getPracticeMgmt());
+        if (practiceManagementTitle == null) {
+            tvPartnerBtn.setText(signinDTO.getPayload().getPmsPartners().get(0).getLabel());
+            cbPracticeManagement.setChecked(false);
         } else {
-            tvPartnerBtn.setText(practiceManagement);
+            tvPartnerBtn.setText(practiceManagementTitle);
+            cbPracticeManagement.setChecked(true);
         }
+
+        cbPracticeManagement.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                getApplicationPreferences().setPracticeManagementTitle(practiceManagementTitle);
+            } else {
+                getApplicationPreferences().setPracticeManagementTitle(null);
+            }
+        });
 
     }
 
@@ -476,6 +479,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         showPracticeSearchFragment();
     }
 
+    @Override
+    public void onSelectPracticeManagement(Partners selectedPracticeManagement) {
+        practiceManagement = selectedPracticeManagement.getPracticeMgmt();
+        practiceManagementTitle = selectedPracticeManagement.getLabel();
+        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+        tvPartnerBtn.setText(practiceManagementTitle);
+        passwordEditText.setText("");
+        emailEditText.setText("");
+        cbPracticeManagement.setChecked(false);
+    }
+
     public void requestPasswordFocus() {
         passwordEditText.requestFocus();
     }
@@ -509,6 +523,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     private void showPracticeSearchFragment() {
         ChoosePracticeFragment fragment = ChoosePracticeFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+    }
+
+    private void showPracticeManagementFragment() {
+        ChoosePracticeManagementFragment fragment = ChoosePracticeManagementFragment.newInstance(
+                signinDTO.getPayload().getPmsPartners());
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
@@ -567,14 +587,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         } else if (requestCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT &&
                 resultCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT) {
             finish();
-        } else if (requestCode == Defs.CHOOSE_PARTNERS_REQUEST && resultCode == RESULT_OK) {
-            if (data != null && data.hasExtra(Defs.partnersInfo)) {
-                practiceManagement = data.getStringExtra(Defs.partnersInfo);
-                tvPartnerBtn.setText(practiceManagement);
-                getApplicationPreferences().setStartPracticeManagement(practiceManagement);
-                passwordEditText.setText("");
-                emailEditText.setText("");
-            }
         }
     }
 
@@ -604,7 +616,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.fragmentContainer, fragment, addToBackStack);
     }
-
 
     @Override
     public void onConfirm() {
