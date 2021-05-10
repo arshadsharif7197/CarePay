@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.session;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -17,7 +19,13 @@ public class PracticeSessionService extends SessionService {
     @Override
     public void onCreate() {
         super.onCreate();
-        sessionTimeout = PRACTICE_SESSION_TIMEOUT;
+        if (((IApplicationSession) getApplication()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            sessionTimeout = Long.parseLong(((IApplicationSession) getApplication()).getApplicationPreferences().getPatientSessionTime());
+            sessionTimeout = 1000 * 60 * sessionTimeout;
+        } else {
+            sessionTimeout = Long.parseLong(((IApplicationSession) getApplication()).getApplicationPreferences().getPracticeSessionTime());
+            sessionTimeout = 1000 * 60 * sessionTimeout;
+        }
     }
 
     @Override
