@@ -21,10 +21,10 @@ public class PracticeSessionService extends SessionService {
         super.onCreate();
         if (((IApplicationSession) getApplication()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             sessionTimeout = Long.parseLong(((IApplicationSession) getApplication()).getApplicationPreferences().getPatientSessionTime());
-            sessionTimeout = 1000 * 60 * sessionTimeout;
+            sessionTimeout = 1000 * 60 * (sessionTimeout-1); // minus 1 because of 1 minute expiry time for popup dialog
         } else {
             sessionTimeout = Long.parseLong(((IApplicationSession) getApplication()).getApplicationPreferences().getPracticeSessionTime());
-            sessionTimeout = 1000 * 60 * sessionTimeout;
+            sessionTimeout = 1000 * 60 * (sessionTimeout-1); // minus 1 because of 1 minute expiry time for popup dialog
         }
     }
 
