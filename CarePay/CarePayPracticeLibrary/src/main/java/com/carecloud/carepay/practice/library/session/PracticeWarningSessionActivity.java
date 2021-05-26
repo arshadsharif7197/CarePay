@@ -25,6 +25,10 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("countdown")) {
+            countDown = Integer.parseInt(intent.getStringExtra("countdown"));
+        }
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
