@@ -102,7 +102,8 @@ public class CarePayPracticeApplication extends CarePayApplication {
     public void onActivityResumed(Activity activity) {
         super.onActivityResumed(activity);
         if (activity instanceof SessionedActivityInterface
-                && ((SessionedActivityInterface) activity).manageSession()) {
+                && ((SessionedActivityInterface) activity).manageSession()
+                && !PracticeSessionService.isServiceStarted) {
             restartSession(activity);
         }
     }
