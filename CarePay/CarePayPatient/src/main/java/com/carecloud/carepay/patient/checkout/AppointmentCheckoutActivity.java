@@ -94,6 +94,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private boolean completedPaymentPlan = false;
 
     private Fragment androidPayTargetFragment;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
         return true;
     }
 

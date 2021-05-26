@@ -84,6 +84,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         searchRecycler.setLayoutManager(layoutManager);
 
         searchView = view.findViewById(R.id.search_entry_view);
+        searchView.setQueryHint(Label.getLabel("search_field_hint"));
         searchView.setOnQueryTextListener(queryTextListener);
 
         setAdapter(templateItems, simpleChargeItems);
