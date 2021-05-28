@@ -54,6 +54,7 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
         OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PracticeSessionWorker.class)
                 .setInputData(builder.build())
+                .addTag("sessionWorker")
                 .build();
 
         WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(

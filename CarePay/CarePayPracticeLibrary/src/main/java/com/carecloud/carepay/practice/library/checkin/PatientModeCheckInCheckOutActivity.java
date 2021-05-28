@@ -166,6 +166,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
                 getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
                 WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
                 PracticeNavigationHelper.navigateToWorkflow(PatientModeCheckInCheckOutActivity.this, workflowDTO);
+                ((CarePayApplication) getApplicationContext()).restartSession(this);
             });
         }
     }

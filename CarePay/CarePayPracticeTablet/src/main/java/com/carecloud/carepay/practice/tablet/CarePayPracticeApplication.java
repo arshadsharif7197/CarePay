@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.session.SessionWorker;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
@@ -113,12 +114,14 @@ public class CarePayPracticeApplication extends CarePayApplication {
 
     @Override
     public void restartSession(Activity activity) {
+        cancelSession();
         Data.Builder builder = new Data.Builder();
         builder.putString("logout_transition",
                 DtoHelper.getStringDTO(((SessionedActivityInterface) activity).getLogoutTransition()));
 
         OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PracticeSessionWorker.class)
                 .setInputData(builder.build())
+                .addTag("sessionWorker")
                 .build();
 
         sessionWorkManager = WorkManager.getInstance(getApplicationContext());
@@ -131,7 +134,8 @@ public class CarePayPracticeApplication extends CarePayApplication {
     public void cancelSession() {
         if (sessionWorkManager != null) {
             PracticeSessionWorker.isServiceStarted = false;
-            sessionWorkManager.cancelUniqueWork("sessionWorker");
+            WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
+            SessionWorker.handler.removeMessages(0);
         }
     }
 }

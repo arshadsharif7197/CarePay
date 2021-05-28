@@ -17,8 +17,8 @@ public abstract class SessionWorker extends ListenableWorker {
 
     protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 9;
     protected static final long PRACTICE_SESSION_TIMEOUT = 1000 * 60 * 2; //old logic
-    private Handler handler;
-    private Runnable timeOutRunnable;
+    public static Handler handler;
+    public Runnable timeOutRunnable;
     protected long sessionTimeout;
 
     /**
