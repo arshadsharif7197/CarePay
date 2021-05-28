@@ -138,6 +138,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
             getAppAuthorizationHelper().setUser(null);
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            ((CarePayApplication) getApplication()).cancelSession();
         }
 
         @Override

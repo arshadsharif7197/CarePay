@@ -48,7 +48,7 @@ public class PracticeSessionService extends SessionService {
         }
 
         handleLogoutTimer();
-        return val;
+        return START_STICKY;
     }
 
     @Override

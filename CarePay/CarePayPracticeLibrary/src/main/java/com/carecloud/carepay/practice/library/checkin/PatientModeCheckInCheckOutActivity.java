@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -112,6 +113,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             findViewById(R.id.logoutTextview).setEnabled(true);
             PatientModeCheckInCheckOutActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            ((CarePayApplication) getApplication()).cancelSession();
         }
 
         @Override
