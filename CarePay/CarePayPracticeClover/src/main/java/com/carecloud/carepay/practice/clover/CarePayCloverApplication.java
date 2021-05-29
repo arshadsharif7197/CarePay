@@ -12,11 +12,14 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.carecloud.carepay.practice.clover.utils.ChipInterceptorUtil;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.session.PracticeSessionWorker;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.session.SessionWorker;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
@@ -85,6 +88,15 @@ public class CarePayCloverApplication extends CarePayApplication
     public void onActivityResumed(Activity activity) {
         ChipInterceptorUtil.getInstance().startIntercept(this,
                 ChipInterceptorUtil.CLOVER_CARD_INTERCEPT_ACTION);
+        if (activity instanceof SessionedActivityInterface
+                && ((SessionedActivityInterface) activity).manageSession()
+                && !PracticeSessionWorker.isServiceStarted) {
+            restartSession(activity);
+        } else if (activity instanceof SessionedActivityInterface
+                && ((SessionedActivityInterface) activity).manageSession()
+                && PracticeSessionWorker.isServiceStarted && PracticeSessionWorker.isLogoutNeeded) {
+            callLogoutService(activity);
+        }
     }
 
     @Override
@@ -104,32 +116,6 @@ public class CarePayCloverApplication extends CarePayApplication
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-    }
-
-    @Override
-    public void restartSession(Activity activity) {
-        Data.Builder builder = new Data.Builder();
-        builder.putString("logout_transition",
-                DtoHelper.getStringDTO(((SessionedActivityInterface) activity).getLogoutTransition()));
-
-        OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PracticeSessionWorker.class)
-                .setInputData(builder.build())
-                .addTag("sessionWorker")
-                .build();
-
-        sessionWorkManager = WorkManager.getInstance(getApplicationContext());
-        sessionWorkManager.enqueueUniqueWork(
-                "sessionWorker",
-                ExistingWorkPolicy.REPLACE,
-                sessionWorkerRequest);
-    }
-
-    public void cancelSession() {
-        if (sessionWorkManager != null) {
-            PracticeSessionWorker.isServiceStarted = false;
-            WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
-            SessionWorker.handler.removeMessages(0);
-        }
     }
 
     @Override
@@ -160,5 +146,53 @@ public class CarePayCloverApplication extends CarePayApplication
         } else {
             return CarePayConstants.CLOVER_2_DEVICE;
         }
+    }
+
+    @Override
+    public void restartSession(Activity activity) {
+        cancelSession();
+        Data.Builder builder = new Data.Builder();
+        builder.putString("logout_transition",
+                DtoHelper.getStringDTO(((SessionedActivityInterface) activity).getLogoutTransition()));
+
+        OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PracticeSessionWorker.class)
+                .setInputData(builder.build())
+                .addTag("sessionWorker")
+                .build();
+
+        sessionWorkManager = WorkManager.getInstance(getApplicationContext());
+        sessionWorkManager.enqueueUniqueWork(
+                "sessionWorker",
+                ExistingWorkPolicy.REPLACE,
+                sessionWorkerRequest);
+    }
+
+    public void cancelSession() {
+        if (sessionWorkManager != null) {
+            PracticeSessionWorker.isServiceStarted = false;
+            PracticeSessionWorker.isLogoutNeeded = false;
+            WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
+            SessionWorker.handler.removeMessages(0);
+        }
+    }
+
+    private void callLogoutService(Activity activity) {
+        ((CarePayApplication) getApplicationContext()).getWorkflowServiceHelper().execute(
+                ((((SessionedActivityInterface) activity).getLogoutTransition())), new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        cancelSession();
+                        PracticeNavigationHelper.navigateToWorkflow(getApplicationContext(), workflowDTO);
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        restartSession(activity);
+                    }
+                });
     }
 }
