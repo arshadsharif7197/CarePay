@@ -1,19 +1,22 @@
 package com.carecloud.carepay.practice.tablet;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
+
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.carecloud.carepay.practice.library.homescreen.AppointmentCountUpdateService;
-import com.carecloud.carepay.practice.library.session.PracticeSessionService;
+import com.carecloud.carepay.practice.library.session.PracticeSessionWorker;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.session.SessionWorker;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
@@ -31,6 +34,7 @@ public class CarePayPracticeApplication extends CarePayApplication {
 
     private ApplicationMode applicationMode;
     private MixpanelAPI mixpanelAPI;
+    public WorkManager sessionWorkManager;
 
     @Override
     public void onCreate() {
@@ -103,18 +107,35 @@ public class CarePayPracticeApplication extends CarePayApplication {
         super.onActivityResumed(activity);
         if (activity instanceof SessionedActivityInterface
                 && ((SessionedActivityInterface) activity).manageSession()
-                && !PracticeSessionService.isServiceStarted) {
+                && !PracticeSessionWorker.isServiceStarted) {
             restartSession(activity);
         }
     }
 
     @Override
     public void restartSession(Activity activity) {
-        Log.e("Session", "manageSession");
-        Bundle bundle = new Bundle();
-        DtoHelper.bundleDto(bundle, ((SessionedActivityInterface) activity).getLogoutTransition());
-        Intent intent = new Intent(this, PracticeSessionService.class);
-        intent.putExtras(bundle);
-        startService(intent);
+        cancelSession();
+        Data.Builder builder = new Data.Builder();
+        builder.putString("logout_transition",
+                DtoHelper.getStringDTO(((SessionedActivityInterface) activity).getLogoutTransition()));
+
+        OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PracticeSessionWorker.class)
+                .setInputData(builder.build())
+                .addTag("sessionWorker")
+                .build();
+
+        sessionWorkManager = WorkManager.getInstance(getApplicationContext());
+        sessionWorkManager.enqueueUniqueWork(
+                "sessionWorker",
+                ExistingWorkPolicy.REPLACE,
+                sessionWorkerRequest);
+    }
+
+    public void cancelSession() {
+        if (sessionWorkManager != null) {
+            PracticeSessionWorker.isServiceStarted = false;
+            WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
+            SessionWorker.handler.removeMessages(0);
+        }
     }
 }
