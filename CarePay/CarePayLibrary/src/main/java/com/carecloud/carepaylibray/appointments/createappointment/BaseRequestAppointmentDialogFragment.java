@@ -139,7 +139,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
                         }
 
-                        if (isFromPostExecute) {
+                        if (isFromPostExecute && callback != null) {
                             isFromPostExecute = false;
                             callback.appointmentScheduledSuccessfully();
                             cancel();
