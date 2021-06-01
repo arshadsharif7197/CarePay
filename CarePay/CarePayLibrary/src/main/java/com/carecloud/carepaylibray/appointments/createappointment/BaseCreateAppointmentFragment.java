@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -183,6 +184,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
+        showDialog();
     }
 
     @Override
@@ -209,6 +211,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
+        showDialog();
     }
 
     @Override
@@ -225,6 +228,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
+        showDialog();
     }
 
     private void setCardViewContent(View view, String title, String subtitle, boolean showImage, String imageUrl) {
