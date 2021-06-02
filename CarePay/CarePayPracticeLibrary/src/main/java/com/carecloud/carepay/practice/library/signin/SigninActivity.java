@@ -38,6 +38,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.models.SessionTimeInfo;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
@@ -52,7 +53,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +175,25 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         viewModel.getAuthenticateDtoObservable().observe(this, workflowDTO -> {
             setSignInButtonClickable(true);
             getApplicationPreferences().setAppointmentCounts(null);
+            if (workflowDTO.getPayload().has("timeouts")) {
+                JsonArray practiceTimeOut = workflowDTO.getPayload().getAsJsonObject("timeouts")
+                        .getAsJsonArray("practice");
+                //set default timeout for practice mode.
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<SessionTimeInfo>>() {
+                }.getType();
+                List<SessionTimeInfo> timeList = gson.fromJson(practiceTimeOut, type);
+                getApplicationPreferences().setPracticeSessionTime(getDefaultSession(timeList));
+
+                //set default timeout for Patient Mode.
+                practiceTimeOut = workflowDTO.getPayload().getAsJsonObject("timeouts")
+                        .getAsJsonArray("patient");
+                gson = new Gson();
+                type = new TypeToken<List<SessionTimeInfo>>() {
+                }.getType();
+                timeList = gson.fromJson(practiceTimeOut, type);
+                getApplicationPreferences().setPatientSessionTime(getDefaultSession(timeList));
+            }
             navigateToWorkFlow(workflowDTO);
         });
     }
@@ -182,6 +206,15 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
         showErrorToast(errorMessage);
         Log.e(getString(R.string.alert_title_server_error), errorMessage);
+    }
+
+    private String getDefaultSession(List<SessionTimeInfo> timeList) {
+        for (SessionTimeInfo sessionTimeInfo : timeList) {
+            if (sessionTimeInfo.isDefault()) {
+                return sessionTimeInfo.getName();
+            }
+        }
+        return "2";
     }
 
     @Override

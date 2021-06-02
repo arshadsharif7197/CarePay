@@ -14,8 +14,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -227,23 +230,23 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
 
-    public static Bitmap getScaledBitmap(Bitmap original, int maxPixels){
+    public static Bitmap getScaledBitmap(Bitmap original, int maxPixels) {
         int width = original.getWidth();
         int height = original.getHeight();
 
-        if(width < maxPixels && height < maxPixels){
+        if (width < maxPixels && height < maxPixels) {
             return original;
         }
 
         float aspectRatio = (float) width / (float) height;
-        if(aspectRatio > 1){
+        if (aspectRatio > 1) {
             //landscape image
             width = maxPixels;
-            height = (int) (maxPixels/aspectRatio);
-        }else{
+            height = (int) (maxPixels / aspectRatio);
+        } else {
             //portrait image
             height = maxPixels;
-            width = (int) (maxPixels/aspectRatio);
+            width = (int) (maxPixels / aspectRatio);
         }
         return Bitmap.createScaledBitmap(original, width, height, true);
     }
@@ -412,7 +415,9 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
             return;
         }
 
-        new CustomMessageToast(context, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS)
+        BaseActivity activity = (BaseActivity) context;
+        if (activity.isVisible())
+            new CustomMessageToast(context, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS)
                 .show();
 
     }
@@ -428,40 +433,43 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         if (null == context) {
             return;
         }
-
-        new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR)
-                .show();
-
+        BaseActivity activity = (BaseActivity) context;
+        if (activity.isVisible())
+            new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR)
+                    .show();
     }
 
     /**
      * Convenience method to safely subtract two numbers and avoid floating point errors
-     * @param minuend number to subtract from
+     *
+     * @param minuend    number to subtract from
      * @param subtrahend number being subtracted
      * @return floating point safe difference
      */
-    public static double safeSubtract(double minuend, double subtrahend){
-        return Math.round((minuend - subtrahend)*100)/100D;
+    public static double safeSubtract(double minuend, double subtrahend) {
+        return Math.round((minuend - subtrahend) * 100) / 100D;
     }
 
     /**
      * Convenience method to safely add two numbers and avoid floating point errors
+     *
      * @param addend1 first addend
      * @param addend2 second addend
      * @return sum
      */
-    public static double safeAdd(double addend1, double addend2){
-        return Math.round((addend1 + addend2)*100)/100D;
+    public static double safeAdd(double addend1, double addend2) {
+        return Math.round((addend1 + addend2) * 100) / 100D;
     }
 
     /**
      * Convenience method to safely multiply two numbers and avoid floating point errors
-     * @param base number to multiply
+     *
+     * @param base   number to multiply
      * @param factor number to multiply by
      * @return product
      */
-    public static double safeMultiply(double base, double factor){
-        return Math.round((base * factor)*100)/100D;
+    public static double safeMultiply(double base, double factor) {
+        return Math.round((base * factor) * 100) / 100D;
     }
 
     public static boolean arrayContains(Object[] array, Object search) {

@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class CreateAppointmentFragment extends BaseCreateAppointmentFragment implements CreateAppointmentFragmentInterface {
 
+    public static CreateAppointmentFragment fragment;
+
     public static CreateAppointmentFragment newInstance() {
         return new CreateAppointmentFragment();
     }
@@ -46,8 +48,12 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         DtoHelper.bundleDto(args, selectedResource);
         DtoHelper.bundleDto(args, selectedVisitTypeDTO);
         DtoHelper.bundleDto(args, selectedLocation);
-        CreateAppointmentFragment fragment = new CreateAppointmentFragment();
+        fragment = new CreateAppointmentFragment();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CreateAppointmentFragment getInstance() {
         return fragment;
     }
 

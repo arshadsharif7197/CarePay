@@ -19,12 +19,17 @@ import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInte
  * @author pjohnson on 1/16/19.
  */
 public class AvailabilityHourFragment extends BaseAvailabilityHourFragment implements DateCalendarRangeInterface {
+    public static AvailabilityHourFragment fragment;
 
     public static AvailabilityHourFragment newInstance(int mode) {
         Bundle args = new Bundle();
         args.putInt("mode", mode);
-        AvailabilityHourFragment fragment = new AvailabilityHourFragment();
+        fragment = new AvailabilityHourFragment();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static AvailabilityHourFragment getInstance() {
         return fragment;
     }
 
