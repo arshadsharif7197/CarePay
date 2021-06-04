@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,12 +51,15 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Label.getLabel("next_5_days_option"));
 
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> dismiss());
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> cancel());
     }
 
     @Override
     protected void selectDateRange() {
-        callback.showFragment(DateRangeDialogFragment.newInstance(startDate, endDate));
+        DateRangeDialogFragment fragment = DateRangeDialogFragment.newInstance(startDate, endDate);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
+        callback.showFragment(fragment);
+        hideDialog();
     }
 
     @Override

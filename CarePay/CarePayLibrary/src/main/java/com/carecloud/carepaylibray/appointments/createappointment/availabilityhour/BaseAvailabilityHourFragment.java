@@ -248,6 +248,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         startDate = newStartDate;
         endDate = newEndDate;
         toolbarTitle.setText(getToolbarTitle(startDate, endDate));
+        showDialog();
         callAvailabilityService();
     }
 
