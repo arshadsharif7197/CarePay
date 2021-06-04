@@ -19,12 +19,18 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.base.models.DeviceVersionModel;
 import com.carecloud.carepaylibray.base.models.LatestVersionDTO;
 import com.carecloud.carepaylibray.base.models.LatestVersionModel;
+import com.carecloud.carepaylibray.base.models.SessionTimeInfo;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SplashActivity extends BasePracticeActivity {

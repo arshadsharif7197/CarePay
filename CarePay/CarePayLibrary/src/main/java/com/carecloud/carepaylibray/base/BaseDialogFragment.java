@@ -235,12 +235,16 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     @Override
     public void showErrorNotification(String errorMessage) {
         if (getDialog() != null) {
-            CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
-            toast.show();
+            if (((BaseActivity) getActivity()).isVisible) {
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+            }
         } else {
             ISession session = (ISession) getActivity();
             if (null != session) {
-                session.showErrorNotification(errorMessage);
+                if (((BaseActivity) getActivity()).isVisible) {
+                    session.showErrorNotification(errorMessage);
+                }
             }
         }
     }

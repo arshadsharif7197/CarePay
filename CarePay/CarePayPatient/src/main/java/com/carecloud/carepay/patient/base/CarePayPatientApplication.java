@@ -110,4 +110,12 @@ public class CarePayPatientApplication extends CarePayApplication {
         Log.e("Session", "manageSession");
         startService(new Intent(this, PatientSessionService.class));
     }
+
+    public void cancelSession() {
+        // TODO: 5/28/2021 worker required for Background Task
+       /* if (sessionWorkManager != null) {
+            PracticeSessionWorker.isServiceStarted = false;
+            sessionWorkManager.cancelUniqueWork("sessionWorker");
+        }*/
+    }
 }
