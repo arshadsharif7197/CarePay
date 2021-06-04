@@ -1,43 +1,32 @@
 package com.carecloud.carepaylibray.session;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.CountDownTimer;
+import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.concurrent.futures.CallbackToFutureAdapter;
+import androidx.work.ListenableWorker;
+import androidx.work.WorkerParameters;
 
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.google.common.util.concurrent.ListenableFuture;
 
-/**
- * @author pjohnson on 2019-07-01.
- */
-public abstract class SessionService extends Service {
+public abstract class SessionWorker extends ListenableWorker {
 
 
     protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 9;
     protected static final long PRACTICE_SESSION_TIMEOUT = 1000 * 60 * 2; //old logic
-    private Handler handler;
-    private Runnable timeOutRunnable;
+    public static Handler handler;
+    public Runnable timeOutRunnable;
     protected long sessionTimeout;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        setUpHandler();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    /**
+     * @param appContext   The application {@link Context}
+     * @param workerParams Parameters to setup the internal state of this worker
+     */
+    public SessionWorker(@NonNull Context appContext, @NonNull WorkerParameters workerParams) {
+        super(appContext, workerParams);
         HandlerThread handlerThread = new HandlerThread("Session Thread");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
@@ -50,6 +39,16 @@ public abstract class SessionService extends Service {
         };
     }
 
+
+    @NonNull
+    @Override
+    public ListenableFuture<Result> startWork() {
+        setUpHandler();
+        return CallbackToFutureAdapter.getFuture(completer -> {
+            return completer;
+        });
+    }
+
     protected void setUpHandler() {
         if (timeOutRunnable != null) {
             handler.removeCallbacks(timeOutRunnable);
@@ -60,12 +59,4 @@ public abstract class SessionService extends Service {
     protected abstract void callWarningActivity();
 
     protected abstract void logout();
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (timeOutRunnable != null) {
-            handler.removeCallbacks(timeOutRunnable);
-        }
-    }
 }

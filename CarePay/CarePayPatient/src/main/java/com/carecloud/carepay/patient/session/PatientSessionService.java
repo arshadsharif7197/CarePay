@@ -21,4 +21,9 @@ public class PatientSessionService extends SessionService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    @Override
+    protected void logout() {
+        // TODO: 5/26/2021 add background logout logic
+    }
 }
