@@ -66,6 +66,8 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_DOB_REQUIRED = "dob_required";
     private static final String PREFERENCE_PM_SESSION_TIME = "patient_mode_session_time";
     private static final String PREFERENCE_PR_SESSION_TIME = "practice_mode_session_time";
+    private static final String PREFERENCE_START_PM = "selected_practice_management";
+    private static final String PREFERENCE_PM_TITLE = "practice_management_title";
 
     private String patientId;
     private String practiceId;
@@ -79,6 +81,8 @@ public class ApplicationPreferences {
     @Defs.AppointmentNavigationTypeDef
     Integer navigationOption;
     private String userName;
+    private @Defs.PracticeManagementDef
+    String startPracticeManagement;
 
     private static ApplicationPreferences instance;
     private String userPassword;
@@ -612,5 +616,30 @@ public class ApplicationPreferences {
 
     public String getPatientSessionTime() {
         return readStringFromSharedPref(PREFERENCE_PM_SESSION_TIME, "2");
+    }
+
+    public @Defs.PracticeManagementDef
+    String getStartPracticeManagement() {
+        if (startPracticeManagement == null) {
+            startPracticeManagement = readStringFromSharedPref(PREFERENCE_START_PM, null);
+        }
+        return startPracticeManagement;
+    }
+
+    public void setStartPracticeManagement(@Defs.PracticeManagementDef String startPracticeManagement) {
+        writeStringToSharedPref(PREFERENCE_START_PM, startPracticeManagement);
+        this.startPracticeManagement = startPracticeManagement;
+    }
+
+    public String getPracticeManagementTitle() {
+        return readStringFromSharedPref(PREFERENCE_PM_TITLE, null);
+    }
+
+    public void setPracticeManagementTitle(String startPracticeManagement) {
+        writeStringToSharedPref(PREFERENCE_PM_TITLE, startPracticeManagement);
+    }
+
+    public void clearAll() {
+        getSharedPreferences().edit().clear().apply();
     }
 }

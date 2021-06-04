@@ -80,6 +80,7 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
 
         if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
                 && (ApplicationPreferences.getInstance().getProfileId() != null)
@@ -459,8 +460,10 @@ public class WorkflowServiceHelper {
 
         Gson gson = new Gson();
         String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", applicationPreferences.getStartPracticeManagement());
 
-        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, null, getApplicationStartHeaders());
+        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, queryMap, getApplicationStartHeaders());
     }
 
     private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,

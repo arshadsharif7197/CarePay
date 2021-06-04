@@ -24,6 +24,10 @@ public class SignInPayloadDTO {
     @Expose
     private List<OptionDTO> languages = new ArrayList<>();
 
+    @SerializedName("pms_partners")
+    @Expose
+    private List<Partners> pmsPartners = new ArrayList<>();
+
     @SerializedName("state")
     @Expose
     private String state;
@@ -58,5 +62,13 @@ public class SignInPayloadDTO {
 
     public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
+    }
+
+    public List<Partners> getPmsPartners() {
+        return pmsPartners;
+    }
+
+    public void setPmsPartners(List<Partners> pmsPartners) {
+        this.pmsPartners = pmsPartners;
     }
 }

@@ -12,12 +12,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.practice.library.R;
@@ -28,10 +32,12 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
+import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeManagementFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -45,6 +51,7 @@ import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
+import com.carecloud.carepaylibray.signinsignup.dto.Partners;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
@@ -73,6 +80,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         ConfirmationCallback, FragmentActivityInterface {
 
     private static final int RESET_PASSWORD = 100;
+    private ApplicationMode.ApplicationType appType;
+    private TextView tvPartnerBtn;
+    private LinearLayout partnerBtnLayout;
+    private SignInScreenMode signinScreenMode;
+    private CheckBox cbPracticeManagement;
+    private String practiceManagementTitle;
 
     private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -91,13 +104,22 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private View showPasswordButton;
     private PracticeSelectionDTO practiceSelectionModel;
     private SignInDTO signinDTO;
+    private String practiceManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         signinDTO = getConvertedDTO(SignInDTO.class);
-        SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+        appType = getApplicationMode().getApplicationType();
+        signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
+        practiceManagement = getApplicationPreferences().getStartPracticeManagement();
+        practiceManagementTitle = getApplicationPreferences().getPracticeManagementTitle();
+
+        initView();
+    }
+
+    private void initView() {
         setContentView(R.layout.activity_signin);
         setSystemUiVisibility();
         initViews(signinScreenMode);
@@ -106,6 +128,16 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         changeScreenMode(signinScreenMode);
         setUpViewModel();
         manageCrashMessage();
+    }
+
+    private boolean isMorePartnerEnable() {
+        int enablePartners = 0;
+        for (Partners partners : signinDTO.getPayload().getPmsPartners()) {
+            if (partners.getImplemented()) {
+                enablePartners++;
+            }
+        }
+        return enablePartners > 1;
     }
 
     private void manageCrashMessage() {
@@ -129,7 +161,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             TransitionDTO transition = null;
             TransitionDTO refreshTransition = null;
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                transition = signinDTO.getMetadata().getTransitions().getAuthenticate();
+                transition = unifiedSignInResponse.getMetadata().getTransitions().getAuthenticate();
                 refreshTransition = signinDTO.getMetadata().getTransitions().getRefresh();
             } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType
                     .PRACTICE_PATIENT_MODE) {
@@ -196,6 +228,13 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             }
             navigateToWorkFlow(workflowDTO);
         });
+
+        viewModel.getSignInButtonStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isEnable) {
+                setSignInButtonClickable(isEnable);
+            }
+        });
     }
 
     private void onFailure(String errorMessage) {
@@ -246,6 +285,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         signInEmailTextInputLayout = findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = findViewById(R.id.passwordTextInputLayout);
         showPasswordButton = findViewById(R.id.show_password_button);
+        partnerBtnLayout = findViewById(R.id.partner_btn_layout);
+        tvPartnerBtn = findViewById(R.id.tv_partner_btn);
+        cbPracticeManagement = findViewById(R.id.cb_practice_management);
+
 
         setUpLanguageSpinner();
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
@@ -358,6 +401,29 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
+
+        tvPartnerBtn.setOnClickListener(view -> {
+            showPracticeManagementFragment();
+        });
+
+        partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                View.GONE : View.VISIBLE);
+        if (practiceManagementTitle == null) {
+            tvPartnerBtn.setText(signinDTO.getPayload().getPmsPartners().get(0).getLabel());
+            cbPracticeManagement.setChecked(false);
+        } else {
+            tvPartnerBtn.setText(practiceManagementTitle);
+            cbPracticeManagement.setChecked(true);
+        }
+
+        cbPracticeManagement.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                getApplicationPreferences().setPracticeManagementTitle(practiceManagementTitle);
+            } else {
+                getApplicationPreferences().setPracticeManagementTitle(null);
+            }
+        });
+
     }
 
     private void changeScreenMode(SignInScreenMode signInScreenMode) {
@@ -398,7 +464,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_mgmt", getApplicationPreferences().getStartPracticeManagement());
             queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
@@ -446,6 +512,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         showPracticeSearchFragment();
     }
 
+    @Override
+    public void onSelectPracticeManagement(Partners selectedPracticeManagement) {
+        practiceManagement = selectedPracticeManagement.getPracticeMgmt();
+        practiceManagementTitle = selectedPracticeManagement.getLabel();
+        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+        tvPartnerBtn.setText(practiceManagementTitle);
+        passwordEditText.setText("");
+        emailEditText.setText("");
+        cbPracticeManagement.setChecked(false);
+    }
+
     public void requestPasswordFocus() {
         passwordEditText.requestFocus();
     }
@@ -482,6 +559,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
+    private void showPracticeManagementFragment() {
+        ChoosePracticeManagementFragment fragment = ChoosePracticeManagementFragment.newInstance(
+                signinDTO.getPayload().getPmsPartners());
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+    }
+
     private boolean areAllFieldsValid(String email, String password) {
         boolean isPasswordValid = checkPassword(password);
         if (!isPasswordValid) {
@@ -496,7 +579,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     private boolean checkEmail(String email) {
         boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
-        boolean isEmailValid = ValidationHelper.isValidEmail(email);
+        boolean isEmailValid = true;
+        if (isEmailValidationNeeded()) {
+            isEmailValid = ValidationHelper.isValidEmail(email);
+        }
         if (isEmptyEmail || !isEmailValid) {
             if (isEmptyEmail) {
                 setEmailError(getString(R.string.signin_signup_error_empty_email));
@@ -515,6 +601,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             setPasswordError(error);
         }
         return !isEmptyPassword;
+    }
+
+    private boolean isEmailValidationNeeded() {
+        return !practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR);
     }
 
     @Override
@@ -560,7 +650,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         replaceFragment(R.id.fragmentContainer, fragment, addToBackStack);
     }
 
-
     @Override
     public void onConfirm() {
         String appPackageName = getPackageName();
@@ -570,5 +659,4 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
-
 }
