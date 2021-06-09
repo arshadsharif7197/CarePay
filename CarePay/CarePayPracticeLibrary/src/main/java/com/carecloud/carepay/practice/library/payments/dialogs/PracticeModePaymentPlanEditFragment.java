@@ -189,6 +189,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
         }
         ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance(title, message);
+        fragment.setNegativeAction(true);
         fragment.setOnCancelListener(onDialogCancelListener);
         fragment.setCallback(() -> cancelPaymentPlan(deletePaymentPlan));
         callback.displayDialogFragment(fragment, true);
