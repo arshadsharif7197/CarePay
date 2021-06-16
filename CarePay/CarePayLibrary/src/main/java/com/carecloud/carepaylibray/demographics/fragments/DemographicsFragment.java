@@ -7,6 +7,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -49,7 +50,7 @@ import java.util.List;
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
 public class DemographicsFragment extends CheckInDemographicsBaseFragment
-        implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
+        implements EmergencyContactFragmentInterface, PhysicianFragmentInterface{
 
     private DemographicExtendedInterface callback;
     private PatientModel demographicPersonalDetailsPayloadDTO;
@@ -73,7 +74,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
-
     private EditText employerAddressEditText;
     private EditText employerAddressEditText2;
     private EditText zipCodeEditText;
@@ -1139,4 +1139,5 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 dataModel.getDemographic().getEmploymentInfo().getProperties().getEmploymentStatus().getOptions());
 
     }
+
 }

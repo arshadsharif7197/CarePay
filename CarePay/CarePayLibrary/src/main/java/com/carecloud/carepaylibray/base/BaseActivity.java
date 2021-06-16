@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -11,9 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelStore;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -32,7 +38,11 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
@@ -45,7 +55,7 @@ import com.google.gson.internal.Primitives;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity implements ISession {
+public abstract class BaseActivity extends AppCompatActivity implements ISession, View.OnTouchListener, View.OnFocusChangeListener {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
     private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
@@ -67,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             handler = new Handler();
         }
         setNewRelicInteraction(getClass().getName());
+
     }
 
     @Override
@@ -91,9 +102,32 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             view.requestFocus();
             onProgressDialogCancel();
         });
+        List<View> list = getAllChildViews(rootView);
+        setListners(list);
+
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
         expectingResult = false;
+    }
+    public abstract boolean manageSession();
+    private void setListners(List<View> list) {
+        for (View view : list) {
+            view.setOnTouchListener(this);
+        }
+    }
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v instanceof CarePayButton || v instanceof CarePayEditText || v instanceof CarePayTextView) {
+            v.setOnFocusChangeListener(this);
+        }
+
+        return false;
+    }
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (manageSession())
+            ((CarePayApplication) getApplicationContext()).restartSession(this);
+
     }
 
     private void handleFragmentDialogs() {
@@ -182,6 +216,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
+
 
     @Override
     public void hideProgressDialog() {
@@ -504,4 +539,24 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return null;
     }
 
+    ArrayList<View> result = new ArrayList<View>();
+
+    public List<View> getAllChildViews(View view) {
+        if (view instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) view;
+
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                if (vg.getChildAt(i) instanceof ViewGroup) {
+                    getAllChildViews(vg.getChildAt(i));
+                } else if (vg.getChildAt(i) instanceof CarePayEditText || vg.getChildAt(i) instanceof CarePayButton||vg.getChildAt(i) instanceof CarePayTextView) {
+                    result.add(vg.getChildAt(i));
+                }
+
+
+            }
+        } else if (view instanceof CarePayEditText || view instanceof CarePayButton || view instanceof CarePayTextView) {
+            result.add(view);
+        }
+        return result;
+    }
 }

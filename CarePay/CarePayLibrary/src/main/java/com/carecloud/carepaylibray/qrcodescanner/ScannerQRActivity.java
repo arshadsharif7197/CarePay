@@ -38,6 +38,11 @@ public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
 
     }

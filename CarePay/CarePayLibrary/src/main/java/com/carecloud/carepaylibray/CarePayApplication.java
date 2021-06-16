@@ -27,6 +27,7 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     private AppointmentDTO appointmentDTO;
     private long lastInteraction;
     protected boolean isForeground;
+    private Activity currentActivity;
 
     @Override
     public void onCreate() {
@@ -107,7 +108,6 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     public void onActivityStarted(Activity activity) {
 
     }
-
     @Override
     public void onActivityResumed(Activity activity) {
         isForeground = true;

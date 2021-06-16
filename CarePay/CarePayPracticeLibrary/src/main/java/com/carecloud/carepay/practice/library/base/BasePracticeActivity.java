@@ -41,7 +41,6 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
             });
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,6 +119,8 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
 
     }
+
+
 
     protected WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
         @Override
