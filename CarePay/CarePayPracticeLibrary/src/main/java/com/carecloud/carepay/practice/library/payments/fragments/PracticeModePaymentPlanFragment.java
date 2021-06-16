@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRu
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -558,7 +559,13 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(selectedCreditCard);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body,
+        Map<String, String> queryMap = new HashMap<>();
+        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+        queryMap.put("practice_mgmt", metadata.getPracticeMgmt());
+        queryMap.put("practice_id", metadata.getPracticeId());
+        queryMap.put("patient_id", metadata.getPatientId());
+
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap,
                 getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
