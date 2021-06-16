@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanItemAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -482,6 +483,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
+        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
+        creditCardModel.setCard_number(creditCardsPayloadDTO.getCompleteNumber());
 
         @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
                 .getTokenizationService().toString();
@@ -491,6 +494,13 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
+        String pm = getApplicationPreferences().getStartPracticeManagement();
+        if (pm != null && pm.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            // No need to Tokenize with Payeezy call
+            selectedCreditCard.setToken(selectedCreditCard.getCompleteNumber());
+            onAuthorizeCreditCardSuccess();
+            return;
+        }
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();

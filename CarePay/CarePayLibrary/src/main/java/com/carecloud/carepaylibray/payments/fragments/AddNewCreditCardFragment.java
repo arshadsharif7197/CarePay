@@ -319,6 +319,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
         creditCardModel.setSaveCard(saveCardOnFileCheckBox.isChecked());
         creditCardModel.setDefault(setAsDefaultCheckBox.isChecked());
+        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
+        creditCardModel.setCard_number(creditCardsPayloadDTO.getCompleteNumber());
 
         @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
         creditCardModel.setTokenizationService(tokenizationService);

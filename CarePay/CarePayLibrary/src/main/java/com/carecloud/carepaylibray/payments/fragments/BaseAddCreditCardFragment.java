@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
@@ -114,8 +115,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         Bundle arguments = getArguments();
         Gson gson = new Gson();
         String payloadString;
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         if (arguments != null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }
@@ -396,6 +397,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         billingInformationDTO = new CreditCardBillingInformationDTO();
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
+        creditCardsPayloadDTO.setCompleteNumber(getCardNumber());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         creditCardsPayloadDTO.setExpireDtDisplay(expirationDateEditText.getText().toString().trim());
@@ -413,6 +415,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     protected void authorizeCreditCard() {
+        String pm = getApplicationPreferences().getStartPracticeManagement();
+        if (pm != null && pm.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            // No need to Tokenize with Payeezy call
+            creditCardsPayloadDTO.setToken(getCardNumber());
+            authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
+            return;
+        }
+
         String cvv = creditCardsPayloadDTO.getCvv();
         String expiryDate = creditCardsPayloadDTO.getExpireDt();
         String name = creditCardsPayloadDTO.getNameOnCard();
