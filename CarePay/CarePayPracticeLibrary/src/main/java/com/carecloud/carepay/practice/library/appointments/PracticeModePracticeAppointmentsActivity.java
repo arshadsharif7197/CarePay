@@ -429,7 +429,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckIn()) {
             dialogStyle = AppointmentDisplayStyle.PENDING;
 
-        } else if (appointmentPayloadDTO.canCheckOut() || appointmentPayloadDTO.getVisitType().hasVideoOption()) {
+        } else if (appointmentPayloadDTO.canCheckOut()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
         } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
