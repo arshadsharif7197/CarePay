@@ -16,11 +16,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -44,7 +44,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,14 +65,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     private ScrollView scrollView;
     protected CheckinFlowCallback checkinFlowCallback;
     protected Button nextButton;
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         demographicDTO = checkinFlowCallback.getDemographicDTO();
         dataModel = demographicDTO.getMetadata().getNewDataModel();
-    }
 
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
@@ -327,6 +325,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
                 this.count = sequence.length();
+
             }
 
             @Override
@@ -336,6 +335,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
@@ -594,6 +594,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
                               String value, boolean isRequired, View requiredView) {
+
+
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
         setVisibility(textInputLayout, isVisible);
         editText.setText(StringUtil.captialize(value).trim());

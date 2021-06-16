@@ -46,6 +46,11 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     protected void onContinueButton() {
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         Data.Builder builder = new Data.Builder();

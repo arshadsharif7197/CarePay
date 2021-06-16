@@ -31,7 +31,7 @@ import com.smartystreets.api.us_zipcode.City;
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
-public class AddressFragment extends CheckInDemographicsBaseFragment {
+public class AddressFragment extends CheckInDemographicsBaseFragment{
 
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private EditText cityEditText;
@@ -42,6 +42,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
@@ -302,4 +303,5 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     protected int getContentId() {
         return R.layout.fragment_review_demographic_address;
     }
+
 }

@@ -1,13 +1,12 @@
 package com.carecloud.carepaylibray.customcomponents;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import androidx.appcompat.widget.AppCompatButton;
 import android.util.AttributeSet;
-
 import com.carecloud.carepaylibrary.R;
-
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_MEDIUM;
@@ -30,7 +29,6 @@ public class CarePayButton extends AppCompatButton {
 
     Context context;
     int fontAttribute;
-
     /**
      * Public constructor with context
      *
@@ -41,7 +39,6 @@ public class CarePayButton extends AppCompatButton {
         this.context = context;
         init(null);
     }
-
     /**
      * Public constructor with context and Attribute.
      * All the custom styleable declare are apply here also.
@@ -54,7 +51,6 @@ public class CarePayButton extends AppCompatButton {
         this.context = context;
         init(attrs);
     }
-
     /**
      * Public constructor with context, Attributes and default attributes.
      * All the custom styleable declare are apply here also.
@@ -69,10 +65,7 @@ public class CarePayButton extends AppCompatButton {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(attrs);
-
-
     }
-
     /**
      * get applied font
      *
@@ -93,7 +86,6 @@ public class CarePayButton extends AppCompatButton {
         invalidate();
         requestLayout();
     }
-
     /**
      * initialize
      *
@@ -112,7 +104,6 @@ public class CarePayButton extends AppCompatButton {
         }
         setFont();
     }
-
     private void setFont() {
         String assetFontName = "";
         switch (fontAttribute) {

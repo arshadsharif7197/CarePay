@@ -30,6 +30,11 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         throw new UnsupportedOperationException("Media Camera Activity does not handle navigating to work flows");
     }
