@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanItemAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -34,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRu
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -482,6 +484,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
+        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
+        creditCardModel.setCard_number(creditCardsPayloadDTO.getCompleteNumber());
 
         @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
                 .getTokenizationService().toString();
@@ -491,6 +495,13 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
+        String pm = getApplicationPreferences().getStartPracticeManagement();
+        if (pm != null && pm.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            // No need to Tokenize with Payeezy call
+            selectedCreditCard.setToken(selectedCreditCard.getCompleteNumber());
+            onAuthorizeCreditCardSuccess();
+            return;
+        }
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();
@@ -548,7 +559,13 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(selectedCreditCard);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body,
+        Map<String, String> queryMap = new HashMap<>();
+        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+        queryMap.put("practice_mgmt", metadata.getPracticeMgmt());
+        queryMap.put("practice_id", metadata.getPracticeId());
+        queryMap.put("patient_id", metadata.getPatientId());
+
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap,
                 getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
