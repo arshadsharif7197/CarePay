@@ -186,7 +186,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         Gson gson = new Gson();
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+        Map<String, String> queryMap = new HashMap<>();
+
+        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+        queryMap.put("practice_mgmt", metadata.getPracticeMgmt());
+        queryMap.put("practice_id", metadata.getPracticeId());
+        queryMap.put("patient_id", metadata.getPatientId());
+
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
 
