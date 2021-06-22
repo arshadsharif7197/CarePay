@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -310,12 +309,10 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
             if (!modifiedAllergies.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
-                //getChildFragmentManager().popBackStackImmediate("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentAllergy", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-             //   getActivity().getSupportFragmentManager().popBackStack(getActivity().getSupportFragmentManager().getBackStackEntryAt(getActivity().getSupportFragmentManager().getBackStackEntryCount()-2).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getActivity().getSupportFragmentManager().getFragments().set(getIndex("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentAllergy"), null);
-              //  Fragment fragmentA = getFragmentManager().findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
-               // getFragmentManager().beginTransaction().remove(fragmentA).commit();
+                Bundle args = new Bundle();
+                DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_allergies));
@@ -330,16 +327,6 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    private int getIndex(String tagname) {
-        FragmentManager manager = getFragmentManager();
-        for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
-            if (manager.getBackStackEntryAt(i).getName().equalsIgnoreCase(tagname)) {
-                return i;
-            }
-        }
-        return 0;
-    }
 
     @Override
     public DTO getDto() {

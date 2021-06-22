@@ -54,13 +54,13 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
-
     private DemographicsPresenter demographicsPresenter;
     private PatientPaymentPresenter paymentPresenter;
     private String paymentWorkflow;
     private MediaResultListener resultListener;
     private PaymentsModel paymentsModel;
 
+    private TextView textView,textView1;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
@@ -76,7 +76,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         }
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
-
+        textView=findViewById(com.carecloud.carepaylibrary.R.id.tvMedicationcheck);
+        textView1=findViewById(com.carecloud.carepaylibrary.R.id.tvAllergiescheck);
         demographicsPresenter = new DemographicsPresenterImpl(this, icicle, false);
         if (icicle != null && icicle.containsKey(KEY_PAYMENT_DTO)) {
             paymentWorkflow = icicle.getString(KEY_PAYMENT_DTO);
@@ -335,6 +336,16 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
+
+      //  if(textView.getText().equals("added"))
+
+            FragmentManager fm=getSupportFragmentManager();
+            if (fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 2).getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentMedications")
+            && (textView.getText().equals("added") || textView1.getText().equals("added")) ) {
+
+                super.onBackPressed();
+
+            }
         if(!isFragmentVisible()){
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
