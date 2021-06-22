@@ -135,7 +135,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            String methodLabel = Label.getLabel("payment_method_" + selectedPaymentMethod.getType());
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, methodLabel, amount);
             viewHandler.navigateToFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);

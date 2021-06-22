@@ -221,8 +221,9 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
                                       PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            String methodLabel = Label.getLabel("payment_method_" + selectedPaymentMethod.getType());
             DialogFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    methodLabel, amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);

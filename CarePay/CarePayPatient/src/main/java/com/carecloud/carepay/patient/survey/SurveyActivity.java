@@ -1,7 +1,10 @@
 package com.carecloud.carepay.patient.survey;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +39,7 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
     public static final int FLAG_SURVEY_FLOW = 110;
     private SurveyDTO surveyDto;
     private boolean comesFromNotifications;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -61,6 +65,10 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
         return true;
     }
 
