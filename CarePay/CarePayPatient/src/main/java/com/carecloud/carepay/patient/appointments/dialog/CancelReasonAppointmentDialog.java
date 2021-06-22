@@ -268,7 +268,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
 
     @Override
     public void onBackPressed() {
-        callback.onBackClick();
         cancel();
+        callback.onBackClick();
     }
 }
