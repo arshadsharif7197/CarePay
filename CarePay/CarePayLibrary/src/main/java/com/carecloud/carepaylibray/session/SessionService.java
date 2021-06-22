@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.session;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -36,13 +38,14 @@ public abstract class SessionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        handler = new Handler();
+        HandlerThread handlerThread = new HandlerThread("Session Thread");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
         timeOutRunnable = () -> {
             if (((CarePayApplication) getApplicationContext()).isForeground()) {
                 callWarningActivity();
             } else {
-                //TODO handle background logout
-//                setUpHandler();
+                logout();
             }
         };
     }
@@ -55,6 +58,8 @@ public abstract class SessionService extends Service {
     }
 
     protected abstract void callWarningActivity();
+
+    protected abstract void logout();
 
     @Override
     public void onDestroy() {

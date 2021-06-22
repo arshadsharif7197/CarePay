@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 
 import androidx.multidex.MultiDexApplication;
+import androidx.work.WorkManager;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -132,5 +133,8 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
 
     }
 
+
     public abstract void restartSession(Activity activity);
+
+    public abstract void cancelSession();
 }
