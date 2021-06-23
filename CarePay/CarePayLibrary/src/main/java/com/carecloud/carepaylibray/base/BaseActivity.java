@@ -52,13 +52,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.internal.Primitives;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import fun.observe.touchy.MotionEventBroadcaster;
-import fun.observe.touchy.MotionEventReceiver;
-
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
@@ -83,13 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             handler = new Handler();
         }
         setNewRelicInteraction(getClass().getName());
-        MotionEventBroadcaster.registerReceiver(new MotionEventReceiver() {
-            @Override
-            protected void onReceive(MotionEvent motionEvent) {
-                if (manageSession() && motionEvent.getAction() == MotionEvent.ACTION_UP)
-                    ((CarePayApplication) getApplicationContext()).restartSession(BaseActivity.this);
-            }
-        });
+
     }
 
     @Override
@@ -105,11 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             ((CarePayApplication) getApplicationContext()).restartSession(this);
         return super.dispatchTouchEvent(ev);
     }
-
-
-
-
-
     @Override
     protected void onResume() {
         super.onResume();
