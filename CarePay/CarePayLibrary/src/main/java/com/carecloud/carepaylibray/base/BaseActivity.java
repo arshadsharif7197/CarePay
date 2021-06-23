@@ -65,7 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     protected boolean isVisible = false;
-    List<View> list = new ArrayList<>();
     View rootView;
 
     @Override
