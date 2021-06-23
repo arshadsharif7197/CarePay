@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -51,7 +50,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private RecyclerView allergyRecycler;
     private Button continueButton;
-
+    private TextView textView;
     protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
@@ -128,6 +127,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             }
         }, 30);
         View container = view.findViewById(R.id.container_main);
+        textView=getActivity().findViewById(R.id.tvMedicationcheck);
         hideKeyboardOnViewTouch(container);
     }
 
@@ -313,6 +313,16 @@ public class AllergiesFragment extends BaseCheckinFragment implements
                 Bundle args = new Bundle();
                 DtoHelper.bundleDto(args, medicationsAllergiesDTO);
 
+
+                if(modifiedAllergies.size()>0)
+                {
+
+
+                    textView.setText("added");
+
+                }else {
+                    textView.setText("");
+                }
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_allergies));

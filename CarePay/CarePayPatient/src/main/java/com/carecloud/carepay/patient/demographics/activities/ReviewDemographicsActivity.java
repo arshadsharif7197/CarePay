@@ -340,8 +340,22 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
       //  if(textView.getText().equals("added"))
 
             FragmentManager fm=getSupportFragmentManager();
-            if (fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 2).getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragmentMedications")
-            && (textView.getText().equals("added") || textView1.getText().equals("added")) ) {
+
+            if(fm.getBackStackEntryCount()>2) {
+                if (fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 2).getName()!=null   && fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 2).getName().
+                        equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment")
+                        && (textView.getText().equals("added") || textView1.getText().equals("added"))) {                                                     //com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment
+
+                    super.onBackPressed();
+
+                }
+            }
+
+            else if(fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName()!=null && fm.getBackStackEntryCount()>=1 &&
+                    fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName().
+                            equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment")
+                    && (textView.getText().equals("added") || textView1.getText().equals("added")))
+            {
 
                 super.onBackPressed();
 

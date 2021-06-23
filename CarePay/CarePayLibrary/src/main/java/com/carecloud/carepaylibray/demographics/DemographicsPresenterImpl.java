@@ -307,29 +307,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         currentFragment = fragment;
     }
 
-
-    public void navigateToFragment(Fragment fragment, boolean addToBackStack,String tag) {
-        navigateToFragment(fragment, addToBackStack, false,tag);
-    }
-
-    public void navigateToFragment(Fragment fragment, boolean addToBackStack, boolean clearPrevious,String newtag) {
-        String tag = fragment.getClass().getName();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-
-        Fragment prev = fm.findFragmentByTag(tag);
-        if (prev != null) {
-            fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
-        }
-
-        transaction.replace(R.id.root_layout, fragment, tag);
-        if (addToBackStack && !startCheckIn) {
-            transaction.addToBackStack(tag+newtag);
-        }
-        transaction.commitAllowingStateLoss();
-        currentFragment = fragment;
-    }
-
     @Override
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
         FormsFragment fragment = FormsFragment.newInstance(workflowDTO);
@@ -371,19 +348,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
         Fragment fragment;
-        boolean emptyfragment=false;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
                     MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
-            emptyfragment=true;
         } else {
             fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO);
         }
-
-        if(!emptyfragment)
-           navigateToFragment(fragment, true);
-       else
-           navigateToFragment(fragment, true,"Medications");
+        navigateToFragment(fragment, true);
 
         if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
                 && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
@@ -398,18 +369,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
         Fragment fragment;
-        boolean emptyfragment=false;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
                     MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
-            emptyfragment=true;
         } else {
             fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
         }
-        if(!emptyfragment)
-            navigateToFragment(fragment, true);
-        else
-            navigateToFragment(fragment, true,"Allergy");
+        navigateToFragment(fragment, true);
 
         if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
@@ -641,10 +607,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
-                        Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message_patient"),
-                        Label.getLabel("cancel"),
-                        Label.getLabel("ok"));
+                Label.getLabel("demographics_insurance_primary_alert_title"),
+                Label.getLabel("demographics_insurance_primary_alert_message_patient"),
+                Label.getLabel("cancel"),
+                Label.getLabel("ok"));
         confirmDialogFragment.setCallback(callback);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);
