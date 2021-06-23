@@ -176,7 +176,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e("Server Error", exceptionMessage);
 
-            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+            String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
         }
