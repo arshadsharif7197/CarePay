@@ -35,7 +35,6 @@ import com.carecloud.carepay.patient.notifications.activities.NotificationActivi
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
-import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -44,6 +43,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
@@ -777,6 +777,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     private void finishSessionService() {
-        stopService(new Intent(this, PatientSessionService.class));
+        ((CarePayApplication) getApplication()).cancelSession();
     }
 }
