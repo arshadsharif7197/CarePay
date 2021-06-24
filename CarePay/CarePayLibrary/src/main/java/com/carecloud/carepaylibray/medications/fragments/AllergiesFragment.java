@@ -240,6 +240,9 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             if (currentAllergies.contains(item)) {
                 return;
             }
+            if (isAllergyExist(item)) {
+                return;
+            }
             if (removeAllergies.contains(item)) {
                 removeAllergies.remove(item);
             }
@@ -248,6 +251,15 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             addAllergies.add((AllergiesObject) item);
         }
         setAdapters();
+    }
+    private boolean isAllergyExist(MedicationsAllergiesObject item) {
+
+        for (AllergiesObject allergiesObject:currentAllergies){
+            if (allergiesObject.getInteroperableDesc().trim().equalsIgnoreCase(((AllergiesObject) item).getInteroperableDesc().trim())){
+               return true;
+            }
+        }
+        return false;
     }
 
     private List<AllergiesObject> getAllModifiedAllergies() {
