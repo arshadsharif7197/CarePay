@@ -137,16 +137,15 @@ public class CarePayPracticeApplication extends CarePayApplication {
                 ExistingWorkPolicy.REPLACE,
                 sessionWorkerRequest);
     }
-
     public void cancelSession() {
-        if (sessionWorkManager != null && SessionWorker.handler!=null) {
-            PracticeSessionWorker.isServiceStarted = false;
-            PracticeSessionWorker.isLogoutNeeded = false;
+        PracticeSessionWorker.isServiceStarted = false;
+        PracticeSessionWorker.isLogoutNeeded = false;
+        if (PracticeSessionWorker.logoutTimer != null) PracticeSessionWorker.logoutTimer.cancel();
+        if (SessionWorker.handler != null) {
             WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
             SessionWorker.handler.removeMessages(0);
         }
     }
-
     private void callLogoutService(Activity activity) {
         ((CarePayApplication) getApplicationContext()).getWorkflowServiceHelper().execute(
                 ((((SessionedActivityInterface) activity).getLogoutTransition())), new WorkflowServiceCallback() {
