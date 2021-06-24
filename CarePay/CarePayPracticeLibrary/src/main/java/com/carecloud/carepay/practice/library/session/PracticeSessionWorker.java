@@ -21,7 +21,7 @@ public class PracticeSessionWorker extends SessionWorker {
     public static TransitionDTO logoutTransition;
     public static boolean isServiceStarted;
     public static boolean isLogoutNeeded;
-    private CountDownTimer logoutTimer;
+    public static CountDownTimer logoutTimer;
 
     /**
      * @param appContext   The application {@link Context}

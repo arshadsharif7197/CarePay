@@ -52,6 +52,7 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
     @Override
     protected void onContinueButton() {
+        ((CarePayApplication) getApplication()).cancelSession();
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         Data.Builder builder = new Data.Builder();
         builder.putString("logout_transition",
@@ -71,6 +72,7 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
     @Override
     protected void restartApp() {
+        ((CarePayApplication) getApplication()).cancelSession();
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         logOut(logoutTransition, false);
     }
