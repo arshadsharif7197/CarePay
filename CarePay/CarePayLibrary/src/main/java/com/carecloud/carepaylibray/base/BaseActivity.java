@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (manageSession())
+        if (manageSession()&&ev.getAction()==MotionEvent.ACTION_UP)
             ((CarePayApplication) getApplicationContext()).restartSession(this);
         return super.dispatchTouchEvent(ev);
     }
