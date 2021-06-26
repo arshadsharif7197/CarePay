@@ -82,7 +82,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
-
+    String locationID = null;
+    String providerID = null;
     private View unappliedLayout;
 
     private NestedScrollView scrollView;
@@ -288,7 +289,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 clearLastSwipeView();
                 if (validateBalanceItems()) {
                     distributeAmountOverBalanceItems(paymentAmount);
-
                     generatePaymentsModel();
                     if (!hasPaymentError) {
                         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
@@ -524,6 +524,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                         }
                         default: {
                             balanceItems.addAll(pendingBalancePayload.getDetails());
+
                         }
                     }
                 }
@@ -553,8 +554,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
         String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
                 .getBalances().get(0).getMetadata().getPatientId();
-        String locationID = null;
-        String providerID = null;
         for (LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()) {
             for (String locationPatientID : locationIndex.getPatientIds()) {
                 if (locationPatientID.equals(patientID)) {
@@ -941,6 +940,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private boolean isValidItem(BalanceItemDTO balanceItem) {
         boolean isValid = true;
         if (balanceItem.getBalance() > 0) {
+            if (balanceItem.getLocation() != null && balanceItem.getLocation().getId() == null && locationID!=null){
+                balanceItem.getLocation().setId(Integer.valueOf(locationID));
+            }
+            if (balanceItem.getProvider() != null && balanceItem.getProvider().getId() == null && providerID!=null){
+                balanceItem.getProvider().setId(Integer.valueOf(providerID));
+            }
             if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                 isValid = false;
                 if (balanceItem.getLocation() != null) {
