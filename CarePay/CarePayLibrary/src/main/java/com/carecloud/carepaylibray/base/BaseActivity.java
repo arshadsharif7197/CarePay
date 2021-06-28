@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
@@ -476,7 +477,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
             }
         }
-        stopSessionService();
+        ((CarePayApplication) getApplication()).cancelSession();
         finishAffinity();
         System.exit(crash ? 2 : 0);
     }

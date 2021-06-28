@@ -21,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
@@ -174,8 +175,11 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         Toolbar toolbar = view.findViewById(com.carecloud.carepay.patient.R.id.toolbar_layout);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(com.carecloud.carepay.patient.R.id.respons_toolbar_title);
-//            title.setText(Label.getLabel("cancel_appointment_label"));
-            title.setText("Reason for Canceling");
+            if (ApplicationPreferences.getInstance().getUserLanguage().equals("en")) {
+                title.setText("Reason for Canceling");
+            } else {
+                title.setText("Razón de la cancelación");
+            }
             toolbar.setTitle("");
 
             toolbar.setNavigationIcon(com.carecloud.carepay.patient.R.drawable.icn_nav_back);
@@ -264,7 +268,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
 
     @Override
     public void onBackPressed() {
-        callback.onBackClick();
         cancel();
+        callback.onBackClick();
     }
 }
