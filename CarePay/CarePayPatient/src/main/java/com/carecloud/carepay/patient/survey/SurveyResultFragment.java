@@ -274,19 +274,19 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         int linkImageId = -1;
         switch (link.getId()) {
             case "facebook":
-                linkImageId = R.drawable.icn_survey_facebook;
+                linkImageId = R.drawable.logo_survey_facebook;
                 break;
             case "vitals":
-                linkImageId = R.drawable.icn_survey_vitals;
+                linkImageId = R.drawable.logo_survey_vitals;
                 break;
             case "yelp":
-                linkImageId = R.drawable.icn_survey_yelp;
+                linkImageId = R.drawable.logo_survey_yelp;
                 break;
             case "healthgrades":
-                linkImageId = R.drawable.icn_survey_healthgrades;
+                linkImageId = R.drawable.logo_survey_healthgrades;
                 break;
             case "google":
-                linkImageId = R.drawable.icn_survey_google;
+                linkImageId = R.drawable.logo_survey_google;
                 break;
         }
         return linkImageId;

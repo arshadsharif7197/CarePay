@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lemonGreen"
+    android:background="@color/white"
     android:clickable="true"
     android:focusable="true">
 
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_80dp"
         android:layout_alignParentTop="true"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/checkImage"
@@ -23,6 +23,7 @@
         android:layout_below="@id/fakeView"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/dimen_15dp"
+        android:tint="@color/lemonGreen"
         android:src="@drawable/icn_check_white" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -33,26 +34,11 @@
         android:gravity="center"
         android:paddingEnd="@dimen/dimen_30dp"
         android:paddingStart="@dimen/dimen_30dp"
-        android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textColor="@color/textview_default_textcolor"
+        android:textSize="@dimen/text_size_16"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="surveys_thank_you_feedback"
         tools:text="Thank you for your feedback" />
-
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/subtitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:paddingEnd="@dimen/dimen_30dp"
-        android:paddingStart="@dimen/dimen_30dp"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:customAssetFont="proxima_nova_regular"
-        breeze:textKey="surveys_let_us_know"
-        tools:text="Please let us know why you weren't as satisfied as possible" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/okButton"
@@ -62,8 +48,8 @@
         android:layout_marginEnd="@dimen/dimen_10dp"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_20dp"
-        android:background="@drawable/round_white_background"
-        android:textColor="@color/lemonGreen"
+        android:background="@drawable/background_blue_rounded_border"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"
         breeze:textKey="ok"
@@ -78,8 +64,9 @@
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="@dimen/dimen_30dp"
         android:layout_marginStart="@dimen/dimen_30dp"
-        android:background="@drawable/round_white_border"
-        android:textColor="@color/white"
+        android:background="@drawable/bg_blue_border"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_book"
@@ -120,6 +107,21 @@
 
     </LinearLayout>
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/subtitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:paddingEnd="@dimen/dimen_30dp"
+        android:paddingStart="@dimen/dimen_30dp"
+        android:textColor="@color/textview_default_textcolor"
+        android:textSize="@dimen/text_size_18sp"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="surveys_let_us_know"
+        tools:text="Please let us know why you weren't as satisfied as possible" />
+
     <RelativeLayout
         android:id="@+id/negativeFeedbackLayout"
         android:layout_width="match_parent"
@@ -135,13 +137,13 @@
             android:layout_marginEnd="@dimen/dimen_30dp"
             android:layout_marginStart="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/round_white_background"
+            android:background="@color/pastel_blue"
             android:gravity="start|top"
             android:lines="8"
             breeze:hintKey="surveys_your_opinion"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/lightSlateGray"
-            android:textColorHint="@color/pastel_blue"
+            android:textColor="@color/textview_default_textcolor"
+            android:textColorHint="@color/lightSlateGray"
             android:textSize="16sp"
             tools:text="Hello, the only thing that i didnt like was that everyone seemed really distracted." />
 
@@ -153,9 +155,9 @@
             android:layout_marginEnd="@dimen/dimen_30dp"
             android:layout_marginStart="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/selector_round_white_background"
+            android:background="@drawable/bg_green_selector"
             android:enabled="false"
-            android:textColor="@drawable/selector_lemon_green"
+            android:textColor="@color/white"
             android:textSize="16sp"
             breeze:textKey="survey.form.button.title.submit"
             tools:text="Submit" />
