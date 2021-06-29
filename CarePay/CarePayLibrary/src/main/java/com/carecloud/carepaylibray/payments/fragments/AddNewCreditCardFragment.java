@@ -112,7 +112,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
+           showProgressDialog();
         }
 
         @Override
