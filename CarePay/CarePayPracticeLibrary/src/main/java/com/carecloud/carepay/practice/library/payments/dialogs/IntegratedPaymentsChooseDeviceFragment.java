@@ -78,6 +78,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private ShamrockPaymentsCallback callback;
     private String userId;
     private String authToken;
+    private boolean isFragmentVisible=true;
 
     private RecyclerView deviceRecycler;
     private TextView selectedLocationText;
@@ -371,6 +372,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         public void onFailure(String errorMessage) {
             hideProgressDialog();
             toggleSelectDevice(false);
+            if (isFragmentVisible)
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
@@ -472,6 +474,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onFailure(String errorMessage) {
             hideProgressDialog();
+            if (isFragmentVisible)
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
@@ -523,6 +526,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
         @Override
         public void onFailure(String errorMessage) {
+            if (isFragmentVisible)
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 
@@ -535,6 +539,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private ConnectionActionCallback connectionActionCallback = new ConnectionActionCallback() {
         @Override
         public void onConnectionError(String deviceName, String errorCode, String errorMessage) {
+            if (isFragmentVisible)
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 
@@ -621,5 +626,11 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     public void onDeviceSelected(Device device) {
         selectedDevice = device;
         refreshProcessButton();
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        isFragmentVisible=menuVisible;
+        super.setMenuVisibility(menuVisible);
     }
 }
