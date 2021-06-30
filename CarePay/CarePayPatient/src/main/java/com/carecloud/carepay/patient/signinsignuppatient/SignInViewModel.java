@@ -11,7 +11,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
-import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -189,9 +188,6 @@ public class SignInViewModel extends BaseViewModel {
                 ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
                 ApplicationPreferences.getInstance().setLandingScreen(true);
-
-                Intent serviceIntent = new Intent(getApplication(), PatientSessionService.class);
-                getApplication().startService(serviceIntent);
 
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());

@@ -224,6 +224,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         fragment.setCallback((option, position) -> {
             paymentDateOption = option;
             paymentDateEditText.setText(option.getLabel());
+            enableCreatePlanButton();
         });
 
         frequencyCodeEditText = view.findViewById(R.id.frequencyCodeEditText);

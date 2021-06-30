@@ -224,6 +224,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
         webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "IntakeInterface");
         webView.loadUrl(getBaseUrl());
+
+
+
     }
 
 
@@ -377,7 +380,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                         isFormSaving = false;
                         webView.scrollTo(0, 0);
                         hideProgressDialog();
-                        if (webView.getHeight() < webView.getContentHeight()) {
+                        if ((webView.getHeight()-(nextButton.getHeight()*5)) < webView.getContentHeight()) {
                             enableNextButton(false);
                         } else {
                             enableNextButton(true);
@@ -392,8 +395,20 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             try {
                 JSONObject json = new JSONObject(scrollPercentage);
                 pageScrollOffsetPercentage = json.getInt("pageScrollOffsetPercentage");
-                if (pageScrollOffsetPercentage > 98) {
-                    getActivity().runOnUiThread(BaseWebFormFragment.this::formScrolledToBottom);
+                if (pageScrollOffsetPercentage >= 100 ) {
+                    getActivity().runOnUiThread(
+
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Your code to run in GUI thread here
+                                    int tek = (int) Math.floor(webView.getContentHeight() * webView.getScale());
+                                    if(tek - webView.getScrollY() <= (webView.getHeight()+10))
+                                       formScrolledToBottom();
+                                }//public void run() {
+                            }
+
+                        );
                 }
             } catch (JSONException e) {
                 pageScrollOffsetPercentage = 0;
@@ -402,6 +417,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         }
 
     }
+
+
 
     protected abstract void formScrolledToBottom();
 
