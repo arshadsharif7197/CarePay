@@ -47,6 +47,7 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
     @Override
     protected void onContinueButton() {
+        ((CarePayApplication) getApplicationContext()).cancelSession();
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         Data.Builder builder = new Data.Builder();
         builder.putString("logout_transition",

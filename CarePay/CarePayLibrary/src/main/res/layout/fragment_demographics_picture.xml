@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     style="@style/DemographicsDocsHeaderStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
         android:layout_weight="1"
         android:foreground="?android:selectableItemBackground"
         android:text="@string/selectOrTakePhotoButton"
+        breeze:textKey="profile.profileDetail.photo.button.select"
         app:customAssetFont="proxima_nova_regular" />
 
 </LinearLayout>
