@@ -15,7 +15,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 public abstract class SessionWorker extends ListenableWorker {
 
 
-    protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 9;
+    protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 2;
     protected static final long PRACTICE_SESSION_TIMEOUT = 1000 * 60 * 2; //old logic
     public static Handler handler;
     public Runnable timeOutRunnable;

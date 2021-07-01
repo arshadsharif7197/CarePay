@@ -130,6 +130,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
             });
         }
         searchView = view.findViewById(R.id.search_entry_view);
+        searchView.setQueryHint(Label.getLabel("search_field_hint"));
         searchView.setOnQueryTextListener(searchQueryListener);
         searchView.requestFocus(View.FOCUS_DOWN);
         SystemUtil.showSoftKeyboard(getActivity());

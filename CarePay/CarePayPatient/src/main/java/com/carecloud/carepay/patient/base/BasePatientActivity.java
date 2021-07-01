@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
-import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -50,6 +50,6 @@ public abstract class BasePatientActivity extends BaseActivity implements Sessio
 
     @Override
     protected void stopSessionService() {
-        stopService(new Intent(this, PatientSessionService.class));
+        ((CarePayApplication) getApplication()).cancelSession();
     }
 }

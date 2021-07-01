@@ -139,9 +139,10 @@ public class CarePayPracticeApplication extends CarePayApplication {
     }
 
     public void cancelSession() {
-        if (sessionWorkManager != null) {
-            PracticeSessionWorker.isServiceStarted = false;
-            PracticeSessionWorker.isLogoutNeeded = false;
+        PracticeSessionWorker.isServiceStarted = false;
+        PracticeSessionWorker.isLogoutNeeded = false;
+        if (PracticeSessionWorker.logoutTimer != null) PracticeSessionWorker.logoutTimer.cancel();
+        if (SessionWorker.handler != null) {
             WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
             SessionWorker.handler.removeMessages(0);
         }
