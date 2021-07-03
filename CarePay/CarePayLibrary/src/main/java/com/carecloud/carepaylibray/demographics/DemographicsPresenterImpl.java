@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -61,13 +62,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-
     //demographics nav
     private int currentDemographicStep = 1;
-
     private boolean startCheckIn = false;
     public String appointmentId;
-
     private Fragment currentFragment;
 
     /**
@@ -293,9 +291,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         String tag = fragment.getClass().getName();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-
         Fragment prev = fm.findFragmentByTag(tag);
-        if (prev != null) {
+        if (prev != null && !tag.equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment")) {
             fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
         }
 

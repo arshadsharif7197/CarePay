@@ -52,7 +52,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
     private Button continueButton;
 
     protected DemographicsPresenter callback;
-
+    public boolean shouldRemove=false;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
@@ -249,6 +249,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             item.setAction(MedicationAllergiesAction.add);
             currentAllergies.add((AllergiesObject) item);
             addAllergies.add((AllergiesObject) item);
+            shouldRemove=true;
         }
         setAdapters();
     }
