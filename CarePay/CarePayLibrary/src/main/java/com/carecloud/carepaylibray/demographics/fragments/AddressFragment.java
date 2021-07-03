@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -248,7 +249,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment{
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                             .getState().isRequired(), stateValue, R.id.stateContainer,
                     R.id.stateTextInputLayout, isUserAction())) return false;
-
             return true;
         } finally {
             setUserAction(false);

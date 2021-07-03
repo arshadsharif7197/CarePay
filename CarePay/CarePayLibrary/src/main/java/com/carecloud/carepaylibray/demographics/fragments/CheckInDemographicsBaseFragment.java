@@ -629,7 +629,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         } else {
             showErrorViews(false, (ViewGroup) view.findViewById(containerId));
         }
-        return false;
+         return false;
     }
 
     protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
