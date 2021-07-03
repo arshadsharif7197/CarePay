@@ -74,6 +74,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private String photoPath;
     private View newPhotoButton;
     private View changePhotoButton;
+    public boolean shouldRemove=false;
 
     protected DemographicsPresenter callback;
 
@@ -315,6 +316,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             item.setAction(MedicationAllergiesAction.add);
             currentMedications.add((MedicationsObject) item);
             addMedications.add((MedicationsObject) item);
+            shouldRemove=true;
         }
         setAdapters();
     }
