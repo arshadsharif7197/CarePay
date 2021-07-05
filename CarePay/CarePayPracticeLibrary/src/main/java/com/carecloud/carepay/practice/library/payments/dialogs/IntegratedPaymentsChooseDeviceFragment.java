@@ -472,6 +472,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onFailure(String errorMessage) {
             hideProgressDialog();
+
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
@@ -523,6 +524,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
         @Override
         public void onFailure(String errorMessage) {
+
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 
@@ -535,6 +537,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private ConnectionActionCallback connectionActionCallback = new ConnectionActionCallback() {
         @Override
         public void onConnectionError(String deviceName, String errorCode, String errorMessage) {
+
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 

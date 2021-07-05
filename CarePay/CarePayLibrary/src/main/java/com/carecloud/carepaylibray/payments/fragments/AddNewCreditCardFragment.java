@@ -121,7 +121,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
 
-            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
+            MixPanelUtil.logEvent(getActivity().getString(R.string.event_updated_credit_cards));
         }
 
         @Override
@@ -129,14 +129,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             hideProgressDialog();
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
     protected WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
+            showProgressDialog();
         }
 
         @Override
@@ -149,9 +149,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
             if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-                Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-                MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+                String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
+                Object[] values = {amountToMakePayment,getActivity().getString(R.string.payment_card_on_file)};
+                MixPanelUtil.logEvent(getActivity().getString(R.string.event_payment_failed), params, values);
                 callback.showErrorToast(payload.getProcessingErrors().get(0).getError());
                 if (getDialog() != null) {
                     dismiss();
@@ -160,11 +160,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                 if (getDialog() != null) {
                     dismiss();
                 }
-                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-                Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
-                MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+                String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
+                Object[] values = {amountToMakePayment, getActivity().getString(R.string.payment_new_card)};
+                MixPanelUtil.logEvent(getActivity().getString(R.string.event_payment_complete), params, values);
+                MixPanelUtil.incrementPeopleProperty(getActivity().getString(R.string.count_payments_completed), 1);
+                MixPanelUtil.incrementPeopleProperty(getActivity().getString(R.string.total_payments_amount), amountToMakePayment);
                 showConfirmation(workflowDTO);
             }
         }
@@ -177,8 +177,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             Log.e("Server Error", exceptionMessage);
 
             String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
-            Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
-            MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+            Object[] values = {amountToMakePayment, getActivity().getString(R.string.payment_new_card)};
+            MixPanelUtil.logEvent(getActivity().getString(R.string.event_payment_failed), params, values);
         }
     };
 
@@ -227,7 +227,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         if (postModel.isPaymentModelValid()) {
             postPayment(postModel);
         } else {
-            Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getActivity().getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
             hideProgressDialog();
         }
     }
@@ -255,7 +255,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         if (postModel.isPaymentModelValid()) {
             postPayment(postModel);
         } else {
-            Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getActivity().getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
             hideProgressDialog();
         }
 
@@ -311,9 +311,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         Gson gson = new Gson();
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, gson.toJson(paymentModelJson), queries, header);
 
-        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-        Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
-        MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
+        String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
+        Object[] values = {amountToMakePayment, getActivity().getString(R.string.payment_new_card)};
+        MixPanelUtil.logEvent(getActivity().getString(R.string.event_payment_started), params, values);
 
     }
 
