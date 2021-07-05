@@ -142,6 +142,7 @@ public class FormsFragment extends BaseWebFormFragment {
 
     @Override
     public DTO getDto() {
+
         return consentFormDTO;
     }
 }
