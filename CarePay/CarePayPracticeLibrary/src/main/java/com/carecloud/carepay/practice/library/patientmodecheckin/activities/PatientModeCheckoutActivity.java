@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -75,6 +76,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
@@ -110,12 +112,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private WorkflowDTO continuePaymentsDTO;
     private boolean isCashPayment = false;
     private WorkflowDTO workflowDTO;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         if (savedInstanceState == null || savedInstanceState.getBoolean("shouldReload", false)) {
             workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
@@ -260,9 +264,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private void showResponsibilityFragment() {
         paymentStarted = true;
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         ResponsibilityCheckOutFragment responsibilityFragment = new ResponsibilityCheckOutFragment();
         Bundle bundle = new Bundle();
-        DtoHelper.bundleDto(bundle, paymentsModel);
+//        DtoHelper.bundleDto(bundle, paymentsModel);
         responsibilityFragment.setArguments(bundle);
 
         replaceFragment(responsibilityFragment, true);
