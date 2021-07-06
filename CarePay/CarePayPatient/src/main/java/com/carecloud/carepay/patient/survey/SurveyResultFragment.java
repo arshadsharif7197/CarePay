@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -198,7 +200,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 goBackButton.setText(Label.getLabel("add_appointment_back_to_appointments_button"));
             }
         } else {
-            goBackButton.setBackgroundResource(R.drawable.round_white_border);
+            goBackButton.setBackgroundResource(R.drawable.background_blue_rounded_border);
             goBackButton.setTextColor(getResources().getColor(R.color.white));
             goBackButton.setText(Label.getLabel("go_back_label"));
             subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
@@ -382,7 +384,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
             Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
             subtitleTextView.setVisibility(View.GONE);
-            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.done"));
             noThanksButton.setVisibility(View.GONE);
         }
     }
