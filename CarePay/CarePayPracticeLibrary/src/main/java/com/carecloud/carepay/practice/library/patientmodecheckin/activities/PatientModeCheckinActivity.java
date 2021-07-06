@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
@@ -60,6 +61,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -81,6 +83,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private WorkflowDTO continuePaymentsDTO;
     private boolean paymentStarted = false;
     private WorkflowDTO paymentConfirmationWorkflow;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         setContentView(R.layout.activity_demographic_review);
 
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
+
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         if (extra.getBoolean(CarePayConstants.HANDLE_HOME, false)) {
             presenter.setHandleHomeButton(true);
@@ -310,10 +315,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
      * @param workflowJson intake DTO
      */
     public void getPaymentInformation(final String workflowJson) {
+        patientResponsibilityViewModel.setPaymentsModel(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson));
         paymentStarted = true;
         ResponsibilityCheckInFragment responsibilityFragment = new ResponsibilityCheckInFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(PaymentsModel.class.getName(), workflowJson);
+//        bundle.putString(PaymentsModel.class.getName(), workflowJson);
         responsibilityFragment.setArguments(bundle);
         presenter.navigateToFragment(responsibilityFragment, true, true);
         updateCheckInFlow(CheckinFlowState.PAYMENT, 1, 1);
