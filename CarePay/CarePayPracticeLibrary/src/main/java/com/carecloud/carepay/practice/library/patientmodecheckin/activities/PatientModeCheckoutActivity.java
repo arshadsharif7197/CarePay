@@ -58,6 +58,8 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -502,10 +504,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private View.OnClickListener homeClick = view -> {
-        AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
-
-        logCheckoutCancelled();
+        showHomeAlertDialog();
     };
 
     @Override
@@ -522,7 +521,21 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.root_layout, fragment, addToBackStack);
     }
-
+    private void showHomeAlertDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+        confirmDialogFragment.setNegativeAction(true);
+        confirmDialogFragment.setCallback(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+                goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+                logCheckoutCancelled();
+            }
+        });
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
+    }
 //    @Override
 //    public void showAvailableHoursFragment(Date start, Date end,
 //                                           AppointmentsResultModel appointmentsResultModel,
