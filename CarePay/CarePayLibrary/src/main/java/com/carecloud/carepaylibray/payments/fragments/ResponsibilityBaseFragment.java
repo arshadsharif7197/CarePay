@@ -81,6 +81,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> paymentDTO = paymentsModel);
         super.onCreate(savedInstanceState);
         appCompatActivity = (AppCompatActivity) getActivity();
 
@@ -104,7 +105,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
 
     protected void getPaymentInformation() {
-        paymentDTO = patientResponsibilityViewModel.getPaymentsModel();
         if (paymentDTO == null) {
             Bundle arguments = getArguments();
             if (arguments != null) {

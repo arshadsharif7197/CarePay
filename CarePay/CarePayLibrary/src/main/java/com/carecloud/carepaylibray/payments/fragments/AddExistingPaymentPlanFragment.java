@@ -43,7 +43,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
@@ -57,7 +57,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     @Override
     public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
-        existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, new Gson().toJson(paymentsModel));
         super.onCreate(icicle);
         setInterval();
         paymentPlanBalanceRules = getPaymentPlanSettings(interval);

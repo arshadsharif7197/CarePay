@@ -36,7 +36,6 @@ import java.util.Locale;
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
     public static final String KEY_FULL_AMOUNT = "fullAmount";
 
-    protected PaymentsModel paymentsModel;
     protected double fullAmount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
@@ -49,7 +48,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
      */
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentResultModel);
+//        DtoHelper.bundleDto(args, paymentResultModel);
         args.putDouble(KEY_FULL_AMOUNT, owedAmount);
         PracticePartialPaymentDialogFragment fragment = new PracticePartialPaymentDialogFragment();
         fragment.setArguments(args);
@@ -70,7 +69,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         fullAmount = arguments.getDouble(KEY_FULL_AMOUNT);
     }
 
