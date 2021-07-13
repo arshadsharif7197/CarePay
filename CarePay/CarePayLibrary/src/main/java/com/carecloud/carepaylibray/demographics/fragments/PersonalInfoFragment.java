@@ -508,7 +508,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             if (bitmap != null) {
                 base64ProfileImage = SystemUtil.convertBitmapToString(
                         SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
-                        Bitmap.CompressFormat.JPEG, 90);
+                        Bitmap.CompressFormat.JPEG, 30);
                 hasNewImage = false;
             }
         }
