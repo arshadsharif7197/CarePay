@@ -97,6 +97,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         super.onCreate(icicle);
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
         searchMode = getArguments().getInt(CarePayConstants.SEARCH_MODE);
+
     }
 
     @Override
