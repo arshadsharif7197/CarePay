@@ -154,10 +154,12 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onPreExecute() {
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
@@ -173,6 +175,7 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
             if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
