@@ -107,8 +107,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    getActivity().onBackPressed();
+                    if (nextButton.isClickable()&&nextButton.isEnabled()){
+                        SystemUtil.hideSoftKeyboard(getActivity());
+                        getActivity().onBackPressed();
+                    }
+
                 }
             });
         }
@@ -160,6 +163,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void onClick(View buttonView) {
                 setUserAction(true);
+                nextButton.setEnabled(false);
+                nextButton.setClickable(false);
                 if (buttonView.isSelected() && passConstraints(view)) {
                     DemographicDTO demographicDTO = updateDemographicDTO(view);
                     openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > checkinFlowCallback.getTotalSteps());
@@ -255,12 +260,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
+                if (getActivityProxy()!=null)
                 MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
             } else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
+                if (getActivityProxy()!=null)
                 MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
             }
 
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
+                if (getActivityProxy()!=null)
                 MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
                 if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                         || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
@@ -275,12 +283,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
 
             }
-
+            nextButton.setEnabled(true);
+            nextButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            nextButton.setEnabled(true);
+            nextButton.setClickable(true);
             showErrorNotification(exceptionMessage);
             if (getActivity() != null) {
                 Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);

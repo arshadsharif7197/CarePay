@@ -339,7 +339,7 @@ public class DocumentScannerAdapter {
         if (bitmap != null) {
             return SystemUtil.convertBitmapToString(
                     SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
-                    Bitmap.CompressFormat.JPEG, 100);
+                    Bitmap.CompressFormat.JPEG, 30);
         }
         return null;
     }
