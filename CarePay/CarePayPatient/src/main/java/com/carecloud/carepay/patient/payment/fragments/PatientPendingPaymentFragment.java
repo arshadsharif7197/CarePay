@@ -2,10 +2,13 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,10 +42,10 @@ import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHist
 public class PatientPendingPaymentFragment extends BaseFragment
         implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
 
-    private PaymentsModel paymentsDTO;
     private View noPaymentsLayout;
     private SwipeRefreshLayout refreshLayout;
     private PaymentFragmentActivityInterface callback;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -62,7 +66,9 @@ public class PatientPendingPaymentFragment extends BaseFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        paymentsDTO = (PaymentsModel) callback.getDto();
+        paymentsModel = (PaymentsModel) callback.getDto();
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
     }
 
     @Override
@@ -90,14 +96,14 @@ public class PatientPendingPaymentFragment extends BaseFragment
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
-        for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
             practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
         }
         if (hasPayments() || hasPaymentPlans()) {
-            filterPaymentPlans(paymentsDTO.getPaymentPayload().getUserPractices());
+            filterPaymentPlans(paymentsModel.getPaymentPayload().getUserPractices());
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                    getActivity(), getPendingBalancesList(paymentsDTO, practiceMap),
-                    PatientPendingPaymentFragment.this, paymentsDTO, practiceMap);
+                    getActivity(), getPendingBalancesList(paymentsModel, practiceMap),
+                    PatientPendingPaymentFragment.this, paymentsModel, practiceMap);
             historyRecyclerView.setAdapter(paymentBalancesAdapter);
         } else {
             showNoPaymentsLayout();
@@ -107,16 +113,16 @@ public class PatientPendingPaymentFragment extends BaseFragment
 
     private void filterPaymentPlans(List<UserPracticeDTO> userPractices) {
         List<PaymentPlanDTO> filteredList = new ArrayList<>();
-        for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
             for (UserPracticeDTO userPracticeDTO : userPractices) {
-                if (paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())
+                if (paymentsModel.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())
                         && paymentPlanDTO.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     filteredList.add(paymentPlanDTO);
                 }
             }
         }
 
-        paymentsDTO.getPaymentPayload().setPatientPaymentPlans(filteredList);
+        paymentsModel.getPaymentPayload().setPatientPaymentPlans(filteredList);
     }
 
     private void showNoPaymentsLayout() {
@@ -127,14 +133,14 @@ public class PatientPendingPaymentFragment extends BaseFragment
     @Override
     public void onBalanceListItemClickListener(PaymentsBalancesItem pendingBalance) {
         if (!refreshLayout.isRefreshing()) {
-            callback.loadPaymentAmountScreen(pendingBalance, paymentsDTO);
+            callback.loadPaymentAmountScreen(pendingBalance, paymentsModel);
         }
     }
 
     @Override
     public void onPaymentPlanItemClickListener(PaymentPlanDTO paymentPlan) {
         if (!refreshLayout.isRefreshing()) {
-            callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
+            callback.loadPaymentPlanScreen(paymentsModel, paymentPlan);
         }
     }
 
@@ -168,8 +174,8 @@ public class PatientPendingPaymentFragment extends BaseFragment
     }
 
     private boolean hasPayments() {
-        if (!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
-            for (PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()) {
+        if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+            for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
                 if (!patientBalanceDTO.getBalances().isEmpty()) {
                     for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
                         if (!pendingBalanceDTO.getPayload().isEmpty()) {
@@ -184,8 +190,8 @@ public class PatientPendingPaymentFragment extends BaseFragment
     }
 
     private boolean hasPaymentPlans() {
-        if (!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()) {
-            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)) {
+        if (!paymentsModel.getPaymentPayload().getActivePlans(null).isEmpty()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getActivePlans(null)) {
                 if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
                         .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;

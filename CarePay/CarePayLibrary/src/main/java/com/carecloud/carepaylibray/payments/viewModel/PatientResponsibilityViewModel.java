@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public class PatientResponsibilityViewModel extends ViewModel {
-    private MutableLiveData<PaymentsModel> paymentsModel;
+    private MutableLiveData<PaymentsModel> paymentsModel = new MutableLiveData<>();
 
     public void setPaymentsModel(PaymentsModel paymentsModel) {
         this.paymentsModel.setValue(paymentsModel);

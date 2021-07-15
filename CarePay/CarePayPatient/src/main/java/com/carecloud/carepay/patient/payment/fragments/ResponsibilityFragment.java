@@ -48,7 +48,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                                                      boolean payLaterButtonVisibility,
                                                      String title) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         if (selectedBalance != null) {
             DtoHelper.bundleDto(args, selectedBalance);
         }

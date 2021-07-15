@@ -106,7 +106,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                                                            boolean onlySelectMode) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         fragment.setArguments(args);

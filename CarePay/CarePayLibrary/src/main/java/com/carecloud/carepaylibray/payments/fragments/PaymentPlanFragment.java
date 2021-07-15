@@ -129,9 +129,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-     /*   if (paymentsModel == null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-        }*/
         if (selectedBalance == null) {
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }

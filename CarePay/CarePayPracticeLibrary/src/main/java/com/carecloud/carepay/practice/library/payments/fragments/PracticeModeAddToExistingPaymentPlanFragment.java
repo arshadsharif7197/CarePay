@@ -36,12 +36,12 @@ import java.util.Map;
  */
 public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePaymentPlanFragment {
 
-    private PaymentPlanDTO paymentPlan;
+    private PaymentPlanDTO paymentPlanDto;
 
     public static PracticeModeAddToExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel,
                                                                            PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         PracticeModeAddToExistingPaymentPlanFragment fragment = new PracticeModeAddToExistingPaymentPlanFragment();
         fragment.setArguments(args);
@@ -50,24 +50,24 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
     @Override
     public void onCreate(Bundle icicle) {
-        paymentPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
-        paymentPlanAmount = paymentPlan.getPayload().getAmount();
         super.onCreate(icicle);
+        paymentPlanDto = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
+        paymentPlanAmount = paymentPlanDto.getPayload().getAmount();
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        paymentPlanAmount = SystemUtil.safeSubtract(paymentPlan.getPayload().getAmount(),
-                paymentPlan.getPayload().getAmountPaid());
+        paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanDto.getPayload().getAmount(),
+                paymentPlanDto.getPayload().getAmountPaid());
         minAmount = paymentPlanAmount;
         setupToolbar(view, Label.getLabel("payment.addBalanceToPaymentPlan.title.label.screenTitle"));
         setUpAmounts(view);
         balanceItems = filterItems();
         setUpItems(view, balanceItems);
-        setUpExistingCharges(view, paymentPlan.getPayload().getLineItems());
+        setUpExistingCharges(view, paymentPlanDto.getPayload().getLineItems());
         setupFields(view);
         setupButtons(view);
-        populateFields(paymentPlan);
+        populateFields(paymentPlanDto);
         setUpCreditCards(view);
     }
 
@@ -82,7 +82,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         view.findViewById(R.id.existingChargesLayout).setVisibility(View.VISIBLE);
         RecyclerView existingChargesRecycler = (RecyclerView) view.findViewById(R.id.existingChargesRecycler);
         existingChargesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        ExistingChargesItemAdapter adapter = new ExistingChargesItemAdapter(paymentPlan.getPayload()
+        ExistingChargesItemAdapter adapter = new ExistingChargesItemAdapter(paymentPlanDto.getPayload()
                 .getLineItems());
         existingChargesRecycler.setAdapter(adapter);
     }
@@ -139,7 +139,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
     @Override
     public void onAddToPlanClicked(BalanceItemDTO item) {
-        showSelectAmountFragment(item, SystemUtil.safeAdd(totalBalance, paymentPlan.getPayload().getAmount()));
+        showSelectAmountFragment(item, SystemUtil.safeAdd(totalBalance, paymentPlanDto.getPayload().getAmount()));
     }
 
     @Override
@@ -149,13 +149,13 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
     private void updatePaymentPlan() {
         double submitAmount = SystemUtil.safeAdd(paymentPlanAmount,
-                        paymentPlan.getPayload().getAmountPaid());
+                        paymentPlanDto.getPayload().getAmountPaid());
 
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
         postModel.setAmount(submitAmount);
-        postModel.setExecution(paymentPlan.getPayload().getExecution());
+        postModel.setExecution(paymentPlanDto.getPayload().getExecution());
         List<PaymentPlanLineItem> lineItems = getPaymentPlanLineItems();
-        lineItems.addAll(paymentPlan.getPayload().getLineItems());
+        lineItems.addAll(paymentPlanDto.getPayload().getLineItems());
         postModel.setLineItems(lineItems);
         postModel.setDescription(planNameEditText.getText().toString());
 
@@ -170,14 +170,14 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             }
             postModel.setPapiPaymentMethod(papiPaymentMethod);
         } else {
-            postModel.setPapiPaymentMethod(paymentPlan.getPayload().getPaymentMethod());
+            postModel.setPapiPaymentMethod(paymentPlanDto.getPayload().getPaymentMethod());
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments +
-                paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
+                paymentPlanDto.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
         paymentPlanModel.setEnabled(true);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -203,10 +203,10 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getUpdatePaymentPlan();
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", paymentPlan.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", paymentPlan.getMetadata().getPracticeId());
-        queryMap.put("patient_id", paymentPlan.getMetadata().getPatientId());
-        queryMap.put("payment_plan_id", paymentPlan.getMetadata().getPaymentPlanId());
+        queryMap.put("practice_mgmt", paymentPlanDto.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", paymentPlanDto.getMetadata().getPracticeId());
+        queryMap.put("patient_id", paymentPlanDto.getMetadata().getPatientId());
+        queryMap.put("payment_plan_id", paymentPlanDto.getMetadata().getPaymentPlanId());
 
 
         getWorkflowServiceHelper().execute(updatePaymentTransition, new WorkflowServiceCallback() {
@@ -232,8 +232,8 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
     }
 
     private int getRemainingPayments() {
-        return paymentPlan.getPayload().getPaymentPlanDetails().getInstallments() -
-                paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        return paymentPlanDto.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDto.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
     }
 
 }
