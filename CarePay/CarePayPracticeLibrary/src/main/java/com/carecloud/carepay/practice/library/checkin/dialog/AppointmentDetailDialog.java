@@ -434,6 +434,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                 Date checkinTime = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getAppointmentStatus()
                         .getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
                 String roomMessage;
+                if (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()!=null)
                 switch (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()) {
                     case CarePayConstants.IN_PROGRESS_IN_ROOM:
                     default:
@@ -450,7 +451,14 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                         roomTitleTextView.setText(Label.getLabel("appointments_queue_out_room_title"));
                         roomMessageTextView.setText(roomMessage);
                         break;
-                }
+                }else
+                    roomMessage = String.format(Label.getLabel("appointments_queue_in_room_message"),
+                            appointmentPayloadDTO.getPatient().getFirstName(),
+                            DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
+                roomTitleTextView.setText(Label.getLabel("appointments_queue_in_room_title"));
+                roomMessageTextView.setText(roomMessage);
+
+
             }
         }
 
