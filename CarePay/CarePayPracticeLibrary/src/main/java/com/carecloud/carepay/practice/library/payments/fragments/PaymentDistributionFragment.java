@@ -266,6 +266,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
         paymentPlanEmptyButton = view.findViewById(R.id.payment_plans_empty_button);
+        if (!paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans().isPaymentPlansEnabled()){
+            paymentPlanButton.setVisibility(View.GONE);
+        }
         View.OnClickListener displayPlans = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
