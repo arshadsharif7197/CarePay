@@ -81,7 +81,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityFragmentDialog.PayResponsibilityCallback,
         PaymentDetailInterface,
         VideoAppointmentCallback {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 1500;
     private FilterModel filterModel;
 
     private CheckInDTO checkInDTO;
@@ -139,7 +140,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void initializePatientListView() {
         patientListView = findViewById(R.id.list_patients);
         patientListView.setCheckInDTO(checkInDTO);
-        patientListView.setCallback(dto -> showPracticeAppointmentDialog((AppointmentDTO) dto));
+        patientListView.setCallback(dto ->
+
+                showPracticeAppointmentDialog((AppointmentDTO) dto)
+
+        );
         applyFilter();
     }
 
@@ -155,6 +160,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         final TextView showPendingAppointmentTextView = findViewById(R.id.showPendingAppointmentTextView);
         showPendingAppointmentTextView.setOnClickListener(v -> {
+            if (isAlreadyClicked())
+                return;
             showPendingAppointmentTextView.setSelected(!showPendingAppointmentTextView.isSelected());
             if (showPendingAppointmentTextView.isSelected()) {
                 showViewById(R.id.practice_pending_count);
@@ -219,6 +226,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @NonNull
     private View.OnClickListener onFilterIconClick() {
         return view -> {
+            if (isAlreadyClicked())
+                return;
             filterDialog = new FilterDialog(getContext(),
                     findViewById(R.id.activity_practice_appointments), filterModel);
 
@@ -292,7 +301,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void initializePracticeSelectDateRange() {
         findViewById(R.id.activity_practice_appointments_change_date_range_label)
                 .setOnClickListener(view -> {
-
+                    if (isAlreadyClicked())
+                        return;
                     DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                             Label.getLabel("date_range_picker_dialog_title"),
                             Label.getLabel("date_range_picker_dialog_close"),
@@ -339,6 +349,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
         return view -> {
+            if (isAlreadyClicked())
+                return;
             needsToConfirmAppointmentCreation = needsConfirmation;
             TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
             FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
@@ -420,6 +432,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
+       if (isAlreadyClicked())
+           return;
         AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
         AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -448,6 +462,19 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         displayDialogFragment(dialog, true);
         setPatient(appointmentDTO.getPayload().getPatient());
     }
+
+    private boolean isAlreadyClicked() {
+        //to prevent mutli click at the same time
+        boolean returnbool=false;
+        long nowMs = System.currentTimeMillis();
+        if (lastClickMs != 0 && (nowMs - lastClickMs) < TOO_SOON_DURATION_MS) {
+           returnbool= true;
+        }
+        lastClickMs = nowMs;
+//......................
+        return returnbool;
+    }
+
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
