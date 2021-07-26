@@ -103,6 +103,7 @@ public class DatePickerFragment extends BaseDialogFragment {
         toolbarTitle = arguments.getString("dialogTitle");
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -202,7 +203,7 @@ public class DatePickerFragment extends BaseDialogFragment {
         selectedDate = null;
     }
 
-    public void setListener(DateRangePickerDialogListener listener) {
+    public void  setListener(DateRangePickerDialogListener listener) {
         this.listener = listener;
     }
 }

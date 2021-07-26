@@ -35,7 +35,8 @@ import java.util.List;
  */
 
 public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
-
+    private long mLastClickTime = System.currentTimeMillis();
+    private static final long CLICK_TIME_INTERVAL = 200;
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
     protected PaymentsModel paymentsModel;
@@ -114,6 +115,12 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
         paymentMethodList.setAdapter(paymentMethodAdapter);
         paymentMethodList.setOnItemClickListener((parent, view1, position, id) -> {
+            long now = System.currentTimeMillis();
+            if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
+                return;
+            }
+            mLastClickTime = now;
+
             PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
             handlePaymentButton(paymentMethod, amountToMakePayment);
         });
