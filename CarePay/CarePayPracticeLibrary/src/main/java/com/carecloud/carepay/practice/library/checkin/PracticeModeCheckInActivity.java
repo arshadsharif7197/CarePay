@@ -545,6 +545,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO,
                 getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()), appointmentPayloadDTO, theRoom);
+       Fragment fragment=getSupportFragmentManager().findFragmentByTag("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog");
+        if (fragment==null||!fragment.getClass().getName().equals("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog"))
         displayDialogFragment(dialog, true);
     }
 
