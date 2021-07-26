@@ -206,6 +206,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
         MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
