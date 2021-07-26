@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 
@@ -28,6 +29,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
 
     private long lastFullScreenSet;
     protected static TransitionDTO logoutTransition;
+    public PaymentsModel paymentsModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
