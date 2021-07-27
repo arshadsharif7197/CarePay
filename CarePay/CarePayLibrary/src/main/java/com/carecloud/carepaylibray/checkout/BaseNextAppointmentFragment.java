@@ -3,9 +3,13 @@ package com.carecloud.carepaylibray.checkout;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,7 +50,8 @@ import java.util.Map;
 
 public abstract class BaseNextAppointmentFragment extends BaseFragment
         implements TranslatableFragment, CreateAppointmentFragmentInterface {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 1500;
     protected CheckOutInterface callback;
     protected AppointmentsResultModel appointmentsResultModel;
     protected VisitTypeDTO selectedVisitType;
@@ -166,6 +171,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked())
+                    return;
                 showChooseProviderFragment();
             }
         });
@@ -198,6 +205,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked())
+                    return;
                 showChooseLocationFragment();
             }
         });
@@ -234,6 +243,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked())
+                    return;
                 showVisitTypeFragment();
             }
         });
@@ -266,6 +277,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked())
+                    return;
                 showAvailabilityFragment();
             }
         });
@@ -277,6 +290,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeResetImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isAlreadyClicked())
+                    return;
                 resetVisitTime();
             }
         });
@@ -561,5 +576,17 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         super.onResume();
         enableTimeSlotField();
         enableScheduleAppointmentButton();
+    }
+
+    private boolean isAlreadyClicked() {
+        //to prevent mutli click at the same time
+        boolean returnbool = false;
+        long nowMs = System.currentTimeMillis();
+        if (lastClickMs != 0 && (nowMs - lastClickMs) < TOO_SOON_DURATION_MS) {
+            returnbool = true;
+        }
+        lastClickMs = nowMs;
+//......................
+        return returnbool;
     }
 }

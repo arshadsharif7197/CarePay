@@ -459,7 +459,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 appointmentDTO,
                 checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions()
         );
-        displayDialogFragment(dialog, true);
+        Fragment fragment=getSupportFragmentManager().findFragmentByTag("com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog");
+        if (fragment==null||!fragment.getClass().getName().equals("com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog")){
+            if (getSupportFragmentManager().getBackStackEntryCount()<1)
+                displayDialogFragment(dialog, true);
+        }
+
         setPatient(appointmentDTO.getPayload().getPatient());
     }
 
