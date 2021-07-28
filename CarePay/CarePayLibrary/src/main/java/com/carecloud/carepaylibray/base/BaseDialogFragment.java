@@ -51,6 +51,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
         setNewRelicInteraction(getClass().getName());
 
         patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
         patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
     }
 

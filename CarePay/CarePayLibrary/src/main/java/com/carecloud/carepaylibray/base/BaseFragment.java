@@ -26,7 +26,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public abstract class BaseFragment extends Fragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
     private boolean isPracticeAppPatientMode;
-    private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    public PatientResponsibilityViewModel patientResponsibilityViewModel;
     public PaymentsModel paymentsModel;
 
     @Override
@@ -34,6 +34,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
         super.onCreate(icicle);
 
         patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
         patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
 
         isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
