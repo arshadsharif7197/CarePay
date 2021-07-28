@@ -37,7 +37,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                                                            boolean hideHeaderAndFooter) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
         args.putBoolean("hideHeaderAndFooter", hideHeaderAndFooter);
 

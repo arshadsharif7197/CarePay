@@ -43,7 +43,6 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     private RecyclerView searchRecycler;
 
     private AddPaymentItemCallback callback;
-    private PaymentsModel paymentsModel;
     private RetailProductsModel retailProductsModel;
     private Paging paging;
     private boolean isPaging = false;
@@ -53,7 +52,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
     public static AddRetailItemFragment getInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
 
         AddRetailItemFragment fragment = new AddRetailItemFragment();
         fragment.setArguments(args);
@@ -65,7 +64,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         retailProductsModel = paymentsModel.getPaymentPayload().getRetailProducts();
         paging = retailProductsModel.getProducts().getPaging();
     }

@@ -100,7 +100,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         PaymentPlanCompletedInterface, PaymentPlanCreateInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
-    private PaymentsModel paymentsModel;
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
     private AppointmentsResultModel resourcesToSchedule;
@@ -156,6 +155,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public void initDto(WorkflowDTO workflowDTO) {
         if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             showNextAppointmentFragment(appointmentId);
         } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
@@ -258,6 +258,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         addFragment(NextAppointmentFragment.newInstance(appointmentId), true);
         MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }

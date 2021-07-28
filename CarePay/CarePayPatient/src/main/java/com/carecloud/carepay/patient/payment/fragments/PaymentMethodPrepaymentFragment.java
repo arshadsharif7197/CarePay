@@ -41,7 +41,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     public static PaymentMethodPrepaymentFragment newInstance(PaymentsModel paymentsModel, double amount, String title) {
         PaymentMethodPrepaymentFragment fragment = new PaymentMethodPrepaymentFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         args.putString(KEY_TITLE, title);
         fragment.setArguments(args);

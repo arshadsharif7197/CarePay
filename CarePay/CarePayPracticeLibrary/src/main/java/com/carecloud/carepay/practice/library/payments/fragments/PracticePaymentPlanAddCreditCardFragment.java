@@ -39,7 +39,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
                                                                        PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
@@ -71,7 +71,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
                                                                        boolean onlySelectMode,
                                                                        Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         if (paymentPlanDTO != null) {
             DtoHelper.bundleDto(args, paymentPlanDTO);
         }
