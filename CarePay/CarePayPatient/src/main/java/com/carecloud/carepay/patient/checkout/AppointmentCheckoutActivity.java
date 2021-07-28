@@ -97,6 +97,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     private Fragment androidPayTargetFragment;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
         return true;
     }
 
@@ -356,7 +361,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 builder.replace(last, builder.length(), "");
                 showErrorNotification(builder.toString());
             } else {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
 
@@ -465,6 +470,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     queryMap,
                     header);
         } else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
             extra.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);

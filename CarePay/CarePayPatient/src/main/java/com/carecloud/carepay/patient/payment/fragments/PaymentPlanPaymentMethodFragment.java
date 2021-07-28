@@ -17,6 +17,7 @@ import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPay
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
@@ -190,8 +191,9 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
                                            boolean onlySelectMode) {
         if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            String methodLabel = Label.getLabel("payment_method_" + paymentMethod.getType());
             PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanPostModel, onlySelectMode);
+                    .newInstance(paymentsModel, methodLabel, paymentPlanPostModel, onlySelectMode);
             callback.replaceFragment(fragment, true);
         } else {
             onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
@@ -213,8 +215,9 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
                                            Date paymentDate) {
         if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            String methodLabel = Label.getLabel("payment_method_" + paymentMethod.getType());
             PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanDTO,
+                    .newInstance(paymentsModel, methodLabel, paymentPlanDTO,
                             onlySelectMode, paymentDate);
             callback.replaceFragment(fragment, true);
         } else {

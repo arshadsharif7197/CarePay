@@ -170,7 +170,6 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     }
 
     protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        dismiss();
         hideProgressDialog();
         PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
         callback.replaceFragment(fragment, true);
@@ -250,7 +249,6 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             return super.getLargeAlertInterface();
         }
     }
-
 
 
 }

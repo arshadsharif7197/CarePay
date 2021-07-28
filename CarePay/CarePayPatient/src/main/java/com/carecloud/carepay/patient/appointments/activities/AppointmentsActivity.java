@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
@@ -186,7 +188,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             } else if (fragment instanceof CancelReasonAppointmentDialog) {
                 // skip backpress
                 return true;
-            }else if (fragment instanceof AvailabilityHourFragment) {
+            } else if (fragment instanceof AvailabilityHourFragment) {
                 // skip backpress
                 return true;
             }
@@ -210,7 +212,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
-            fragmentManager.popBackStackImmediate();
+            try {
+                fragmentManager.popBackStackImmediate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         toolbarHidden = false;
@@ -293,7 +299,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
-            fragmentManager.popBackStackImmediate();
+            try {
+                fragmentManager.popBackStackImmediate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
     }

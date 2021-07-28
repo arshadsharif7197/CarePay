@@ -303,8 +303,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                                       PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            String methodLabel = Label.getLabel("payment_method_" + selectedPaymentMethod.getType());
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    methodLabel, amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);

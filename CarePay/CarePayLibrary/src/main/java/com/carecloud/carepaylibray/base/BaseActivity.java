@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
@@ -355,8 +356,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             fm.popBackStack();
         }
 
-        for(Fragment baseFragment: fm.getFragments()){
-            if(baseFragment instanceof BaseDialogFragment){
+        for (Fragment baseFragment : fm.getFragments()) {
+            if (baseFragment instanceof BaseDialogFragment) {
                 ((BaseDialogFragment) baseFragment).cancel();
             }
         }
@@ -387,14 +388,16 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      * @param errorMessage the error message
      */
     public void showErrorToast(String errorMessage) {
-        new CustomMessageToast(this, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+        if (isVisible)
+            new CustomMessageToast(this, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
     }
 
     /**
      * @param successMessage the success message
      */
     public void showSuccessToast(String successMessage) {
-        new CustomMessageToast(this, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        if (isVisible)
+            new CustomMessageToast(this, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
     }
 
     /**
@@ -474,7 +477,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
             }
         }
-        stopSessionService();
+        ((CarePayApplication) getApplication()).cancelSession();
         finishAffinity();
         System.exit(crash ? 2 : 0);
     }

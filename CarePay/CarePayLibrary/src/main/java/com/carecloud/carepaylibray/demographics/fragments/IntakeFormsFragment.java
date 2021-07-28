@@ -130,6 +130,8 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
     @Override
     protected void formScrolledToBottom() {
+
+
         enableNextButton(true);
     }
 

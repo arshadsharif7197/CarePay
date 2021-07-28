@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
-import com.carecloud.carepay.practice.library.session.PracticeSessionService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -140,6 +139,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
             getAppAuthorizationHelper().setUser(null);
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            ((CarePayApplication) getApplication()).cancelSession();
         }
 
         @Override
@@ -253,6 +253,6 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
 
     @Override
     protected void stopSessionService() {
-        stopService(new Intent(this, PracticeSessionService.class));
+        ((CarePayApplication) getApplication()).cancelSession();
     }
 }

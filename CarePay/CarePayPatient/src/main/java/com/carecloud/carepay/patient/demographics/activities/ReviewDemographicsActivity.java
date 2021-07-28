@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,6 +64,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     private MediaResultListener resultListener;
     private PaymentsModel paymentsModel;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,6 +132,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
+
         return true;
     }
 
@@ -409,3 +416,4 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         }, 2000);
     }
 }
+
