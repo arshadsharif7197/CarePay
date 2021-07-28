@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -21,6 +23,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -40,10 +43,11 @@ import java.util.Map;
 public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     private PaymentPlanDTO existingPlan;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
@@ -57,6 +61,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     @Override
     public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
         existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         super.onCreate(icicle);
         setInterval();

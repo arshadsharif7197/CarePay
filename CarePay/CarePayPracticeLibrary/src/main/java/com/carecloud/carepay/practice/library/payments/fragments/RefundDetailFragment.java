@@ -26,7 +26,7 @@ public class RefundDetailFragment extends PracticePaymentHistoryDetailFragment {
     public static RefundDetailFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
 
         RefundDetailFragment fragment = new RefundDetailFragment();
         fragment.setArguments(args);

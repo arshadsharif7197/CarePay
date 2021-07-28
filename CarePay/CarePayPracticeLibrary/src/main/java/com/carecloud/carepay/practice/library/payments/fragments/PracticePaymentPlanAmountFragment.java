@@ -23,7 +23,6 @@ import java.text.NumberFormat;
 
 public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDialogFragment {
 
-    private PaymentsModel paymentsModel;
     private PendingBalanceDTO selectedBalance;
     private PaymentDetailInterface callback;
 
@@ -46,7 +45,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
                                                                 PendingBalanceDTO selectedBalance,
                                                                 boolean showModalResult) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putBoolean("showModalResult", showModalResult);
 
@@ -69,7 +68,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         this.practiceId = selectedBalance.getMetadata().getPracticeId();
         fullAmount = calculateFullAmount();

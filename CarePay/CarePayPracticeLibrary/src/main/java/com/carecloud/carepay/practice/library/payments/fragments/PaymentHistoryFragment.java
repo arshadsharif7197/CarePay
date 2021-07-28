@@ -44,7 +44,6 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
     private static final int BOTTOM_ROW_OFFSET = 2;
 
     private PracticePaymentHistoryCallback callback;
-    private PaymentsModel paymentsModel;
     private List<PaymentHistoryItem> paymentHistory = new ArrayList<>();
 
     private RecyclerView historyRecycler;
@@ -59,7 +58,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
      */
     public static PaymentHistoryFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
 
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
         fragment.setArguments(args);
@@ -81,7 +80,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
         paymentHistory = paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList();
     }

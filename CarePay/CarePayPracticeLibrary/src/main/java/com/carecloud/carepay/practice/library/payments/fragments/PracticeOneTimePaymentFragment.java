@@ -55,7 +55,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
      */
     public static PracticeOneTimePaymentFragment newInstance(PaymentsModel paymentResultModel, double owedAmount, PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentResultModel);
+//        DtoHelper.bundleDto(args, paymentResultModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putDouble(KEY_FULL_AMOUNT, owedAmount);
         PracticeOneTimePaymentFragment fragment = new PracticeOneTimePaymentFragment();
