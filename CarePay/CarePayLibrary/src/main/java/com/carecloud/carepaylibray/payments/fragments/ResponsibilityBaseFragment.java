@@ -2,10 +2,12 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 
@@ -25,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -38,7 +41,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
 
-    protected PaymentsModel paymentDTO = null;
     protected String totalResponsibilityString;
     protected String payTotalAmountString;
     protected String payPartialAmountString;
@@ -51,6 +53,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
     protected ResponsibilityPaymentInterface actionCallback;
     protected boolean hasPermissionToViewBalanceDetails = true;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     public void attachCallback(Context context) {
@@ -77,6 +80,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appCompatActivity = (AppCompatActivity) getActivity();
+
     }
 
     protected void fillDetailAdapter(View view, List<PendingBalancePayloadDTO> pendingBalancePayloads) {
@@ -97,12 +101,14 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
 
     protected void getPaymentInformation() {
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            try {
-                paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-            } catch (Exception e) {
-                Log.e("PAYMENT_ERROR", e.getMessage());
+        if (paymentsModel == null) {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                try {
+                    paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+                } catch (Exception e) {
+                    Log.e("PAYMENT_ERROR", e.getMessage());
+                }
             }
         }
     }
@@ -119,7 +125,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected void createPaymentModel(double payAmount) {
-        IntegratedPaymentPostModel postModel = paymentDTO.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();
         }
@@ -174,12 +180,12 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
             postModel.addLineItem(paymentLineItem);
         }
 
-        paymentDTO.getPaymentPayload().setPaymentPostModel(postModel);
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
     private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes() {
         List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
-        for (PatientBalanceDTO patientBalanceDTO : paymentDTO.getPaymentPayload().getPatientBalances()) {
+        for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
             for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
                 for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
                     switch (pendingBalancePayloadDTO.getType()) {
@@ -199,7 +205,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
     protected boolean isPartialPayAvailable(String practiceId, double total) {
         if (practiceId != null) {
-            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     if (payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()) {
                         double minBalance = payloadSettingsDTO.getPayload().getRegularPayments().getPartialPaymentsThreshold();
@@ -216,23 +222,23 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
     @Override
     public DTO getDto() {
-        return paymentDTO;
+        return paymentsModel;
     }
 
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
         double adjustedBalance = SystemUtil.safeSubtract(balance, nonBalanceTotal);
-        if(adjustedBalance <= 0){
+        if (adjustedBalance <= 0) {
             return false;
         }
         if (practiceId != null) {
-            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
-                    if(!paymentPlanSettings.isPaymentPlansEnabled()){
+                    if (!paymentPlanSettings.isPaymentPlansEnabled()) {
                         return false;
                     }
 
-                    double maxAllowablePayment = paymentDTO.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+                    double maxAllowablePayment = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
                     if (maxAllowablePayment > adjustedBalance) {
                         maxAllowablePayment = adjustedBalance;
                     }
@@ -240,10 +246,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                         if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                                 maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                             //found a valid rule that covers this balance
-                            if(paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                            if (paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
                                 //don't already have an existing plan so this is the first plan
                                 return true;
-                            }else if(paymentPlanSettings.isCanHaveMultiple()){
+                            } else if (paymentPlanSettings.isCanHaveMultiple()) {
                                 // already have a plan so need to see if I can create a new one
                                 return true;
                             }
@@ -252,12 +258,12 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                     }
 
                     //check if balance can be added to existing
-                    double minAllowablePayment = paymentDTO.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+                    double minAllowablePayment = paymentsModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
                     if (minAllowablePayment > adjustedBalance) {
                         minAllowablePayment = adjustedBalance;
                     }
-                    if(paymentPlanSettings.isAddBalanceToExisting() &&
-                            !paymentDTO.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
+                    if (paymentPlanSettings.isAddBalanceToExisting() &&
+                            !paymentsModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
                         mustAddToExisting = true;
                         return true;
                     }

@@ -20,7 +20,7 @@ public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddEx
 
     public static PracticeModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount){
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
         args.putDouble(KEY_PLAN_AMOUNT, amount);

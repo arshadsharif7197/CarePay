@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,6 @@ import java.util.Locale;
 public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFragment {
 
     private PaymentInterface callback;
-    private PaymentsModel paymentsModel;
 
     /**
      * Get new instance of PracticePaymentHistoryDetailFragment
@@ -48,7 +49,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
     public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
 
         PracticePaymentHistoryDetailFragment fragment = new PracticePaymentHistoryDetailFragment();
         fragment.setArguments(args);
@@ -68,7 +69,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
     }
 
     @Override
