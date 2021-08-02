@@ -26,7 +26,7 @@ public class PatientPaymentPlanDetailsDialogFragment extends PaymentPlanDetailsD
                                                                       PaymentPlanDTO paymentPlanDTO) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
 
         PatientPaymentPlanDetailsDialogFragment dialog = new PatientPaymentPlanDetailsDialogFragment();

@@ -23,7 +23,7 @@ public class PatientModePaymentPlanFullFragment extends PaymentPlanFragment {
 
     public static PatientModePaymentPlanFullFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
 

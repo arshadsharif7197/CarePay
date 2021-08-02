@@ -44,7 +44,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
     public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
                                                                        PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
 
         PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
@@ -62,7 +62,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                                                                        PaymentPlanDTO paymentPlanDTO,
                                                                        boolean onlySelectMode) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
 
@@ -83,7 +83,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                                                                        boolean onlySelectMode,
                                                                        Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
 

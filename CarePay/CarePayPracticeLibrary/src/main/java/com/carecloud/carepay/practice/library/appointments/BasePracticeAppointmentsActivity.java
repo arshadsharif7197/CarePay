@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -35,6 +36,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -53,15 +55,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     protected Date endDate;
 
     protected AppointmentsResultModel appointmentsResultModel;
-
-    protected PaymentsModel paymentsModel;
     private PatientModel patientModel;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
+
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         paymentsModel = getConvertedDTO(PaymentsModel.class);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
     }
 
     @Override

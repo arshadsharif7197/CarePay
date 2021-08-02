@@ -44,7 +44,6 @@ import java.util.List;
 public class ResponsibilityFragmentDialog extends BaseDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
-    private PaymentsModel paymentsModel;
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
     @Nullable
@@ -63,7 +62,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
                                                            PatientBalanceDTO selectedBalance) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
         DtoHelper.bundleDto(args, selectedBalance);
 
@@ -94,7 +93,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, args);
         patientBalance = DtoHelper.getConvertedDTO(PatientBalanceDTO.class, args);
     }

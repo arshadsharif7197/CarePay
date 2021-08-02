@@ -56,7 +56,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                                                                           String selectedPaymentMethodLabel,
                                                                           PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
 
@@ -93,7 +93,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                                                                           boolean onlySelectMode,
                                                                           Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);

@@ -2,9 +2,12 @@ package com.carecloud.carepaylibray.base;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -12,6 +15,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -21,10 +26,16 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public abstract class BaseFragment extends Fragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
     private boolean isPracticeAppPatientMode;
+    public PatientResponsibilityViewModel patientResponsibilityViewModel;
+    public PaymentsModel paymentsModel;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
 
         isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         setNewRelicInteraction(getClass().getName());

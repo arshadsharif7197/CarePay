@@ -39,7 +39,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
                                                                 PatientBalanceDTO selectedBalance) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
         DtoHelper.bundleDto(args, authPermissions);
         DtoHelper.bundleDto(args, selectedBalance);

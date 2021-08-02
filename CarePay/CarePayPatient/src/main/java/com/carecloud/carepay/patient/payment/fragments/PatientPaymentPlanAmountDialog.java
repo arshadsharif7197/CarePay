@@ -21,7 +21,7 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
                                                              PendingBalanceDTO selectedBalance) {
 
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         PatientPaymentPlanAmountDialog dialog = new PatientPaymentPlanAmountDialog();
         dialog.setArguments(args);

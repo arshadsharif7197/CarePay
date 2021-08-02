@@ -114,8 +114,13 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                         holder.todayTimeLayout.setVisibility(View.VISIBLE);
                     }
                 } else if (shouldShowCheckoutButton) {
-                    holder.checkOutButton.setVisibility(View.VISIBLE);
-                    holder.checkOutButton.setClickable(true);
+                    if(appointmentsPayload.getVisitType().hasVideoOption())
+                    {
+                        holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.checkOutButton.setVisibility(View.VISIBLE);
+                        holder.checkOutButton.setClickable(true);
+                    }
                 }
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));

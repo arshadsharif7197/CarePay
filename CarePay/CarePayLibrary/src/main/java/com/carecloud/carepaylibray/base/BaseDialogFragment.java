@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
@@ -15,6 +17,8 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -35,6 +39,9 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     private long lastFullScreenSet;
     public static boolean isVisible;
 
+    public PatientResponsibilityViewModel patientResponsibilityViewModel;
+    public PaymentsModel paymentsModel;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -42,6 +49,10 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
         isPracticeAppPatientMode = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         isPracticeAppPracticeMode = applicationType == ApplicationMode.ApplicationType.PRACTICE;
         setNewRelicInteraction(getClass().getName());
+
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
     }
 
     @Override

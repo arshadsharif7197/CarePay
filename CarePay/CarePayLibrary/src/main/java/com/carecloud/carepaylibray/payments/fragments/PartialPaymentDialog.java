@@ -71,7 +71,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
      */
     public static PartialPaymentDialog newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, selectedBalance);
         PartialPaymentDialog dialog = new PartialPaymentDialog();
         dialog.setArguments(args);
@@ -95,9 +95,9 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        paymentsDTO = paymentsModel;
         Bundle args = getArguments();
         if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);

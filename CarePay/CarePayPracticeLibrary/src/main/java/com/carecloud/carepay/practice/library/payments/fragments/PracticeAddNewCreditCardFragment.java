@@ -23,7 +23,7 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
     public static PracticeAddNewCreditCardFragment newInstance(PaymentsModel paymentsDTO, double amount) {
         Bundle args = new Bundle();
         PracticeAddNewCreditCardFragment fragment = new PracticeAddNewCreditCardFragment();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         fragment.setArguments(args);
         return fragment;

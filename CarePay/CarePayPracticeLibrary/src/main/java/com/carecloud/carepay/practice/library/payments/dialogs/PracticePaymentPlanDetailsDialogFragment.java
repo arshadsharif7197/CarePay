@@ -50,7 +50,6 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     private PaymentPlanDTO paymentPlan;
     private boolean isPaymentPlanCompleted;
     private PaymentPlanEditInterface callback;
-    private PaymentsModel paymentsModel;
 
     /**
      * @param paymentsModel  the payment model
@@ -62,7 +61,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
                                                                        PaymentPlanDTO paymentPlanDTO,
                                                                        boolean isCompleted) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean("isCompleted", isCompleted);
 
@@ -86,7 +85,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
         isPaymentPlanCompleted = getArguments().getBoolean("isCompleted", false);
     }
 
