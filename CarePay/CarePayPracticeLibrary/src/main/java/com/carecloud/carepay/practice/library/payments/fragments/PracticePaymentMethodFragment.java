@@ -47,10 +47,10 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         Bundle args = new Bundle();
 
         Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
+/*        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
 
-        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentsModel);*/
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
         PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();

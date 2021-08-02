@@ -35,7 +35,6 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
     protected PaymentPlanCreateInterface callback;
-    protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     protected double paymentPlanAmount;
     public boolean isOnBackPressCalled;
@@ -44,7 +43,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
                                                  PendingBalanceDTO selectedBalance,
                                                  double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
 
@@ -76,7 +75,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         paymentPlanAmount = args.getDouble(KEY_PLAN_AMOUNT);
     }
