@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,8 @@ import java.util.Map;
 public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     public static final String COMMA = ",";
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 3500;
     private PracticeAppointmentDialogListener callback;
     private AppointmentDTO appointmentDTO;
     private UserAuthPermissions authPermissions;
@@ -234,7 +236,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void initializeButtons() {
-        initializeButton(R.id.button_left_action, leftActionLabel, view -> onLeftActionTapped(appointmentDTO));
+        initializeButton(R.id.button_left_action, leftActionLabel, view ->
+                onLeftActionTapped(appointmentDTO));
         initializeButton(R.id.button_right_action, rightActionLabel, view -> {
             /*if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
                 ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
@@ -266,6 +269,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void onLeftActionTapped(AppointmentDTO appointmentDTO) {
+        enableView(R.id.button_right_action, R.id.button_middle_action, false);
         AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
@@ -276,6 +280,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             fragment.setOnCancelListener(dialogInterface -> showDialog());
             fragment.show(getFragmentManager(), fragment.getClass().getName());
             hideDialog();
+            enableView(R.id.button_right_action, R.id.button_middle_action, true);
+
         }
     }
 
@@ -289,12 +295,15 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void onRightActionTapped(AppointmentDTO appointmentDTO) {
+        enableView(R.id.button_left_action, R.id.button_middle_action, false);
         if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
+            enableView(R.id.button_right_action, R.id.button_middle_action, true);
         } else if (appointmentDTO.getPayload().canCheckIn()) {
             launchPatientModeCheckIn(appointmentDTO);
         } else if (appointmentDTO.getPayload().canCheckOut()) {
             launchPatientModeCheckOut(appointmentDTO);
+
         }
     }
 
@@ -323,6 +332,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 logMixPanelEvent(appointmentDTO, eventName);
                 callback.refreshData();
                 dismiss();
+
+
             }
 
             @Override
@@ -330,6 +341,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+
             }
 
         };
@@ -424,6 +436,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void showAdHocFormsDialog(AppointmentDTO appointmentDTO) {
+        enableView(R.id.button_right_action, R.id.button_left_action, false);
         String patientId = appointmentDTO.getMetadata().getPatientId();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", patientId);
@@ -449,13 +462,18 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 fragment.setOnCancelListener(dialogInterface -> showDialog(true));
                 callback.displayDialogFragment(fragment, false);
                 hideDialog(true);
+                enableView(R.id.button_right_action, R.id.button_left_action, true);
+
             }
 
             @Override
             public void onFailure(String exceptionMessage) {
+                enableById(R.id.button_middle_action, false);
+                enableById(R.id.button_right_action, false);
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
                 Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                enableView(R.id.button_right_action, R.id.button_left_action, true);
             }
         };
     }
@@ -483,4 +501,21 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         return textView;
     }
 
+    private void enableView(int id1, int id2, boolean isEnable) {
+        if (isEnable) {
+            new CountDownTimer(1000, 500) { //40000 milli seconds is total time, 1000 milli seconds is time interval
+                public void onTick(long millisUntilFinished) {
+                }
+                public void onFinish() {
+                    enableById(id1, true);
+                    enableById(id2, true);
+                }
+            }.start();
+        } else {
+            enableById(id1, false);
+            enableById(id2, false);
+        }
+
+    }
 }
+
