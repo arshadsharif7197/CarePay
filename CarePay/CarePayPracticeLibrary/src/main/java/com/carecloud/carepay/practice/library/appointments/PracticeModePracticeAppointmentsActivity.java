@@ -432,7 +432,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
-       if (isAlreadyClicked())
+       if (isAlreadyClicked()||getSupportFragmentManager().getBackStackEntryCount()>0)
            return;
         AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
         AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
