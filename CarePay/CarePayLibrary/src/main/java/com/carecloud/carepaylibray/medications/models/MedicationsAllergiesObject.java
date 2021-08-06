@@ -21,6 +21,10 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
     @Expose
     private String uuid;
 
+    @SerializedName("allow_delete")
+    @Expose
+    private String allowDelete;
+
     private transient boolean deleted = false;
 
     public MedicationAllergiesAction getAction() {
@@ -54,6 +58,10 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public String getAllowDelete() {
+        return allowDelete;
     }
 
     public void setDeleted(boolean deleted) {

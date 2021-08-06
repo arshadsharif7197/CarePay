@@ -1,8 +1,11 @@
 package com.carecloud.carepaylibray.medications.adapters;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +85,11 @@ public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationA
             holder.strike2.setVisibility(View.GONE);
             if (applicationType != ApplicationMode.ApplicationType.PATIENT) {
                 holder.delete.setBackgroundResource(R.drawable.button_round_red_border);
+            }
+            if (item.getAllowDelete() != null&&item.getAllowDelete().equalsIgnoreCase("false")) {
+                    holder.delete.setEnabled(false);
+                    holder.delete.setBackgroundResource(R.drawable.button_rounded_gray_background);
+                    holder.delete.setTextColor(Color.parseColor("#ffffff"));
             }
         }
 
