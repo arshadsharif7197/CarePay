@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
     private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
     private static boolean isForeground = false;
     private static Handler handler;

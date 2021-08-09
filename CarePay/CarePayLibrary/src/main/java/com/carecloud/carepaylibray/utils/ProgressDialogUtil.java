@@ -13,7 +13,7 @@ import com.carecloud.carepaylibrary.R;
 
 public class ProgressDialogUtil extends Dialog {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
     private final boolean isPracticeAppPatientMode;
     private final int theme;
 
