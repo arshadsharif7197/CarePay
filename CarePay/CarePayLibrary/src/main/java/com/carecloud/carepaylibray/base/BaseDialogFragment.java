@@ -23,7 +23,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public abstract class BaseDialogFragment extends BlurDialogFragment implements ISession {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
     private boolean isPracticeAppPracticeMode;

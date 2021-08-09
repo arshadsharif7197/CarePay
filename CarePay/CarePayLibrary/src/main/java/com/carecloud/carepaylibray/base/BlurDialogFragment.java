@@ -18,13 +18,14 @@ public abstract class BlurDialogFragment extends DialogFragment {
 
     private BlurDialogEngine mBlurEngine = null;
 
+
     @SuppressLint("RestrictedApi")
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
-//        setUpBlur();
+      //  setUpBlur();
     }
 
     private void setUpBlur() {

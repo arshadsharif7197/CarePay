@@ -27,7 +27,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  */
 public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  */
 
 public abstract class BaseFragment extends Fragment implements ISession {
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
     private boolean isPracticeAppPatientMode;
 
     @Override
