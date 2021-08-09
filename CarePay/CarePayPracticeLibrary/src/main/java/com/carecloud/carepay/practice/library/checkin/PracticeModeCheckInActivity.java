@@ -542,6 +542,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      */
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
+        if (getSupportFragmentManager().getBackStackEntryCount()>0)
+            return;
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO,
                 getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()), appointmentPayloadDTO, theRoom);
