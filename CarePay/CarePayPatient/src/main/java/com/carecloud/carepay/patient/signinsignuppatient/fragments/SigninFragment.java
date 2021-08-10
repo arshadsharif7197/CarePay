@@ -185,7 +185,7 @@ public class SigninFragment extends BaseFragment {
 
         view.findViewById(R.id.get_started).setOnClickListener(view12 -> {
             PlainWebViewFragment fragment = PlainWebViewFragment
-                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
+                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL+ ApplicationPreferences.getInstance().getUserLanguage());
             callback.replaceFragment(fragment, true);
         });
     }
