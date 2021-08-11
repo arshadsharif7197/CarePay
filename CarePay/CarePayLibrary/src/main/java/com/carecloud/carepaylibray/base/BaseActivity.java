@@ -231,11 +231,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             if (null == errorNotification) {
 
                 if (!StringUtil.isNullOrEmpty(errorMessage)) {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                    errorNotification = new CustomPopupNotification(getApplicationContext(), getCurrentFocus(),
                             getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION,
                             errorNotificationSwipeListener());
                 } else {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                    errorNotification = new CustomPopupNotification(getApplicationContext(), getCurrentFocus(),
                             getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE,
                             CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
                 }
