@@ -37,7 +37,6 @@ import java.util.Locale;
 
 public abstract class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
 
-    private PaymentsModel paymentsModel;
     protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -58,7 +57,7 @@ public abstract class PaymentPlanDetailsDialogFragment extends BasePaymentDetail
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
     }
 

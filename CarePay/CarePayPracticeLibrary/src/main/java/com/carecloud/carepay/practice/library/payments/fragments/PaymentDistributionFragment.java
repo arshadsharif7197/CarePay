@@ -105,7 +105,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private PopupPickerWindow providerPickerWindow;
     private PopupPickerPayments paymentsPickerWindow;
 
-    private PaymentsModel paymentsModel;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
     private List<BalanceItemDTO> chargeItems = new ArrayList<>();
     private List<BalanceItemDTO> retailItems = new ArrayList<>();
@@ -135,7 +134,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     public static PaymentDistributionFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         Gson gson = new Gson();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+//        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
         PaymentDistributionFragment fragment = new PaymentDistributionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -159,8 +158,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         Bundle args = getArguments();
         if (args != null) {
             Gson gson = new Gson();
-            String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
+//            String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+//            paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
             authPermissions = paymentsModel.getPaymentPayload().getUserAuthModel().getUserAuthPermissions();
         }
     }

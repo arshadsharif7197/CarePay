@@ -48,7 +48,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                                                      boolean payLaterButtonVisibility,
                                                      String title) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         if (selectedBalance != null) {
             DtoHelper.bundleDto(args, selectedBalance);
         }
@@ -76,7 +76,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPaymentInformation();
-        hasPermissionToViewBalanceDetails = paymentDTO.getPaymentPayload()
+        hasPermissionToViewBalanceDetails = paymentsModel.getPaymentPayload()
                 .canViewBalanceDetails(selectedBalance.getMetadata().getPracticeId());
     }
 
@@ -127,7 +127,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         List<PendingBalancePayloadDTO> filteredList = new ArrayList<>();
         for (PendingBalancePayloadDTO balance : balances) {
             if (balance.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
-                if (paymentDTO.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                if (paymentsModel.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
                         .getMetadata().getPracticeId())) {
                     filteredList.add(balance);
                 }
@@ -161,27 +161,27 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
                 .getPracticeId(), total) ? View.VISIBLE : View.GONE);
 
-        boolean canMakePayments = paymentDTO.getPaymentPayload()
+        boolean canMakePayments = paymentsModel.getPaymentPayload()
                 .canMakePayments(selectedBalance.getMetadata().getPracticeId());
         if (!canMakePayments) {
             payTotalAmountContainer.setVisibility(View.GONE);
             partialPaymentContainer.setVisibility(View.GONE);
         }
 
-        boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
+        boolean paymentPlanEnabled = !paymentsModel.getPaymentPayload().isPaymentPlanCreated() &&
                 isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total)
-                && paymentDTO.getPaymentPayload().getDelegate() == null; //TODO: SHMRK-9463 Take out last validation when MW handle PP
+                && paymentsModel.getPaymentPayload().getDelegate() == null; //TODO: SHMRK-9463 Take out last validation when MW handle PP
         View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
         paymentPlanContainer.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setEnabled(paymentPlanEnabled);
         paymentPlanContainer.setClickable(paymentPlanEnabled);
         paymentPlanContainer.setOnClickListener(view14 -> {
-            PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+            PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload()
                     .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
-            PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+            PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
                     .reduceBalanceItems(selectedBalancesItem, false);
             actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
-                    .newInstance(paymentDTO, reducedBalancesItem), true);
+                    .newInstance(paymentsModel, reducedBalancesItem), true);
         });
         if (mustAddToExisting) {
             TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
@@ -220,19 +220,19 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
         if (selectedBalance == null) {
-            selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+            selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         }
     }
 
     private void doPayment() {
         createPaymentModel(total);
-        actionCallback.onPayButtonClicked(total, paymentDTO);
+        actionCallback.onPayButtonClicked(total, paymentsModel);
     }
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false, false);
+                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false, false);
         actionCallback.displayDialogFragment(dialog, false);
     }
 

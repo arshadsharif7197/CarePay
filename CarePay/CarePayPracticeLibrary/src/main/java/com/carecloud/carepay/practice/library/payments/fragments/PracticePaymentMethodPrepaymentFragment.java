@@ -35,7 +35,7 @@ public class PracticePaymentMethodPrepaymentFragment extends PracticePaymentMeth
     public static PracticePaymentMethodPrepaymentFragment newInstance(PaymentsModel paymentsModel, double amount){
         PracticePaymentMethodPrepaymentFragment fragment = new PracticePaymentMethodPrepaymentFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         fragment.setArguments(args);
         return fragment;

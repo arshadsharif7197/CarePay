@@ -115,8 +115,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         Bundle arguments = getArguments();
         Gson gson = new Gson();
         String payloadString;
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         if (arguments != null) {
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }

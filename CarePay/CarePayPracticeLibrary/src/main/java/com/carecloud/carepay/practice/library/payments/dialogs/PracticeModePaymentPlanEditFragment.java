@@ -54,7 +54,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
     public static PracticeModePaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
                                                                   PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
 
         PracticeModePaymentPlanEditFragment fragment = new PracticeModePaymentPlanEditFragment();

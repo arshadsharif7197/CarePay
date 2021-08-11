@@ -33,7 +33,7 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
                                                                           boolean enablePayNowButton) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean("enablePayNowButton", enablePayNowButton);
 

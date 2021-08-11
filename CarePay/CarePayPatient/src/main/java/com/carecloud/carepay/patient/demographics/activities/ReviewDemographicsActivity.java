@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -60,6 +62,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     private String paymentWorkflow;
     private MediaResultListener resultListener;
     private PaymentsModel paymentsModel;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         demographicsPresenter = new DemographicsPresenterImpl(this, icicle, false);
         if (icicle != null && icicle.containsKey(KEY_PAYMENT_DTO)) {
             paymentWorkflow = icicle.getString(KEY_PAYMENT_DTO);
@@ -240,6 +244,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         } else {
             paymentPresenter.setPaymentPresenter(this, paymentsModel, patientID);
         }
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         return paymentsModel;
     }
 
@@ -335,7 +340,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
-        if(!isFragmentVisible()){
+        if (!isFragmentVisible()) {
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
