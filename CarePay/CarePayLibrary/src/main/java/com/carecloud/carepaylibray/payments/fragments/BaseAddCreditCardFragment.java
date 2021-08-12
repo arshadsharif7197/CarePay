@@ -35,12 +35,10 @@ import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationD
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.material.textfield.TextInputLayout;
@@ -105,7 +103,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected List<MerchantServicesDTO> merchantServicesList;
 
     protected PaymentConfirmationInterface callback;
-    protected PaymentsModel paymentsModel;
+
     protected boolean onlySelectMode;
 
 
