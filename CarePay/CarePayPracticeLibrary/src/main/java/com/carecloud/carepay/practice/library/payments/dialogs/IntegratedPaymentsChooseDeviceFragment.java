@@ -75,7 +75,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     public static final String KEY_LAST_SELECTED_LOCATION = "last_selected_payments_location";
     View closeButton;
     private double paymentAmount;
-    private PaymentsModel paymentsModel;
     private UserPracticeDTO practiceInfo;
     private ShamrockPaymentsCallback callback;
     private String userId;
@@ -97,7 +96,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     public static IntegratedPaymentsChooseDeviceFragment newInstance(PaymentsModel paymentsModel, double paymentAmount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentAmount);
 
         IntegratedPaymentsChooseDeviceFragment fragment = new IntegratedPaymentsChooseDeviceFragment();
@@ -120,7 +119,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         super.onCreate(icicle);
         Bundle args = getArguments();
         if (args != null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
             initLocationsMap();

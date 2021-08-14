@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormsListFragment;
@@ -57,6 +58,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -94,6 +96,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private View filterTextViewOn;
     private TextView patientCountLabelTextView;
     private FilterDialog filterDialog;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void initializeCheckinDto() {
         checkInDTO = getConvertedDTO(CheckInDTO.class);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         populateLists();
         initializePatientListView();
         initializePatientCounter();
@@ -483,6 +487,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
                         checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),

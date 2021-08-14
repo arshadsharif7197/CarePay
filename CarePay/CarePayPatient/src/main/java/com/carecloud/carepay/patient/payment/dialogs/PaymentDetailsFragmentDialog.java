@@ -71,7 +71,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                                                            boolean showStatementButton) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putBoolean("showPaymentButtons", showPaymentButtons);

@@ -39,7 +39,7 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         paymentPayload = DtoHelper.getConvertedDTO(PendingBalancePayloadDTO.class, getArguments());
-        paymentReceiptModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
+        paymentReceiptModel = paymentsModel;
     }
 
     @Override

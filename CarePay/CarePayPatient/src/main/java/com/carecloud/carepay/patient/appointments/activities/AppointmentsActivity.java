@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -40,6 +41,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -57,6 +59,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private boolean toolbarHidden = false;
     private AppointmentViewModel viewModel;
     public static boolean isFromTelehealthScreen;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             viewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
                 this.appointmentsResultModel = appointmentsResultModel;
                 paymentsModel = viewModel.getPaymentsModel();
+                patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
                 resumeOnCreate();
             });
             viewModel.getAppointments(getTransitionAppointments(), true);
@@ -85,6 +89,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     protected void setUpViewModel() {
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         viewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
@@ -102,6 +107,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private void resumeOnCreate() {
         if (paymentsModel == null) {
             paymentsModel = getConvertedDTO(PaymentsModel.class);
+            patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         }
         initPresenter();
         AppointmentTabHostFragment fragment = AppointmentTabHostFragment.newInstance(0);
