@@ -813,7 +813,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             @Override
             public void onPreExecute() {
                 if (!showInline) {
+                    paymentButton.setEnabled(false);
                     showProgressDialog();
+
                 }
             }
 
@@ -844,6 +846,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                 } else {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 }
+                paymentButton.setEnabled(true);
             }
 
             @Override
@@ -851,6 +854,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
                 Log.e(TAG, exceptionMessage);
+                paymentButton.setEnabled(true);
             }
         };
     }

@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ import java.util.List;
 public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
-
+    private long mLastClickTime=0;
     protected PaymentsModel paymentsModel;
     protected double amountToMakePayment;
 
@@ -114,6 +115,10 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
         paymentMethodList.setAdapter(paymentMethodAdapter);
         paymentMethodList.setOnItemClickListener((parent, view1, position, id) -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 2000){
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
             handlePaymentButton(paymentMethod, amountToMakePayment);
         });
