@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -42,6 +44,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
     PatientPaymentPresenter presenter;
 
     private boolean isFirstFragment = true;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
 
     @Override
@@ -49,6 +52,9 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsDTO);
+
         initPresenter();
         Bundle info = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, info);
@@ -100,7 +106,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentConne
 
     @Override
     public void onBackPressed() {
-        if(!isFragmentVisible()){
+        if (!isFragmentVisible()) {
             super.onBackPressed();
         }
     }

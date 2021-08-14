@@ -23,7 +23,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     public static PatientModePaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
                                                                  PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
 
         PatientModePaymentPlanEditFragment fragment = new PatientModePaymentPlanEditFragment();

@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
@@ -37,6 +36,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -44,7 +44,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +55,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
 //        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
-    protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     protected PaymentPlanCreateInterface callback;
 
@@ -94,6 +92,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
     public boolean isOnBackPressCalled;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     /**
      * @param paymentsModel   the payment model
@@ -104,7 +103,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
                                                   PendingBalanceDTO selectedBalance,
                                                   double paymentPlanAmount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, paymentPlanAmount);
 
@@ -130,9 +129,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        if (paymentsModel == null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-        }
         if (selectedBalance == null) {
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }

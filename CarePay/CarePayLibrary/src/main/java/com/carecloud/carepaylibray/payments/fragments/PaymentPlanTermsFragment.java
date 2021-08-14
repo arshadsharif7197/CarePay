@@ -39,7 +39,6 @@ import java.util.Map;
 
 public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
-    protected PaymentsModel paymentsModel;
     protected PaymentPlanPostModel paymentPlanPostModel;
     protected PaymentPlanCreateInterface callback;
     private NestedScrollView scrollView;
@@ -56,7 +55,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
      */
     public static PaymentPlanTermsFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
 
         PaymentPlanTermsFragment fragment = new PaymentPlanTermsFragment();
@@ -81,7 +80,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
     }
 

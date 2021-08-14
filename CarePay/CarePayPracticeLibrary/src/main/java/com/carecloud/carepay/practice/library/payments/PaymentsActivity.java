@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.View;
@@ -59,6 +60,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -90,6 +92,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private boolean paymentMethodCancelled = false;
     private View filterTextView;
     private View filterTextViewOn;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         filterModel = new FilterModel();
         paymentsModel = getConvertedDTO(PaymentsModel.class);
+        // initialized payment Model for all fragments to Observe
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         populateList();
         setUpUI();
     }
@@ -308,6 +315,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 patientDetails.getPaymentPayload().setLocationIndex(paymentsModel.getPaymentPayload().getLocationIndex());
                 patientDetails.getPaymentPayload().setProviders(paymentsModel.getPaymentPayload().getProviders());
                 patientDetails.getPaymentPayload().setProviderIndex(paymentsModel.getPaymentPayload().getProviderIndex());
+
                 startPaymentProcess(patientDetails);
             }
 
@@ -431,6 +439,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
         displayDialogFragment(fragment, true);
     }

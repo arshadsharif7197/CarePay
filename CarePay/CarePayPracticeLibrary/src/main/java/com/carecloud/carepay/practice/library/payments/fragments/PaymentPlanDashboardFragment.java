@@ -39,7 +39,6 @@ import java.util.List;
 public class PaymentPlanDashboardFragment extends BaseDialogFragment
         implements PaymentPlanDashboardAdapter.PaymentPlanDashboardItemInterface {
 
-    private PaymentsModel paymentsModel;
     private PaymentPlanCreateInterface callback;
     private boolean hasBalanceForPaymentPlan;
 
@@ -49,7 +48,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
 
     public static PaymentPlanDashboardFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         PaymentPlanDashboardFragment fragment = new PaymentPlanDashboardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -69,7 +68,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
     }
 
     @Override
