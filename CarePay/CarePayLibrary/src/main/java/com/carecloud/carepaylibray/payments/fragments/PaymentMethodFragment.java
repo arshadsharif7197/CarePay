@@ -36,7 +36,7 @@ import java.util.List;
 
 public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     private long mLastClickTime = System.currentTimeMillis();
-    private static final long CLICK_TIME_INTERVAL = 200;
+    private static final long CLICK_TIME_INTERVAL = 2000;
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
     protected PaymentsModel paymentsModel;

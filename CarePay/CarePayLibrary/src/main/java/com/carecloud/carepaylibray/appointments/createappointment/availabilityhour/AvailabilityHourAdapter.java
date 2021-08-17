@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickHeaderItemDecoration.StickyHeaderInterface {
     private long mLastClickTime = System.currentTimeMillis();
-    private static final long CLICK_TIME_INTERVAL = 200;
+    private static final long CLICK_TIME_INTERVAL = 2000;
     private static final int CELL_HEADER = 0;
     private static final int CELL_CARD = 1;
     private final OnTimeSlotListItemClickListener listener;
@@ -72,7 +72,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             mLastClickTime = now;
 
-                    listener.onTimeSlotListItemClickListener(appointmentSlotItem);
+            listener.onTimeSlotListItemClickListener(appointmentSlotItem);
 
         }
         );

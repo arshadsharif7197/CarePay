@@ -442,12 +442,12 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                     creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());
                     authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
                 } else {
-                    nextButton.setEnabled(true);
+                  //  nextButton.setEnabled(true);
                     authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
 
                 }
             } else {
-                nextButton.setEnabled(true);
+              //  nextButton.setEnabled(true);
                 authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
             }
         });
