@@ -56,7 +56,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     private int searchMode;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-    private MedicationsOnlyResultModel medicationsAllergiesDTO2;
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     private MedicationAllergyCallback callback;
     private RecyclerView searchRecycler;
     private SearchView searchView;
@@ -65,11 +65,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     private View initialScreenContainer;
 
     public static MedicationAllergySearchFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
-                                                              MedicationsOnlyResultModel medicationsAllergiesDTO2, int searchMode) {
+                                                              MedicationsOnlyResultModel medicationsOnlyResultModel, int searchMode) {
         Bundle args = new Bundle();
         if (searchMode==ALLERGY_ITEM)
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
-        else  DtoHelper.bundleDto(args, medicationsAllergiesDTO2);
+        else  DtoHelper.bundleDto(args, medicationsOnlyResultModel);
         args.putInt(CarePayConstants.SEARCH_MODE, searchMode);
         MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
         fragment.setArguments(args);
@@ -102,7 +102,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         searchMode = getArguments().getInt(CarePayConstants.SEARCH_MODE);
         if (searchMode==ALLERGY_ITEM)
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
-        else  medicationsAllergiesDTO2 = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, getArguments());
+        else  medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, getArguments());
 
 
     }
@@ -221,16 +221,16 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         if (searchMode == ALLERGY_ITEM) {
             searchDTO = medicationsAllergiesDTO.getMetadata().getLinks().getSearchAllergies();
         } else {
-            searchDTO = medicationsAllergiesDTO2.getMetadata().getLinks().getSearchMedications();
+            searchDTO = medicationsOnlyResultModel.getMetadata().getLinks().getSearchMedications();
         }
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_id", searchMode == ALLERGY_ITEM ?
                 medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeId() :
-                medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getPracticeId());
+                medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeId());
         queryMap.put("practice_mgmt", searchMode == ALLERGY_ITEM ?
                 medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeMgmt() :
-                medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getPracticeMgmt());
+                medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeMgmt());
         try {
             queryMap.put("search", URLEncoder.encode(searchQuery, "utf-8"));
         } catch (UnsupportedEncodingException e) {

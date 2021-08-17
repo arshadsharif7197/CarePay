@@ -36,15 +36,15 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
 
     private DemographicsPresenter callback;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-    private MedicationsOnlyResultModel medicationsAllergiesDTO2;
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     private int selectedMode;
 
     public static MedicationsAllergiesEmptyFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
-                                                                MedicationsOnlyResultModel medicationsAllergiesDTO2, int mode) {
+                                                                MedicationsOnlyResultModel medicationsOnlyResultModel, int mode) {
         Bundle args = new Bundle();
         if (mode==ALLERGY_MODE)
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
-        else DtoHelper.bundleDto(args, medicationsAllergiesDTO2);
+        else DtoHelper.bundleDto(args, medicationsOnlyResultModel);
         args.putInt(KEY_DISPLAY_MODE, mode);
 
         MedicationsAllergiesEmptyFragment fragment = new MedicationsAllergiesEmptyFragment();
@@ -59,7 +59,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         selectedMode = args.getInt(KEY_DISPLAY_MODE, MEDICATION_MODE);
         if (selectedMode==ALLERGY_MODE)
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, args);
-        else medicationsAllergiesDTO2 = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, args);
+        else medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, args);
 
     }
 
@@ -113,7 +113,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
                 if (selectedMode==ALLERGY_MODE){
                     workflowDTO  = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsAllergiesDTO));
                 }else {
-                    workflowDTO  = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsAllergiesDTO2));
+                    workflowDTO  = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsOnlyResultModel));
                 }
 
 
@@ -166,11 +166,11 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
             queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeMgmt());
             queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getAppointmentId());
         } else {
-            transitionDTO = medicationsAllergiesDTO2.getMetadata().getTransitions().getMedications();
-            queryMap.put("patient_id", medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getPatientId());
-            queryMap.put("practice_id", medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getPracticeId());
-            queryMap.put("practice_mgmt", medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getPracticeMgmt());
-            queryMap.put("appointment_id", medicationsAllergiesDTO2.getPayload().getMedications().getMetadata().getAppointmentId());
+            transitionDTO = medicationsOnlyResultModel.getMetadata().getTransitions().getMedications();
+            queryMap.put("patient_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPatientId());
+            queryMap.put("practice_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeId());
+            queryMap.put("practice_mgmt", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeMgmt());
+            queryMap.put("appointment_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getAppointmentId());
         }
 
 

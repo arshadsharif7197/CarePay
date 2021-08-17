@@ -62,7 +62,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-    private MedicationsOnlyResultModel medicationsAllergiesDTO2;
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     //demographics nav
     private int currentDemographicStep = 1;
     private boolean startCheckIn = false;
@@ -343,19 +343,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void navigateToMedications(WorkflowDTO workflowDTO, boolean checkEmpty) {
-        medicationsAllergiesDTO2 = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class,
+        medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class,
                 workflowDTO);
         Fragment fragment;
-        if (checkEmpty && medicationsAllergiesDTO2.getPayload().getMedications().getPayload().isEmpty()) {
-            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,medicationsAllergiesDTO2,
+        if (checkEmpty && medicationsOnlyResultModel.getPayload().getMedications().getPayload().isEmpty()) {
+            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,medicationsOnlyResultModel,
                     MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
         } else {
-            fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO2);
+            fragment = MedicationsFragment.newInstance(medicationsOnlyResultModel);
         }
         navigateToFragment(fragment, true);
 
-        if (!checkEmpty && !medicationsAllergiesDTO2.getPayload().getCheckinSettings().isAllowMedicationPicture()
-                && medicationsAllergiesDTO2.getPayload().getMedications().getPayload().isEmpty()) {
+        if (!checkEmpty && !medicationsOnlyResultModel.getPayload().getCheckinSettings().isAllowMedicationPicture()
+                && medicationsOnlyResultModel.getPayload().getMedications().getPayload().isEmpty()) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
 
@@ -369,7 +369,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Fragment fragment;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
-                    medicationsAllergiesDTO2, MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
+                    medicationsOnlyResultModel, MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
         } else {
             fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
         }
@@ -471,7 +471,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showMedicationAllergySearchFragment(int searchType) {
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO,medicationsAllergiesDTO2, searchType);
+                .newInstance(medicationsAllergiesDTO,medicationsOnlyResultModel, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 
