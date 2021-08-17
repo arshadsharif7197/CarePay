@@ -45,6 +45,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -61,6 +62,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsOnlyResultModel medicationsAllergiesDTO2;
     //demographics nav
     private int currentDemographicStep = 1;
     private boolean startCheckIn = false;
@@ -341,19 +343,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void navigateToMedications(WorkflowDTO workflowDTO, boolean checkEmpty) {
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
+        medicationsAllergiesDTO2 = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class,
                 workflowDTO);
         Fragment fragment;
-        if (checkEmpty && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
-            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
+        if (checkEmpty && medicationsAllergiesDTO2.getPayload().getMedications().getPayload().isEmpty()) {
+            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,medicationsAllergiesDTO2,
                     MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
         } else {
-            fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO);
+            fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO2);
         }
         navigateToFragment(fragment, true);
 
-        if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
-                && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
+        if (!checkEmpty && !medicationsAllergiesDTO2.getPayload().getCheckinSettings().isAllowMedicationPicture()
+                && medicationsAllergiesDTO2.getPayload().getMedications().getPayload().isEmpty()) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
 
@@ -367,7 +369,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Fragment fragment;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
-                    MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
+                    medicationsAllergiesDTO2, MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
         } else {
             fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
         }
@@ -469,7 +471,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showMedicationAllergySearchFragment(int searchType) {
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO, searchType);
+                .newInstance(medicationsAllergiesDTO,medicationsAllergiesDTO2, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 

@@ -40,7 +40,7 @@ import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
-import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsImagePostModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
@@ -78,7 +78,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
 
     protected DemographicsPresenter callback;
 
-    private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsOnlyResultModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
     private List<MedicationsObject> currentMedications = new ArrayList<>();
@@ -90,7 +90,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
 
     private boolean shouldAllowMedPicture = true;
 
-    public static MedicationsFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
+    public static MedicationsFragment newInstance(MedicationsOnlyResultModel medicationsAllergiesDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
         MedicationsFragment fragment = new MedicationsFragment();
@@ -120,7 +120,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, getArguments());
         currentMedications = medicationsAllergiesDTO.getPayload().getMedications().getPayload();
     }
 
