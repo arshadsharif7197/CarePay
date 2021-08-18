@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.medications.interfaces.MedicationAllergyCallb
 import com.carecloud.carepaylibray.medications.models.AllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -55,6 +56,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     private int searchMode;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     private MedicationAllergyCallback callback;
     private RecyclerView searchRecycler;
     private SearchView searchView;
@@ -63,9 +65,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     private View initialScreenContainer;
 
     public static MedicationAllergySearchFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
-                                                              int searchMode) {
+                                                              MedicationsOnlyResultModel medicationsOnlyResultModel, int searchMode) {
         Bundle args = new Bundle();
+        if (searchMode==ALLERGY_ITEM)
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+        else  DtoHelper.bundleDto(args, medicationsOnlyResultModel);
         args.putInt(CarePayConstants.SEARCH_MODE, searchMode);
         MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
         fragment.setArguments(args);
@@ -95,8 +99,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
         searchMode = getArguments().getInt(CarePayConstants.SEARCH_MODE);
+        if (searchMode==ALLERGY_ITEM)
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
+        else  medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, getArguments());
+
 
     }
 
@@ -214,16 +221,16 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         if (searchMode == ALLERGY_ITEM) {
             searchDTO = medicationsAllergiesDTO.getMetadata().getLinks().getSearchAllergies();
         } else {
-            searchDTO = medicationsAllergiesDTO.getMetadata().getLinks().getSearchMedications();
+            searchDTO = medicationsOnlyResultModel.getMetadata().getLinks().getSearchMedications();
         }
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_id", searchMode == ALLERGY_ITEM ?
                 medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeId() :
-                medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
+                medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeId());
         queryMap.put("practice_mgmt", searchMode == ALLERGY_ITEM ?
                 medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeMgmt() :
-                medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
+                medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeMgmt());
         try {
             queryMap.put("search", URLEncoder.encode(searchQuery, "utf-8"));
         } catch (UnsupportedEncodingException e) {
