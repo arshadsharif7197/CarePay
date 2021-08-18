@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +70,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -112,12 +114,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     CarePayTextView checkedOutCounterTextView;
 
     CheckInDTO checkInDTO;
-    private PaymentsModel selectedPaymentModel;
+    private PaymentsModel paymentsModel;
+   // private PaymentsModel selectedPaymentModel;
     private PaymentHistoryItem recentRefundItem;
     private String patientId;
 
     private boolean paymentMethodCancelled = false;
-
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +130,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         filterModel = new FilterModel();
+        paymentsModel = getConvertedDTO(PaymentsModel.class);
+        // initialized payment Model for all fragments to Observe
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         initializationView();
         populateLists();
         setUpFilter();
@@ -138,7 +146,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         super.onPostResume();
         if (recentRefundItem != null) {
             if (recentRefundItem.getPayload() != null) {
-                completeRefundProcess(recentRefundItem, selectedPaymentModel);
+                completeRefundProcess(recentRefundItem, paymentsModel);
             } else {
                 displayPendingTransactionDialog(true);
             }
@@ -682,7 +690,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                         Log.d("Process Refund Success", jsonPayload);
                         PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
                         if (isVisible()) {
-                            completeRefundProcess(historyItem, selectedPaymentModel);
+                            completeRefundProcess(historyItem, paymentsModel);
                         } else {
                             recentRefundItem = historyItem;
                         }
@@ -819,7 +827,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 && paymentsModel.getPaymentPayload().getScheduledOneTimePayments().size() > 0) {
             scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
         }
-        List<ScheduledPaymentModel> scheduledPaymentModels = this.selectedPaymentModel
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel
                 .getPaymentPayload().getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
             if (scheduledPaymentModel.getMetadata().getOneTimePaymentId()

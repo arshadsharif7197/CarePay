@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +84,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
+    private long mLastClickTime=0;
     String locationID = null;
     String providerID = null;
     private View unappliedLayout;
@@ -287,6 +290,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 2000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 clearPickers();
                 clearLastSwipeView();
                 if (validateBalanceItems()) {
