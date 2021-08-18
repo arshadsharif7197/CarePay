@@ -860,6 +860,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
     }
 
     private void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);
