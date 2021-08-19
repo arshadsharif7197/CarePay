@@ -385,6 +385,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
+                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
                 showProgressDialog();
             }
 
@@ -394,7 +395,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 isExporting = true;
                 exportButton.setEnabled(false);
-                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
 //                exportButton.setProgressEnabled(true);
                 callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
@@ -404,6 +404,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 Log.e("okHttp", exceptionMessage);
                 hideProgressDialog();
                 showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
+                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
+                exportButton.setEnabled(true);
             }
         }, query.toString());
     }
@@ -521,6 +523,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        resetExportButton();
+//        resetExportButton();
     }
 }

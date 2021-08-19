@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -123,10 +125,16 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
 
     public void cancel() {
         isVisible = false;
+        onCancel(this);
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
         dismiss();
+    }
+
+    public void onCancel(BaseDialogFragment baseDialogFragment) {
+        if (baseDialogFragment instanceof DatePickerFragment)
+            ((DatePickerFragment) baseDialogFragment).onCancel();
     }
 
     public boolean showViewById(int id) {
