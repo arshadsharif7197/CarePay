@@ -90,6 +90,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private int retryIntent = 0;
 
     private boolean isExporting = false;
+    private boolean isDownloadNeeded;
+    private VisitSummaryDTO visitSummaryDTO;
 
     public static VisitSummaryDialogFragment newInstance() {
         return new VisitSummaryDialogFragment();
@@ -385,17 +387,18 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
                 showProgressDialog();
             }
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                isDownloadNeeded = true;
+                visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 isExporting = true;
                 exportButton.setEnabled(false);
 //                exportButton.setProgressEnabled(true);
+                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
                 callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
 
@@ -419,6 +422,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
             @Override
             public void onPreExecute() {
+                isDownloadNeeded = false;
             }
 
             @Override
@@ -524,5 +528,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     public void onResume() {
         super.onResume();
 //        resetExportButton();
+        if (isDownloadNeeded) {
+            callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
+        }
     }
 }
