@@ -336,7 +336,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm=getSupportFragmentManager();
             BaseCheckinFragment fragment = null;
 
         if(!isFragmentVisible()){
@@ -354,7 +353,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
                         fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
                     }
-
                 }
                 if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.AllergiesFragment")) {
                     MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
@@ -364,8 +362,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                     if (allergiesFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
 
                         fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
-
-
                     }
 
                 }
