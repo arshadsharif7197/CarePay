@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,7 +88,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private List<MedicationsObject> tempMedications = new ArrayList<>();
 
     private Handler handler = new Handler();
-
+    public boolean shouldRemove=false;
     private boolean shouldAllowMedPicture = true;
 
     public static MedicationsFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
@@ -406,6 +408,16 @@ public class MedicationsFragment extends BaseCheckinFragment implements
                 String[] params = {getString(R.string.param_meds_count),
                         getString(R.string.param_meds_photo)
                 };
+
+                if(modifiedMeds.size()>0)
+                {
+                    Bundle args = new Bundle();
+                    DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+                    shouldRemove=true;
+
+                }else {
+                    shouldRemove=false;
+                }
                 Object[] values = {modifiedMeds.size(),
                         hasPhoto() && !StringUtil.isNullOrEmpty(photoPath)
                 };

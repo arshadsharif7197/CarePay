@@ -50,9 +50,8 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private RecyclerView allergyRecycler;
     private Button continueButton;
-
     protected DemographicsPresenter callback;
-
+    public boolean shouldRemove=false;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
@@ -311,6 +310,17 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
             if (!modifiedAllergies.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
+
+                Bundle args = new Bundle();
+                DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+
+                if(modifiedAllergies.size()>0)
+                {
+                    shouldRemove=true;
+
+                }else {
+                    shouldRemove=false;
+                }
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_allergies));
