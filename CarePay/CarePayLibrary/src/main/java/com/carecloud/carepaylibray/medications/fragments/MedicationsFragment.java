@@ -77,8 +77,6 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private View newPhotoButton;
     private View changePhotoButton;
 
-    private TextView textView;
-
     protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
@@ -90,7 +88,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private List<MedicationsObject> tempMedications = new ArrayList<>();
 
     private Handler handler = new Handler();
-
+    public boolean shouldRemove=false;
     private boolean shouldAllowMedPicture = true;
 
     public static MedicationsFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
@@ -150,7 +148,6 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         final NestedScrollView scrollView = view.findViewById(R.id.scroll_medications_allergy);
         handler.postDelayed(() -> scrollView.scrollTo(0, 0), 30);
         View container = view.findViewById(R.id.container_main);
-        textView=getActivity().findViewById(R.id.tvMedicationcheck);
         hideKeyboardOnViewTouch(container);
     }
 
@@ -413,11 +410,10 @@ public class MedicationsFragment extends BaseCheckinFragment implements
                 {
                     Bundle args = new Bundle();
                     DtoHelper.bundleDto(args, medicationsAllergiesDTO);
-
-                    textView.setText("added");
+                    shouldRemove=true;
 
                 }else {
-                    textView.setText("");
+                    shouldRemove=false;
                 }
                 Object[] values = {modifiedMeds.size(),
                         hasPhoto() && !StringUtil.isNullOrEmpty(photoPath)

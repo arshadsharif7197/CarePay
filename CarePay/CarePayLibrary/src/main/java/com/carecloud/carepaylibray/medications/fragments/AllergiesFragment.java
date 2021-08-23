@@ -50,9 +50,8 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private RecyclerView allergyRecycler;
     private Button continueButton;
-    private TextView textView;
     protected DemographicsPresenter callback;
-
+    public boolean shouldRemove=false;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
@@ -127,7 +126,6 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             }
         }, 30);
         View container = view.findViewById(R.id.container_main);
-        textView=getActivity().findViewById(R.id.tvMedicationcheck);
         hideKeyboardOnViewTouch(container);
     }
 
@@ -313,15 +311,12 @@ public class AllergiesFragment extends BaseCheckinFragment implements
                 Bundle args = new Bundle();
                 DtoHelper.bundleDto(args, medicationsAllergiesDTO);
 
-
                 if(modifiedAllergies.size()>0)
                 {
-
-
-                    textView.setText("added");
+                    shouldRemove=true;
 
                 }else {
-                    textView.setText("");
+                    shouldRemove=false;
                 }
             }
 
