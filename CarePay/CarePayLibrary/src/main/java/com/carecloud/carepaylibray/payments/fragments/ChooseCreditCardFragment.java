@@ -59,7 +59,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected Button nextButton;
 
     protected PaymentCreditCardsPayloadDTO selectedCreditCard;
-    protected PaymentsModel paymentsModel;
     private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
 
@@ -68,6 +67,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
     protected boolean onlySelectMode;
+    private boolean isOnPostCalled;
 
 
     /**
@@ -80,7 +80,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                                                        String selectedPaymentMethodLabel,
                                                        double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
@@ -118,7 +118,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         Bundle arguments = getArguments();
         if (arguments != null) {
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             onlySelectMode = arguments.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
 
@@ -339,6 +339,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            isOnPostCalled = true;
             hideProgressDialog();
             nextButton.setEnabled(true);
 
@@ -375,7 +376,14 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
 
             // on Payment error go to Appointment screen
-            showConfirmation(null);
+            if (!isOnPostCalled) {
+                showConfirmation(null);
+            } else {
+                if (getDialog() != null) {
+                    dismiss();
+                }
+            }
+            isOnPostCalled = false;
         }
     };
 

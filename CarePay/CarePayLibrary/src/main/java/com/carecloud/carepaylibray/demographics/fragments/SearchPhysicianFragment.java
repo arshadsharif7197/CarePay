@@ -116,6 +116,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
         Toolbar toolbar = view.findViewById(R.id.toolbarLayout);
         if (getDialog() == null) {
             searchView = toolbar.findViewById(R.id.search_entry_view);
+            searchView.setQueryHint(Label.getLabel("search_field_hint"));
             ImageView lenImage = searchView.findViewById(R.id.search_mag_icon);
             if (lenImage != null) {
                 lenImage.setVisibility(View.GONE);
@@ -130,6 +131,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
             });
         } else {
             searchView = view.findViewById(R.id.search_entry_view);
+            searchView.setQueryHint(Label.getLabel("search_field_hint"));
             TextView title = toolbar.findViewById(R.id.toolbar_title);
             if (physicianType == PRIMARY_PHYSICIAN) {
                 title.setText(Label.getLabel("demographics_primary_care_physician"));

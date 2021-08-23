@@ -71,14 +71,13 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
 
         holder.itemView.setOnClickListener(view -> {
+            long now = System.currentTimeMillis();
+            if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
+                return;
+            }
+            mLastClickTime = now;
+
             if (callback != null) {
-
-                long now = System.currentTimeMillis();
-                if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
-                    return;
-                }
-                mLastClickTime = now;
-
                 callback.onItemTapped(sortedAppointments.get(position));
             }
         });

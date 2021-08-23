@@ -82,25 +82,25 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
         Button paymentOptionsButton = view.findViewById(R.id.paymentOptionsButton);
         paymentOptionsButton.setOnClickListener(v -> {
-            PaymentOptionsFragmentDialog fragment = PaymentOptionsFragmentDialog.newInstance(paymentDTO);
+            PaymentOptionsFragmentDialog fragment = PaymentOptionsFragmentDialog.newInstance(paymentsModel);
             fragment.setCallback(option -> {
                 switch (option) {
                     case PaymentOptionsFragmentDialog.PAYMENT_OPTION_TOTAL_AMOUNT:
                         doPayment();
                         break;
                     case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PARTIAL_AMOUNT:
-                        final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload()
+                        final PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
                                 .getPatientBalances().get(0).getBalances().get(0);
                         actionCallback.onPartialPaymentClicked(total, selectedBalance);
                         break;
                     case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAYMENT_PLAN:
                         //this should be a safe assumption for checkin
-                        PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload()
                                 .getPatientBalances().get(0).getBalances().get(0);
-                        PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
                                 .reduceBalanceItems(selectedBalancesItem, false);
                         PracticePaymentPlanAmountFragment fragment1 = PracticePaymentPlanAmountFragment
-                                .newInstance(paymentDTO, reducedBalancesItem, false);
+                                .newInstance(paymentsModel, reducedBalancesItem, false);
                         actionCallback.displayDialogFragment(fragment1, false);
                         break;
                     case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAY_LATER:
@@ -115,11 +115,11 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
         getPaymentInformation();
 
-        if (paymentDTO != null) {
+        if (paymentsModel != null) {
             getPaymentLabels();
             try {
                 ((TextView) view.findViewById(R.id.respons_title)).setText(Label.getLabel("payment_title"));
-                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                List<PendingBalanceDTO> paymentList = paymentsModel.getPaymentPayload()
                         .getPatientBalances().get(0).getBalances();
 
                 total = 0;
@@ -153,7 +153,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     protected void doPayment() {
         createPaymentModel(total);
-        actionCallback.onPayButtonClicked(total, paymentDTO);
+        actionCallback.onPayButtonClicked(total, paymentsModel);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, false);
+                .newInstance(paymentsModel, paymentLineItem, false);
         actionCallback.displayDialogFragment(dialog, true);
     }
 }

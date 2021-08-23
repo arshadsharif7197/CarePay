@@ -5,16 +5,24 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.util.Log;
+
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.carecloud.carepay.patient.BuildConfig;
-import com.carecloud.carepay.patient.session.PatientSessionService;
+import com.carecloud.carepay.patient.session.PatientSessionWorker;
+import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.session.SessionWorker;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
@@ -30,6 +38,7 @@ public class CarePayPatientApplication extends CarePayApplication {
 
     private ApplicationMode applicationMode;
     private MixpanelAPI mixpanelAPI;
+    private WorkManager sessionWorkManager;
 
     @Override
     public void onCreate() {
@@ -95,8 +104,15 @@ public class CarePayPatientApplication extends CarePayApplication {
     public void onActivityResumed(Activity activity) {
         super.onActivityResumed(activity);
         if (activity instanceof SessionedActivityInterface
-                && ((SessionedActivityInterface) activity).manageSession()) {
+                && ((SessionedActivityInterface) activity).manageSession()
+                && !PatientSessionWorker.isServiceStarted) {
             restartSession(activity);
+        } else if (activity instanceof SigninSignupActivity) {
+            cancelSession();
+        } else if (activity instanceof SessionedActivityInterface
+                && ((SessionedActivityInterface) activity).manageSession()
+                && PatientSessionWorker.isServiceStarted && PatientSessionWorker.isLogoutNeeded) {
+            callLogoutService(activity);
         }
     }
 
@@ -107,7 +123,43 @@ public class CarePayPatientApplication extends CarePayApplication {
 
     @Override
     public void restartSession(Activity activity) {
-        Log.e("Session", "manageSession");
-        startService(new Intent(this, PatientSessionService.class));
+        cancelSession();
+        Data.Builder builder = new Data.Builder();
+        builder.putString("logout_transition",
+                DtoHelper.getStringDTO(((SessionedActivityInterface) activity).getLogoutTransition()));
+
+        OneTimeWorkRequest sessionWorkerRequest = new OneTimeWorkRequest.Builder(PatientSessionWorker.class)
+                .setInputData(builder.build())
+                .addTag("sessionWorker")
+                .build();
+
+        sessionWorkManager = WorkManager.getInstance(getApplicationContext());
+        sessionWorkManager.enqueueUniqueWork(
+                "sessionWorker",
+                ExistingWorkPolicy.REPLACE,
+                sessionWorkerRequest);
+    }
+
+    public void cancelSession() {
+        PatientSessionWorker.isServiceStarted = false;
+        PatientSessionWorker.isLogoutNeeded = false;
+        if (PatientSessionWorker.logoutTimer != null) PatientSessionWorker.logoutTimer.cancel();
+        if (SessionWorker.handler != null) {
+            WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag("sessionWorker");
+            SessionWorker.handler.removeMessages(0);
+        }
+    }
+
+    private void callLogoutService(Activity activity) {
+        cancelSession();
+
+        getApplicationMode().clearUserPracticeDTO();
+        AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
+        authHelper.setUser(null);
+        authHelper.setAccessToken(null);
+        authHelper.setIdToken(null);
+        authHelper.setRefreshToken(null);
+        onAtomicRestart();
+        activity.finishAffinity();
     }
 }

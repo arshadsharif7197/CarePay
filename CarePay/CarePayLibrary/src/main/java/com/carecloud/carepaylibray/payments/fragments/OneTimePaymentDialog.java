@@ -60,7 +60,6 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         }
         DateUtil.getInstance().setDate(new Date());

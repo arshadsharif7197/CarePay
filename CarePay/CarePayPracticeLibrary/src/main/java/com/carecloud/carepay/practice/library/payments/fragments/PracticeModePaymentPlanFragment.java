@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +42,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -71,11 +73,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     protected double minAmount = 0.1;
     private CreditCardsListAdapter creditCardsListAdapter;
     private Button addNewCardButton;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     public static PracticeModePaymentPlanFragment newInstance(PaymentsModel paymentsModel,
                                                               PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
 
         PracticeModePaymentPlanFragment fragment = new PracticeModePaymentPlanFragment();
@@ -85,9 +88,10 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
-        applyRangeRules = false;
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
         selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        applyRangeRules = false;
         super.onCreate(icicle);
     }
 

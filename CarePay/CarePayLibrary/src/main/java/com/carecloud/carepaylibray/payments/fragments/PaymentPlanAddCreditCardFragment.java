@@ -53,7 +53,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
      */
     public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
@@ -86,7 +86,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
                                                                boolean onlySelectMode,
                                                                Date paymentDate) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         if (paymentDate != null) {
@@ -170,7 +170,6 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     }
 
     protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        dismiss();
         hideProgressDialog();
         PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
         callback.replaceFragment(fragment, true);
@@ -250,7 +249,6 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             return super.getLargeAlertInterface();
         }
     }
-
 
 
 }

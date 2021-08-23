@@ -54,6 +54,8 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
+import static com.microsoft.appcenter.utils.InstrumentationRegistryHelper.getArguments;
+
 public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
@@ -472,6 +474,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void showMedicationAllergySearchFragment(int searchType) {
+
+        MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
+                .newInstance(medicationsAllergiesDTO, searchType);
+        showFragmentAsDialogIfNeeded(fragment);
+    }
+
+    @Override
+    public void showMedicationAllergySearchFragment(int searchType,MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
+
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
                 .newInstance(medicationsAllergiesDTO, searchType);
         showFragmentAsDialogIfNeeded(fragment);

@@ -103,6 +103,9 @@ public class AllergiesFragment extends BaseCheckinFragment implements
         if (callback == null) {
             attachCallback(getContext());
         }
+
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args,medicationsAllergiesDTO);
         callback.setCheckinFlow(CheckinFlowState.ALLERGIES, 0, 0);
         hideProgressDialog();
     }
@@ -259,7 +262,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
     private View.OnClickListener chooseAllergyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
+            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM,medicationsAllergiesDTO);
         }
     };
 

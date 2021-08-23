@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -53,6 +54,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -86,10 +88,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private int displayPage = PAGE_BALANCES;
     private boolean paymentEnabled;
     private PatientPaymentPlanDetailsDialogFragment patientPaymentPlanDetailsDialogFragment;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
@@ -97,6 +101,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         if (paymentsDTO == null) {
             callPaymentsService();
         } else {
+            patientResponsibilityViewModel.setPaymentsModel(paymentsDTO);
             initFragments();
         }
     }
@@ -116,6 +121,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                patientResponsibilityViewModel.setPaymentsModel(paymentsDTO);
                 initFragments();
             }
 
@@ -297,8 +303,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                                       PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            String methodLabel = Label.getLabel("payment_method_" + selectedPaymentMethod.getType());
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    methodLabel, amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);

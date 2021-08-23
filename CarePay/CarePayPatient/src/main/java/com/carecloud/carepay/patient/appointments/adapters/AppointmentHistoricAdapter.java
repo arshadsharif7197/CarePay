@@ -19,9 +19,8 @@ import java.util.Set;
  * @author pjohnson on 19/10/18.
  */
 public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
-
-    private boolean isLoading;
     private long mLastClickTime = System.currentTimeMillis();
+    private boolean isLoading;
     private static final long CLICK_TIME_INTERVAL = 600;
     public AppointmentHistoricAdapter(Context context,
                                       List<AppointmentDTO> appointments,
@@ -56,13 +55,13 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (callback != null) {
 
-                    long now = System.currentTimeMillis();
-                    if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
-                        return;
-                    }
-                    mLastClickTime = now;
+                long now = System.currentTimeMillis();
+                if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
+                    return;
+                }
+                mLastClickTime = now;
+                if (callback != null) {
                     callback.onItemTapped(sortedAppointments.get(holder.getAdapterPosition()));
                 }
             }

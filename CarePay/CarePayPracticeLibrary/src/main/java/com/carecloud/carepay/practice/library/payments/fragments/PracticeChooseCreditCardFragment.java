@@ -32,7 +32,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
                                                                String selectedPaymentMethodLabel,
                                                                double amount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         PracticeChooseCreditCardFragment chooseCreditCardFragment = new PracticeChooseCreditCardFragment();
