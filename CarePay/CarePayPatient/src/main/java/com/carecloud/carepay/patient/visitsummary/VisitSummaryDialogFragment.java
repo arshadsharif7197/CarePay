@@ -90,6 +90,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private int retryIntent = 0;
 
     private boolean isExporting = false;
+    private boolean isDownloadNeeded;
+    private VisitSummaryDTO visitSummaryDTO;
 
     public static VisitSummaryDialogFragment newInstance() {
         return new VisitSummaryDialogFragment();
@@ -390,12 +392,13 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                isDownloadNeeded = true;
+                visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 isExporting = true;
                 exportButton.setEnabled(false);
-                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
 //                exportButton.setProgressEnabled(true);
+                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
                 callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
 
@@ -404,6 +407,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 Log.e("okHttp", exceptionMessage);
                 hideProgressDialog();
                 showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
+                exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
+                exportButton.setEnabled(true);
             }
         }, query.toString());
     }
@@ -417,6 +422,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
             @Override
             public void onPreExecute() {
+                isDownloadNeeded = false;
             }
 
             @Override
@@ -521,6 +527,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        resetExportButton();
+//        resetExportButton();
+        if (isDownloadNeeded) {
+            callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +50,7 @@ public class MyHealthMainFragment extends BaseFragment {
     private MyHealthInterface callback;
     private MyHealthDto myHealthDto;
     public static final int MAX_ITEMS_TO_SHOW = 3;
+    private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
 
     public MyHealthMainFragment() {
 
@@ -75,7 +79,7 @@ public class MyHealthMainFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        MyHealthViewModel model  = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
+        MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
         myHealthDto = model.getMyHealthDto().getValue();
     }
 
@@ -118,8 +122,13 @@ public class MyHealthMainFragment extends BaseFragment {
             if (isVisitSummaryEnabled) break;
         }
         TextView visitSummaryButton = view.findViewById(R.id.visitSummaryButton);
-        visitSummaryButton.setOnClickListener(v -> callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true));
+        visitSummaryButton.setOnClickListener(v -> requestReadWritePermission());
         visitSummaryButton.setVisibility(isVisitSummaryEnabled ? View.VISIBLE : View.GONE);
+    }
+
+    private void requestReadWritePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
     }
 
     private void setUpLabsRecyclerView(View view) {
@@ -438,6 +447,16 @@ public class MyHealthMainFragment extends BaseFragment {
         TextView noDataTitleTextView = noPermissionView.findViewById(noDataTitle);
         noDataTitleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
         noPermissionView.findViewById(noDataSubtitle).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            new Handler().postDelayed(() -> callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true)
+                    , 500);
+        }
     }
 
 }
