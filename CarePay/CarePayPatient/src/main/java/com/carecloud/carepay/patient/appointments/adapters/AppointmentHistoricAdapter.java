@@ -20,9 +20,8 @@ import java.util.Set;
  */
 public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
     private long mLastClickTime = System.currentTimeMillis();
-    private static final long CLICK_TIME_INTERVAL = 300;
     private boolean isLoading;
-
+    private static final long CLICK_TIME_INTERVAL = 600;
     public AppointmentHistoricAdapter(Context context,
                                       List<AppointmentDTO> appointments,
                                       List<UserPracticeDTO> userPracticeDTOs,
