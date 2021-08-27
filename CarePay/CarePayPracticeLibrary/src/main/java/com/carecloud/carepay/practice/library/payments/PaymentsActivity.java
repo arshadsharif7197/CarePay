@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -86,7 +87,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private Date startDate;
     private Date endDate;
-
+    private boolean isFragmentAdded = false;
     private PaymentHistoryItem recentRefundItem;
     private String patientId;
     private boolean paymentMethodCancelled = false;
@@ -170,11 +171,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         patientListView.setCallback(dto -> {
-            PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
-            PatientModel patient = new PatientModel();
-            patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
-            patientId = patient.getPatientId();
-            getPatientBalanceDetails(patientId);
+            if (!isFragmentAdded && getSupportFragmentManager().getBackStackEntryCount()<1){
+                PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
+                PatientModel patient = new PatientModel();
+                patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
+                patientId = patient.getPatientId();
+                getPatientBalanceDetails(patientId);
+            }
+
         });
         applyFilter();
     }
@@ -301,6 +305,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onPreExecute() {
+            isFragmentAdded=true;
             showProgressDialog();
         }
 
@@ -323,6 +328,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onFailure(String exceptionMessage) {
+            isFragmentAdded=false;
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
         }
@@ -442,6 +448,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
         displayDialogFragment(fragment, true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isFragmentAdded=false;
+            }
+        }, 2000);
+
     }
 
     @Override
