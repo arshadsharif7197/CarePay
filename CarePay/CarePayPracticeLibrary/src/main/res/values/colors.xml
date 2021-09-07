@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="page_indicator">#4D5BC5D0</color>
     <color name="transparent_70">#80ffffff</color>
     <color name="colorAccent">#acacac</color>
-
     <color name="find_patient_bg">#CC142C2E</color>
     <color name="amaranth">#ffe63248</color>
     <color name="brick_red">#d14c4c</color>
