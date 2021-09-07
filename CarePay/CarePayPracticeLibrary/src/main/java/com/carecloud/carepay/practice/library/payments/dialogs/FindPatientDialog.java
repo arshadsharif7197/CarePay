@@ -155,6 +155,7 @@ public class FindPatientDialog extends BaseDialogFragment {
         @Override
         public void onPreExecute() {
          //   showProgressDialog();
+
         }
 
         @Override
