@@ -136,6 +136,7 @@ public class FindPatientDialog extends BaseDialogFragment {
             @Override
             public void afterTextChanged(Editable charSequence) {
                 if (charSequence.length() == 0) {
+
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 } else if (charSequence.length() > 3) {
                     ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
