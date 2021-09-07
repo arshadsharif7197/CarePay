@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,7 @@ public class FindPatientDialog extends BaseDialogFragment {
     private OnItemClickedListener listener;
     private String titleLabel;
     private String query;
-
+    private FrameLayout loader_container;
     /**
      * Constructor
      *
@@ -83,7 +84,7 @@ public class FindPatientDialog extends BaseDialogFragment {
         CarePayEditText findPatientEditBox = (CarePayEditText) findViewById(R.id.find_patient_edit_box);
         findPatientEditBox.addTextChangedListener(getTextChangedListener());
         findPatientEditBox.setOnKeyListener(getKeyListener());
-
+        loader_container = (FrameLayout) findViewById(R.id.loader_container);
         findViewById(R.id.find_patient_close_button).setOnClickListener(view -> {
             ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
             dismiss();
@@ -135,6 +136,7 @@ public class FindPatientDialog extends BaseDialogFragment {
             @Override
             public void afterTextChanged(Editable charSequence) {
                 if (charSequence.length() == 0) {
+
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 } else if (charSequence.length() > 3) {
                     ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
@@ -155,12 +157,13 @@ public class FindPatientDialog extends BaseDialogFragment {
         @Override
         public void onPreExecute() {
          //   showProgressDialog();
-
+            loader_container.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
            // hideProgressDialog();
+            loader_container.setVisibility(View.INVISIBLE);
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
@@ -177,6 +180,7 @@ public class FindPatientDialog extends BaseDialogFragment {
         @Override
         public void onFailure(String exceptionMessage) {
            // hideProgressDialog();
+            loader_container.setVisibility(View.INVISIBLE);
             if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);

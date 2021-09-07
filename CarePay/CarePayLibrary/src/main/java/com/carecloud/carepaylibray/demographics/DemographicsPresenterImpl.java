@@ -45,8 +45,8 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
-import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
