@@ -103,6 +103,10 @@ public class DatePickerFragment extends BaseDialogFragment {
         toolbarTitle = arguments.getString("dialogTitle");
     }
 
+    public void onCancel() {
+        isVisible = true;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

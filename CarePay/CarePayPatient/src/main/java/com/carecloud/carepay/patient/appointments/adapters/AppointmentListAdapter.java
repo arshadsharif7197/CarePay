@@ -26,7 +26,7 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
     private List<AppointmentDTO> appointmentItems;
     private long mLastClickTime = System.currentTimeMillis();
-    private static final long CLICK_TIME_INTERVAL = 300;
+    private static final long CLICK_TIME_INTERVAL = 600;
     /**
      * Constructor
      *

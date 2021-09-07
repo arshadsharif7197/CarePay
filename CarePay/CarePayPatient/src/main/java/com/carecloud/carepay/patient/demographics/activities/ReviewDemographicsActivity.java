@@ -39,6 +39,9 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -57,7 +60,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
-
     private DemographicsPresenter demographicsPresenter;
     private PatientPaymentPresenter paymentPresenter;
     private String paymentWorkflow;
@@ -347,11 +349,36 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
-        if (!isFragmentVisible()) {
+            BaseCheckinFragment fragment = null;
+
+        if(!isFragmentVisible()){
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
+                 fragment  = (BaseCheckinFragment) fragmentManager
                         .findFragmentById(R.id.root_layout);
+
+                if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsFragment")) {
+                    MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                            getSupportFragmentManager().findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+                    MedicationsFragment medicationsFragment = (MedicationsFragment) fragment;
+                    if (medicationsFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+
+                        fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+                    }
+                }
+                if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.AllergiesFragment")) {
+                    MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                            getSupportFragmentManager().findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+                    AllergiesFragment allergiesFragment = (AllergiesFragment) fragment;
+                    if (allergiesFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+
+                        fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+                    }
+
+                }
+
                 if (fragment == null || !fragment.navigateBack()) {
                     super.onBackPressed();
                 }
@@ -359,7 +386,22 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                 cce.printStackTrace();
                 super.onBackPressed();
             }
+
+
+
         }
+    }
+
+
+
+    private int getIndex(String tagname) {
+        FragmentManager manager = getSupportFragmentManager();
+        for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+            if (manager.getBackStackEntryAt(i).getName().equalsIgnoreCase(tagname)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private boolean isFragmentVisible() {
