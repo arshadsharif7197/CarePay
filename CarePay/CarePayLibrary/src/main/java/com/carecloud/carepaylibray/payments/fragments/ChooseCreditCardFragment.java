@@ -369,6 +369,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
             if (getDialog() != null && !isCalledSaveInstance) {
                 dismiss();
+                showConfirmation(workflowDTO1);
             }else {
                 showConfirmation(workflowDTO1);
             }
