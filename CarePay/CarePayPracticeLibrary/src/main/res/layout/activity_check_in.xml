@@ -36,7 +36,7 @@
 
         <LinearLayout
             android:id="@+id/filterLayout"
-            android:layout_width="120dp"
+            android:layout_width="150dp"
             android:layout_height="@dimen/goBackHeight"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
@@ -50,8 +50,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/icn_filter"
-                android:drawablePadding="@dimen/dimen_10dp"
+                android:drawablePadding="@dimen/dimen_5dp"
+                android:layout_gravity="center_vertical"
                 android:gravity="center"
+                android:maxLines="1"
                 android:includeFontPadding="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
