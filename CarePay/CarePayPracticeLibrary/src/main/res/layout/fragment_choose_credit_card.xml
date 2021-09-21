@@ -32,83 +32,72 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="@dimen/dialog_width"
         android:layout_height="@dimen/commonPracticeDialogHeight"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_marginEnd="@dimen/dimen_26dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/pay_button_layout"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/patient_mode_dialog_header_bg">
-
-                <include
-                    android:id="@+id/toolbar_layout"
-                    layout="@layout/toolbar_responsibility" />
-
-            </FrameLayout>
-
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/chooseCreditCardContentHeight"
-                android:background="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/dimen_16dp"
-                    android:orientation="vertical">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/list_credit_cards"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:choiceMode="singleChoice"
-                        android:contentDescription="@string/content_description_credit_cards_list"
-                        android:padding="@dimen/payment_method_parent_layout_padding"
-                        android:visibility="visible" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/addNewCardButton"
-                        style="@style/BreezeButtonStyleDark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/commonButtonHeight"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
-                        android:background="@drawable/blue_border_rounded_button_selector"
-                        android:paddingStart="@dimen/dimen_20dp"
-                        android:paddingEnd="@dimen/dimen_20dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/respons_button_text_size"
-                        app:customAssetFont="gotham_rounded_medium"
-                        breeze:textKey="payment_add_new_credit_card_button" />
-
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/separatorHeight"
-                android:background="@color/light_gray" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/pay_button_layout"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:background="@drawable/patient_mode_dialog_header_bg">
+
+            <include
+                android:id="@+id/toolbar_layout"
+                layout="@layout/toolbar_responsibility" />
+
+        </FrameLayout>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chooseCreditCardContentHeight"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_credit_cards"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:choiceMode="singleChoice"
+                    android:padding="@dimen/payment_method_parent_layout_padding"
+                    android:visibility="visible"
+                    android:contentDescription="@string/content_description_credit_cards_list"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/addNewCardButton"
+                    style="@style/BreezeButtonStyleDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/commonButtonHeight"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:background="@drawable/blue_border_rounded_button_selector"
+                    android:paddingEnd="@dimen/dimen_20dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/respons_button_text_size"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="payment_add_new_credit_card_button" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/separatorHeight"
+            android:background="@color/light_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
             android:padding="@dimen/distributionButtonContainersPadding">
@@ -135,16 +124,15 @@
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
-                android:contentDescription="@string/content_description_pay_button"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_pay_button_text" />
+                breeze:textKey="demographics_pay_button_text"
+                android:contentDescription="@string/content_description_pay_button"/>
 
 
         </LinearLayout>
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
