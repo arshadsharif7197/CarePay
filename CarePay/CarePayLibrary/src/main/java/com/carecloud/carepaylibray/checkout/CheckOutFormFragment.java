@@ -82,7 +82,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader(Label.getLabel("checkout_rating_form_title"));
-        lastFormButtonLabel = Label.getLabel("next_step_button");
+        lastFormButtonLabel = Label.getLabel("checkout_forms_done");
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null && !callback.shouldAllowNavigateBack()) {
             toolbar.setNavigationIcon(null);
