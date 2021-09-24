@@ -330,7 +330,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             toCalendar.add(Calendar.DATE, 1);
             if (fromDate != null) {
                 fromCalendar.setTimeInMillis(fromDate.getTime());
-                fromCalendar.add(Calendar.DATE, 1);
+             //   fromCalendar.add(Calendar.DATE, 1);
                 showCalendar = fromCalendar;
             }
         }
