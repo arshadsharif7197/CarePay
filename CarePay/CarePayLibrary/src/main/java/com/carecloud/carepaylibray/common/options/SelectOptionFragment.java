@@ -68,6 +68,10 @@ public class SelectOptionFragment extends BlurDialogFragment implements OnOption
         optionsRecyclerView.setAdapter(adapter);
 
         TextView dialogTitleTextView = view.findViewById(R.id.dialogTitleTextView);
+
+        if(getArguments().getString("title").equalsIgnoreCase("Relación"))
+        dialogTitleTextView.setText(getArguments().getString("title"));
+        else
         dialogTitleTextView.setText(StringUtil.capitalize(getArguments().getString("title")));
 
         view.findViewById(R.id.closeImageView).setOnClickListener(view1 -> dismiss());

@@ -27,6 +27,7 @@
             android:text="@string/sunday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.sundayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -37,6 +38,7 @@
             android:text="@string/monday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.mondayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -47,6 +49,7 @@
             android:text="@string/tuesday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.tuesdayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -57,6 +60,7 @@
             android:text="@string/wednesday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.wednesdayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -67,6 +71,7 @@
             android:text="@string/thursday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.thursdayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -77,6 +82,7 @@
             android:text="@string/friday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.fridayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -87,6 +93,7 @@
             android:text="@string/saturday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            breeze:textKey="appointments.customDateRange.calendar.label.saturdayInitial"
             app:customAssetFont="proxima_nova_semi_bold" />
 
     </LinearLayout>
