@@ -73,7 +73,10 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     @Override
     protected void showAvailabilityFragment() {
-        callback.showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+        AvailabilityHourFragment fragment = AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
+        callback.showFragment(fragment);
+        hideDialog();
     }
 
     private void setUpToolbar(View view) {
@@ -90,7 +93,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 .newInstance(selectedPractice, selectedVisitType, selectedProvider);
         fragment.setOnCancelListener(dialogInterface -> showDialog());
         callback.showFragment(fragment);
-        hideDialog();    }
+        hideDialog();
+    }
 
     protected void showVisitTypeList(UserPracticeDTO selectedPractice,
                                      AppointmentResourcesItemDTO selectedProvider,

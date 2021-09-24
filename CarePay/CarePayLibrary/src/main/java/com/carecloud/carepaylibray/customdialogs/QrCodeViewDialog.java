@@ -156,6 +156,7 @@ public class QrCodeViewDialog extends BaseDialogFragment implements View.OnClick
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.cancelImageView) {
+            hideProgressDialog();
             cancel();
         }
     }
