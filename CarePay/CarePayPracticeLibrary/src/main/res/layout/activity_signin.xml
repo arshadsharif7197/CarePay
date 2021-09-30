@@ -88,6 +88,7 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     style="@style/TextInputLayoutStyle"
                     android:layout_alignParentTop="true"
+                    android:id="@+id/il_partner_btn"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -100,7 +101,7 @@
                         android:editable="false"
                         android:inputType="none"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="practice_management_system" />
+                       />
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

@@ -82,6 +82,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private static final int RESET_PASSWORD = 100;
     private ApplicationMode.ApplicationType appType;
     private TextView tvPartnerBtn;
+    private TextInputLayout il_partner_btn;
     private LinearLayout partnerBtnLayout;
     private SignInScreenMode signinScreenMode;
     private CheckBox cbPracticeManagement;
@@ -287,6 +288,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         showPasswordButton = findViewById(R.id.show_password_button);
         partnerBtnLayout = findViewById(R.id.partner_btn_layout);
         tvPartnerBtn = findViewById(R.id.tv_partner_btn);
+        il_partner_btn = findViewById(R.id.il_partner_btn);
         cbPracticeManagement = findViewById(R.id.cb_practice_management);
 
 
@@ -409,9 +411,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                 View.GONE : View.VISIBLE);
         if (practiceManagementTitle == null) {
-            tvPartnerBtn.setText(signinDTO.getPayload().getPmsPartners().get(0).getLabel());
+            tvPartnerBtn.setText( Label.getLabel("practice_management_system"));
             cbPracticeManagement.setChecked(false);
         } else {
+            il_partner_btn.setHint(Label.getLabel("practice_management_system"));
             tvPartnerBtn.setText(practiceManagementTitle);
             cbPracticeManagement.setChecked(true);
         }
@@ -437,6 +440,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private void signIn() {
+        if (practiceManagementTitle==null){
+            showErrorNotification(Label.getLabel("practice_management_system_select"));
+            return;
+        }
         if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
             TransitionDTO signInTransition;
             signInTransition = signinDTO.getMetadata().getTransitions().getSignIn();
@@ -514,6 +521,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     @Override
     public void onSelectPracticeManagement(Partners selectedPracticeManagement) {
+        il_partner_btn.setHint(Label.getLabel("practice_management_system"));
         practiceManagement = selectedPracticeManagement.getPracticeMgmt();
         practiceManagementTitle = selectedPracticeManagement.getLabel();
         getApplicationPreferences().setStartPracticeManagement(practiceManagement);
@@ -566,6 +574,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private boolean areAllFieldsValid(String email, String password) {
+        if (practiceManagementTitle==null){
+            showErrorNotification(Label.getLabel("practice_management_system_select"));
+            return false;
+        }
         boolean isPasswordValid = checkPassword(password);
         if (!isPasswordValid) {
             requestPasswordFocus();
