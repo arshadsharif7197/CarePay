@@ -1,7 +1,9 @@
 package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getBalance()));
         holder.paymentEffectiveDate.setText(DateUtil.getInstance()
-                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYearString());
+                .setDateRaw(paymentDetailsItem.getEffectiveDate()).toStringWithFormatMmSlashDdSlashYyyy());
     }
 
     @Override
