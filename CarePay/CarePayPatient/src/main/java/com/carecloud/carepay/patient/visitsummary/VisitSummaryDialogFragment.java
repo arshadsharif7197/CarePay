@@ -327,11 +327,12 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 toCalendar.setTimeInMillis(toDate.getTime());
                 toCalendar.set(Calendar.HOUR_OF_DAY, 23);
             }
+            toCalendar.add(Calendar.DATE, 1);
         } else {
             toCalendar.add(Calendar.DATE, 1);
             if (fromDate != null) {
                 fromCalendar.setTimeInMillis(fromDate.getTime());
-                fromCalendar.add(Calendar.DATE, 1);
+             //   fromCalendar.add(Calendar.DATE, 1);
                 showCalendar = fromCalendar;
             }
         }
