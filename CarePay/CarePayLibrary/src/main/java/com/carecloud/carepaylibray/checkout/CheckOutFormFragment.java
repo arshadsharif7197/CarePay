@@ -118,7 +118,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
                     .replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
-
         }
     }
 
