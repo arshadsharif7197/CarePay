@@ -34,6 +34,8 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
     private Date previousEndDate;
     private Date newEndDate;
     private Date newStartDate;
+    private Collection<Date> selectedDates;
+
     private CalendarPickerView calendarPickerView;
     private Button applyDateRangeButton;
     private DateCalendarRangeInterface callback;
@@ -76,13 +78,17 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
         calendarPickerView = view.findViewById(R.id.calendarView);
         if (previousStartDate != null && previousEndDate != null) {
             /*Instantiate calendar for a date range selected*/
-            Collection<Date> selectedDates = new ArrayList<>();
+             selectedDates = new ArrayList<>();
             selectedDates.add(previousStartDate);
             selectedDates.add(previousEndDate);
 
             calendarPickerView.init(new Date(), getNextFifteenMonthCalendar().getTime())
                     .inMode(CalendarPickerView.SelectionMode.RANGE)
                     .withSelectedDates(selectedDates);
+
+            //if having some selected date range then apply button will be enabled by Saleem Haider
+
+
         } else {
             /*Instantiate calendar by default a week as a date range*/
             Calendar rangeStart = Calendar.getInstance();
@@ -105,6 +111,9 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
             callback.setDateRange(newStartDate, newEndDate);
             dismiss();
         });
+        if(selectedDates.size()>1)
+            applyDateRangeButton.setEnabled(true);
+        else
         applyDateRangeButton.setEnabled(false);
     }
 
