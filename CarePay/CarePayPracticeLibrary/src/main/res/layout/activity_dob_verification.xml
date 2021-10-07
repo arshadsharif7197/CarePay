@@ -84,56 +84,76 @@
             android:layout_width="@dimen/signin_main_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/layout_shadow"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/signInMainLayoutPadding">
+            android:gravity="center">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/dobTextInputLayout"
-                style="@style/TextInputLayoutStyle"
+            <ImageView
+                android:id="@+id/shadow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/emailFieldTopMargin"
-                app:customAssetFont="gotham_rounded_book"
-                android:textColorHint="@color/pastel_blue"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                android:layout_below="@id/dob_layout"
+                android:layout_marginTop="-30dp"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="Shadow"
+                android:src="@drawable/home_shadow" />
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/dobEditText"
-                    style="@style/EditTextStyle"
-                    android:contentDescription="@string/content_description_email"
-                    android:focusable="false"
-                    android:imeOptions="actionDone"
-                    android:inputType="date"
-                    android:maxLength="10"
-                    android:digits="1234567890/"
-                    tools:hint="Date of Birth"
+            <RelativeLayout
+                android:id="@+id/dob_layout"
+                android:layout_width="@dimen/signin_main_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:background="@drawable/layout_dob_shadow"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/signInMainLayoutPadding"
+                android:paddingTop="@dimen/signInMainLayoutPadding"
+                android:paddingRight="@dimen/signInMainLayoutPadding">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/dobTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/emailFieldTopMargin"
+                    android:textColorHint="@color/pastel_blue"
                     app:customAssetFont="gotham_rounded_book"
-                    breeze:hintKey="demographics_dob_label" />
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/dobEditText"
+                        style="@style/EditTextStyle"
+                        android:contentDescription="@string/content_description_email"
+                        android:digits="1234567890/"
+                        android:focusable="false"
+                        android:imeOptions="actionDone"
+                        android:inputType="date"
+                        android:maxLength="10"
+                        app:customAssetFont="gotham_rounded_book"
+                        breeze:hintKey="demographics_dob_label"
+                        tools:hint="Date of Birth" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/verifyButton"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/signInButtonHeight"
-                android:layout_below="@id/dobTextInputLayout"
-                android:layout_marginTop="@dimen/signInButtonMarginTop"
-                android:layout_marginBottom="@dimen/dimen_20dp"
-                android:background="@drawable/button_sign_in_selector"
-                android:contentDescription="@string/content_description_sign_in"
-                android:enabled="false"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/signInButtonTextSize"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="dobVerification.main.buton.label.verify" />
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/verifyButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/signInButtonHeight"
+                    android:layout_below="@id/dobTextInputLayout"
+                    android:layout_marginTop="@dimen/signInButtonMarginTop"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:background="@drawable/button_sign_in_selector"
+                    android:contentDescription="@string/content_description_sign_in"
+                    android:enabled="false"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/signInButtonTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="dobVerification.main.buton.label.verify" />
+            </RelativeLayout>
+
+
 
         </RelativeLayout>
-
     </LinearLayout>
 
     <LinearLayout
