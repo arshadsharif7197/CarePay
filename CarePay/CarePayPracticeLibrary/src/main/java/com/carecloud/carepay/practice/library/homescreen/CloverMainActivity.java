@@ -815,13 +815,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            Gson gson = new Gson();
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson
-                    .fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            logOut(transitionsDTO.getLogout());
-            getAppAuthorizationHelper().setUser(null);
-            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
+           createChangeModeDialog();
         }
     }
 
