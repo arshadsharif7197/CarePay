@@ -164,8 +164,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             LinksDTO linksDTO = appointmentsResultModel.getMetadata().getLinks();
             TransitionsDTO transitionsDTO = appointmentsResultModel.getMetadata().getTransitions();
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            appointmentsResultModel.getMetadata().getLinks().setAppointmentAvailability(linksDTO.getAppointmentAvailability());
             appointmentsResultModel.getMetadata().getLinks().setResourcesToSchedule(linksDTO.getResourcesToSchedule());
             appointmentsResultModel.getMetadata().getTransitions().setContinueTransition(transitionsDTO.getContinueTransition());
+            appointmentsResultModel.getMetadata().getTransitions().setMakeAppointment(transitionsDTO.getMakeAppointment());
             showCheckOutFormFragment();
         }
 
