@@ -51,7 +51,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     public static AddNewCreditCardFragment newInstance(PaymentsModel paymentsDTO, double amount) {
         Bundle args = new Bundle();
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         AddNewCreditCardFragment addNewCreditCardFragment = new AddNewCreditCardFragment();
         addNewCreditCardFragment.setArguments(args);
         return addNewCreditCardFragment;
@@ -86,7 +86,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         Bundle arguments = getArguments();
         if (arguments != null) {
 //            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
                     addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
@@ -143,6 +143,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             hideProgressDialog();
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
             if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};

@@ -99,7 +99,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     private void setupToolbar() {
         selectMenuItem(R.id.messagesMenuItem);
-        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_messages")));
+        displayToolbar(true, Label.getLabel("navigation_link_messages"));
     }
 
     @Override

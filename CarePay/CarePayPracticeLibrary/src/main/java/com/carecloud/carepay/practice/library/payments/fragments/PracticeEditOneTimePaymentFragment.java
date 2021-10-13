@@ -46,7 +46,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                                                                  PaymentPlanDTO paymentPlanDTO,
                                                                  ScheduledPaymentModel scheduledPaymentModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentResultModel);
+//        DtoHelper.bundleDto(args, paymentResultModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         DtoHelper.bundleDto(args, scheduledPaymentModel);
         args.putDouble(KEY_FULL_AMOUNT, owedAmount);

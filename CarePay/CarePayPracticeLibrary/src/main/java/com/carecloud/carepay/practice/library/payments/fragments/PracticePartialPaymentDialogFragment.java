@@ -3,11 +3,14 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -36,7 +39,6 @@ import java.util.Locale;
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
     public static final String KEY_FULL_AMOUNT = "fullAmount";
 
-    protected PaymentsModel paymentsModel;
     protected double fullAmount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
@@ -49,7 +51,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
      */
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentResultModel);
+//        DtoHelper.bundleDto(args, paymentResultModel);
         args.putDouble(KEY_FULL_AMOUNT, owedAmount);
         PracticePartialPaymentDialogFragment fragment = new PracticePartialPaymentDialogFragment();
         fragment.setArguments(args);
@@ -70,7 +72,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         fullAmount = arguments.getDouble(KEY_FULL_AMOUNT);
     }
 
@@ -121,6 +123,10 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
                         CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
+            }
+
+            if (((Button) view).getText().equals(Label.getLabel("payment_create_payment_plan"))) {
+                dismiss();
             }
             onPaymentClick(amount);
         }

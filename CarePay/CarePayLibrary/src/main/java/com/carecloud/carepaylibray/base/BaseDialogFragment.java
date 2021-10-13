@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,13 +9,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -35,6 +41,9 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     private long lastFullScreenSet;
     public static boolean isVisible;
 
+    public PatientResponsibilityViewModel patientResponsibilityViewModel;
+    public PaymentsModel paymentsModel;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -42,6 +51,10 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
         isPracticeAppPatientMode = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         isPracticeAppPracticeMode = applicationType == ApplicationMode.ApplicationType.PRACTICE;
         setNewRelicInteraction(getClass().getName());
+
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
     }
 
     @Override
@@ -123,10 +136,16 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
 
     public void cancel() {
         isVisible = false;
+        onCancel(this);
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
         dismiss();
+    }
+
+    public void onCancel(BaseDialogFragment baseDialogFragment) {
+        if (baseDialogFragment instanceof DatePickerFragment)
+            ((DatePickerFragment) baseDialogFragment).onCancel();
     }
 
     public boolean showViewById(int id) {
@@ -235,12 +254,16 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     @Override
     public void showErrorNotification(String errorMessage) {
         if (getDialog() != null) {
-            CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
-            toast.show();
+            if (((BaseActivity) getActivity()).isVisible) {
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+            }
         } else {
             ISession session = (ISession) getActivity();
             if (null != session) {
-                session.showErrorNotification(errorMessage);
+                if (((BaseActivity) getActivity()).isVisible) {
+                    session.showErrorNotification(errorMessage);
+                }
             }
         }
     }

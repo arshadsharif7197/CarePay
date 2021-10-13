@@ -6,8 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,11 +39,15 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -54,12 +60,13 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
-
     private DemographicsPresenter demographicsPresenter;
     private PatientPaymentPresenter paymentPresenter;
     private String paymentWorkflow;
     private MediaResultListener resultListener;
     private PaymentsModel paymentsModel;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +84,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         demographicsPresenter = new DemographicsPresenterImpl(this, icicle, false);
         if (icicle != null && icicle.containsKey(KEY_PAYMENT_DTO)) {
             paymentWorkflow = icicle.getString(KEY_PAYMENT_DTO);
@@ -126,6 +134,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
+
         return true;
     }
 
@@ -240,6 +253,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         } else {
             paymentPresenter.setPaymentPresenter(this, paymentsModel, patientID);
         }
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         return paymentsModel;
     }
 
@@ -335,11 +349,36 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onBackPressed() {
+            BaseCheckinFragment fragment = null;
+
         if(!isFragmentVisible()){
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
+                 fragment  = (BaseCheckinFragment) fragmentManager
                         .findFragmentById(R.id.root_layout);
+
+                if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsFragment")) {
+                    MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                            getSupportFragmentManager().findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+                    MedicationsFragment medicationsFragment = (MedicationsFragment) fragment;
+                    if (medicationsFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+
+                        fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+                    }
+                }
+                if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.AllergiesFragment")) {
+                    MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                            getSupportFragmentManager().findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+                    AllergiesFragment allergiesFragment = (AllergiesFragment) fragment;
+                    if (allergiesFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+
+                        fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+                    }
+
+                }
+
                 if (fragment == null || !fragment.navigateBack()) {
                     super.onBackPressed();
                 }
@@ -347,7 +386,22 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                 cce.printStackTrace();
                 super.onBackPressed();
             }
+
+
+
         }
+    }
+
+
+
+    private int getIndex(String tagname) {
+        FragmentManager manager = getSupportFragmentManager();
+        for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+            if (manager.getBackStackEntryAt(i).getName().equalsIgnoreCase(tagname)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private boolean isFragmentVisible() {
@@ -404,3 +458,4 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         }, 2000);
     }
 }
+

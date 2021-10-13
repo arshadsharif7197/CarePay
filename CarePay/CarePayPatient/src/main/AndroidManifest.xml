@@ -196,11 +196,6 @@
             android:name=".payment.androidpay.AndroidPayQueueUploadService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <service
-            android:name=".session.PatientSessionService"
-            android:enabled="true"
-            android:exported="false" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.carecloud.carepay.patient.provider"

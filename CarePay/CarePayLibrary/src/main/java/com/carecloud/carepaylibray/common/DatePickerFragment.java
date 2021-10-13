@@ -104,6 +104,11 @@ public class DatePickerFragment extends BaseDialogFragment {
     }
 
 
+    public void onCancel() {
+        isVisible = true;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

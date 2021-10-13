@@ -50,7 +50,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                                                        PaymentPlanDTO paymentPlanDTO,
                                                        ScheduledPaymentModel scheduledPaymentModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
+//        DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         DtoHelper.bundleDto(args, scheduledPaymentModel);
         EditOneTimePaymentDialog dialog = new EditOneTimePaymentDialog();
@@ -74,7 +74,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         super.onCreate(icicle);
         Bundle args = getArguments();
         if (args != null) {
-            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+            paymentsDTO = paymentsModel;
             paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
             scheduledPaymentModel = DtoHelper.getConvertedDTO(ScheduledPaymentModel.class, args);
         }

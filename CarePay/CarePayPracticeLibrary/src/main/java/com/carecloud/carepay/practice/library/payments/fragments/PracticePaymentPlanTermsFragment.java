@@ -29,7 +29,7 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
     public static PracticePaymentPlanTermsFragment newInstance(PaymentsModel paymentsModel,
                                                                PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
 
         PracticePaymentPlanTermsFragment fragment = new PracticePaymentPlanTermsFragment();

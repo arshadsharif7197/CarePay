@@ -54,6 +54,8 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
+import static com.microsoft.appcenter.utils.InstrumentationRegistryHelper.getArguments;
+
 public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
@@ -295,7 +297,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         FragmentTransaction transaction = fm.beginTransaction();
 
         Fragment prev = fm.findFragmentByTag(tag);
-        if (prev != null) {
+        if (prev != null && !tag.equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment")) {
             fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
         }
 
@@ -472,6 +474,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void showMedicationAllergySearchFragment(int searchType) {
+
+        MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
+                .newInstance(medicationsAllergiesDTO, searchType);
+        showFragmentAsDialogIfNeeded(fragment);
+    }
+
+    @Override
+    public void showMedicationAllergySearchFragment(int searchType,MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
+
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
                 .newInstance(medicationsAllergiesDTO, searchType);
         showFragmentAsDialogIfNeeded(fragment);
@@ -607,10 +618,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
-                        Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message_patient"),
-                        Label.getLabel("cancel"),
-                        Label.getLabel("ok"));
+                Label.getLabel("demographics_insurance_primary_alert_title"),
+                Label.getLabel("demographics_insurance_primary_alert_message_patient"),
+                Label.getLabel("cancel"),
+                Label.getLabel("ok"));
         confirmDialogFragment.setCallback(callback);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);

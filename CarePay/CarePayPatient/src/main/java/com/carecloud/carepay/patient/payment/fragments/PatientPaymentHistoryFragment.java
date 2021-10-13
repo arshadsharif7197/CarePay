@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.base.models.NextPagingDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -52,6 +54,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     private View noPaymentsLayout;
     private SwipeRefreshLayout refreshLayout;
     private boolean isPaging = false;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -73,6 +76,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentsModel = (PaymentsModel) callback.getDto();
+        patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
+        patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
         paging.setCurrentPage(0);
         paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()

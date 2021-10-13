@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -198,7 +200,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 goBackButton.setText(Label.getLabel("add_appointment_back_to_appointments_button"));
             }
         } else {
-            goBackButton.setBackgroundResource(R.drawable.round_white_border);
+            goBackButton.setBackgroundResource(R.drawable.background_blue_rounded_border);
             goBackButton.setTextColor(getResources().getColor(R.color.white));
             goBackButton.setText(Label.getLabel("go_back_label"));
             subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
@@ -274,19 +276,19 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         int linkImageId = -1;
         switch (link.getId()) {
             case "facebook":
-                linkImageId = R.drawable.icn_survey_facebook;
+                linkImageId = R.drawable.logo_survey_facebook;
                 break;
             case "vitals":
-                linkImageId = R.drawable.icn_survey_vitals;
+                linkImageId = R.drawable.logo_survey_vitals;
                 break;
             case "yelp":
-                linkImageId = R.drawable.icn_survey_yelp;
+                linkImageId = R.drawable.logo_survey_yelp;
                 break;
             case "healthgrades":
-                linkImageId = R.drawable.icn_survey_healthgrades;
+                linkImageId = R.drawable.logo_survey_healthgrades;
                 break;
             case "google":
-                linkImageId = R.drawable.icn_survey_google;
+                linkImageId = R.drawable.logo_survey_google;
                 break;
         }
         return linkImageId;
@@ -382,7 +384,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
             Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
             subtitleTextView.setVisibility(View.GONE);
-            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.done"));
             noThanksButton.setVisibility(View.GONE);
         }
     }

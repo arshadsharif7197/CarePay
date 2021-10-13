@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
@@ -68,6 +69,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 //import com.google.android.gms.wallet.MaskedWallet;
@@ -94,12 +96,15 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private boolean completedPaymentPlan = false;
 
     private Fragment androidPayTargetFragment;
+    private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private Menu exitMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_appointment);
 
+        patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
         if (savedInstanceState == null) {
@@ -135,6 +140,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
+        exitMenu = menu;
+        new Handler().postDelayed(() -> {
+            exitMenu.findItem(R.id.exitFlow).setTitle(Label.getLabel("demographics_exit"));
+        }, 2000);
         return true;
     }
 
@@ -202,11 +211,15 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
         MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
 
     private void showResponsibilityFragment() {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
+
         paymentStarted = true;
         replaceFragment(ResponsibilityFragment
                 .newInstance(paymentsModel, null, false,
@@ -348,7 +361,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 builder.replace(last, builder.length(), "");
                 showErrorNotification(builder.toString());
             } else {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
 
@@ -457,6 +470,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     queryMap,
                     header);
         } else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
             extra.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);

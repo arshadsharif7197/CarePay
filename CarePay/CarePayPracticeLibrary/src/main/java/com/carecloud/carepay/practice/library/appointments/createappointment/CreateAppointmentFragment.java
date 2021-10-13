@@ -1,10 +1,12 @@
 package com.carecloud.carepay.practice.library.appointments.createappointment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +73,10 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     @Override
     protected void showAvailabilityFragment() {
-        callback.showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+        AvailabilityHourFragment fragment = AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
+        callback.showFragment(fragment);
+        hideDialog();
     }
 
     private void setUpToolbar(View view) {
@@ -86,7 +91,9 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                                     VisitTypeDTO selectedVisitType) {
         LocationListFragment fragment = LocationListFragment
                 .newInstance(selectedPractice, selectedVisitType, selectedProvider);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
         callback.showFragment(fragment);
+        hideDialog();
     }
 
     protected void showVisitTypeList(UserPracticeDTO selectedPractice,
@@ -94,7 +101,9 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                                      LocationDTO selectedLocation) {
         VisitTypeListFragment fragment = VisitTypeListFragment
                 .newInstance(selectedPractice, selectedLocation, selectedProvider);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
         callback.showFragment(fragment);
+        hideDialog();
     }
 
     protected void showProviderList(UserPracticeDTO selectedPractice,
@@ -102,7 +111,9 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                                     LocationDTO selectedLocation) {
         ProviderListFragment fragment = ProviderListFragment
                 .newInstance(selectedPractice, selectedVisitType, selectedLocation);
+        fragment.setOnCancelListener(dialogInterface -> showDialog());
         callback.showFragment(fragment);
+        hideDialog();
     }
 
     @Override

@@ -39,7 +39,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     private static final long CLICK_TIME_INTERVAL = 2000;
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
-    protected PaymentsModel paymentsModel;
     protected double amountToMakePayment;
 
     private List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
@@ -72,7 +71,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
             onlySelectMode = bundle.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
                 paymentMethodsList = getPaymentMethodList();

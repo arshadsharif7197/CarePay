@@ -52,7 +52,6 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentHistoryItem historyItem;
-    private PaymentsModel paymentsModel;
     private List<PaymentHistoryLineItem> lineItems = new ArrayList<>();
     private List<PaymentHistoryLineItem> refundLineItems = new ArrayList<>();
 
@@ -74,7 +73,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     public static RefundProcessFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
-        DtoHelper.bundleDto(args, paymentsModel);
+//        DtoHelper.bundleDto(args, paymentsModel);
 
         RefundProcessFragment fragment = new RefundProcessFragment();
         fragment.setArguments(args);
@@ -97,7 +96,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         super.onCreate(icicle);
         Bundle args = getArguments();
         historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, args);
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         if (historyItem != null) {
             initLineItems();
             isCloverPayment = historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER);

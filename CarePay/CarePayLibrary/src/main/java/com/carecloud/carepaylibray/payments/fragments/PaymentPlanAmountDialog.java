@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
 
-    protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     protected FragmentActivityInterface callback;
 
@@ -51,7 +50,7 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+//            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
         practiceId = selectedBalance.getMetadata().getPracticeId();
