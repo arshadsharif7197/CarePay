@@ -103,9 +103,11 @@ public class DatePickerFragment extends BaseDialogFragment {
         toolbarTitle = arguments.getString("dialogTitle");
     }
 
+
     public void onCancel() {
         isVisible = true;
     }
+
 
     @Nullable
     @Override
@@ -206,7 +208,7 @@ public class DatePickerFragment extends BaseDialogFragment {
         selectedDate = null;
     }
 
-    public void setListener(DateRangePickerDialogListener listener) {
+    public void  setListener(DateRangePickerDialogListener listener) {
         this.listener = listener;
     }
 }

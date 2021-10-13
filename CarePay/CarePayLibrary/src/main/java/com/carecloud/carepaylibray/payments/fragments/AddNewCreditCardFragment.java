@@ -117,10 +117,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            nextButton.setEnabled(true);
+          //  nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
-
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         }
 
@@ -142,9 +141,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
-
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
 
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
             if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
@@ -166,6 +164,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
                 showConfirmation(workflowDTO);
             }
+            nextButton.setEnabled(true);
         }
 
         @Override
@@ -182,6 +181,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     };
 
     private void addNewCreditCardCall() {
+        nextButton.setEnabled(false);
         Gson gson = new Gson();
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
