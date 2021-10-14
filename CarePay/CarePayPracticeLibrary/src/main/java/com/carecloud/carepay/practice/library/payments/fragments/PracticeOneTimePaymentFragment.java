@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -197,6 +198,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         @Override
         public void onClick(final View view) {
             schedulePaymentDateText.setClickable(false);
+            hideDialog();
             showCalendar();
         }
     };
@@ -254,6 +256,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                     @Override
                     public void onDateRangeCancelled() {
                         schedulePaymentDateText.setClickable(true);
+                        showDialog();
                     }
 
                     @Override
@@ -264,6 +267,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                     }
                 }, CalendarPickerView.SelectionMode.SINGLE.name());
         dialog.setTodayButtonVisibility(todayCalendarButtonVisibility);
+        dialog.setOnCancelListener(dialogInterface -> showDialog());
 
         callback.displayDialogFragment(dialog, false);
 
