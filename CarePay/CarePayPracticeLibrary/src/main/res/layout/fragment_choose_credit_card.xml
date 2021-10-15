@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/commonPracticeDialogHeight"
+    android:layout_height="wrap_content"
     android:contentDescription="@string/content_description_credit_cards_screen"
     android:orientation="horizontal">
 
@@ -34,14 +34,14 @@
 
     <RelativeLayout
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/commonPracticeDialogHeight"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp">
 
         <LinearLayout
+            android:id="@+id/layout_credit_cards"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/pay_button_layout"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <FrameLayout
@@ -108,7 +108,7 @@
             android:id="@+id/pay_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/layout_credit_cards"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
             android:padding="@dimen/distributionButtonContainersPadding">
