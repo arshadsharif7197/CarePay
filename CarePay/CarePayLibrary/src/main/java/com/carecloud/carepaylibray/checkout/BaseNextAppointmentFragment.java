@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -70,6 +72,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     private View locationResetImage;
     private View visitTypeResetImage;
     private View visitTimeResetImage;
+    private boolean isAlreadyClicked;
 
     /**
      * new Instance of BaseNextAppointmentFragment
@@ -166,6 +169,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked)
+                    return;
+                startDelayTimer();
                 showChooseProviderFragment();
             }
         });
@@ -198,6 +204,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked)
+                    return;
+                startDelayTimer();
                 showChooseLocationFragment();
             }
         });
@@ -234,6 +243,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked)
+                    return;
+                startDelayTimer();
                 showVisitTypeFragment();
             }
         });
@@ -266,6 +278,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isAlreadyClicked)
+                    return;
+                startDelayTimer();
                 showAvailabilityFragment();
             }
         });
@@ -561,5 +576,20 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         super.onResume();
         enableTimeSlotField();
         enableScheduleAppointmentButton();
+    }
+
+    private void startDelayTimer() {
+        isAlreadyClicked = true;
+        new CountDownTimer(1500, 500) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                isAlreadyClicked = false;
+            }
+        }.start();
     }
 }
