@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -59,6 +60,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private View locationContainer;
     private Button checkAvailabilityButton;
     protected boolean isReschedule;
+    private boolean isAlreadyClicked;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -107,22 +109,57 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private void setUpUI(View view) {
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
         providerContainer = view.findViewById(R.id.providerContainer);
-        providersNoDataTextView.setOnClickListener(v -> showProviderList(selectedPractice, selectedVisitType, selectedLocation));
-        providerContainer.setOnClickListener(v -> showProviderList(selectedPractice, selectedVisitType, selectedLocation));
+        providersNoDataTextView.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showProviderList(selectedPractice, selectedVisitType, selectedLocation);
+        });
+        providerContainer.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showProviderList(selectedPractice, selectedVisitType, selectedLocation);
+        });
 
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
         visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
-        visitTypeNoDataTextView.setOnClickListener(v -> showVisitTypeList(selectedPractice, selectedResource, selectedLocation));
-        visitTypeContainer.setOnClickListener(v -> showVisitTypeList(selectedPractice, selectedResource, selectedLocation));
+        visitTypeNoDataTextView.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
+        });
+        visitTypeContainer.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
+        });
 
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
         locationContainer = view.findViewById(R.id.locationContainer);
-        locationNoDataTextView.setOnClickListener(v -> showLocationList(selectedPractice, selectedResource, selectedVisitType));
-        locationContainer.setOnClickListener(v -> showLocationList(selectedPractice, selectedResource, selectedVisitType));
+        locationNoDataTextView.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showLocationList(selectedPractice, selectedResource, selectedVisitType);
+        });
+        locationContainer.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showLocationList(selectedPractice, selectedResource, selectedVisitType);
+        });
 
         checkAvailabilityButton = view.findViewById(R.id.checkAvailabilityButton);
-        checkAvailabilityButton.setOnClickListener(v -> callAvailabilityService());
+        checkAvailabilityButton.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            callAvailabilityService();
+        });
 
         if (isReschedule) {
             setResourceProvider(selectedResource);
@@ -296,5 +333,20 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             }
         }
         return null;
+    }
+
+    private void startDelayTimer() {
+        isAlreadyClicked = true;
+        new CountDownTimer(1500, 500) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                isAlreadyClicked = false;
+            }
+        }.start();
     }
 }
