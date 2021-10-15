@@ -150,8 +150,17 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
                             acceptableRange = false;
                         }
                     }
-                    applyDateRangeButton.setEnabled(true);
-                    applyDateRangeButton.setEnabled(newStartDate != null && acceptableRange);
+
+                    applyDateRangeButton.setEnabled(newEndDate != null && acceptableRange);
+                    if(previousStartDate !=null && previousEndDate!=null && newStartDate!=null && newEndDate!=null) {
+                        if (!(previousStartDate.getDate() == newStartDate.getDate()) && (previousStartDate.getMonth() == newStartDate.getMonth())
+                                || !(previousEndDate.getDate() == newEndDate.getDate()) && (previousEndDate.getMonth() == newEndDate.getMonth()))
+                            applyDateRangeButton.setEnabled(newStartDate != null && acceptableRange);
+                        else
+                            applyDateRangeButton.setEnabled(false);
+                    }
+
+
                 }
 
                 @Override
