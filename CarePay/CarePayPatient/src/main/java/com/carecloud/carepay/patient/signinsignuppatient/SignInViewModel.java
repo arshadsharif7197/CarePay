@@ -250,6 +250,10 @@ public class SignInViewModel extends BaseViewModel {
                         .getLinks().getNotifications());
                 notificationsDTO.getMetadata().getLinks().setMyHealth(landingDto.getMetadata()
                         .getLinks().getMyHealth());
+                notificationsDTO.getMetadata().getLinks().setUserForms(landingDto.getMetadata()
+                        .getLinks().getUserForms());
+                notificationsDTO.getMetadata().getLinks().setMessaging(landingDto.getMetadata()
+                        .getLinks().getMessaging());
 
                 WorkflowDTO notificationWorkFlow = gson.fromJson(gson.toJson(notificationsDTO),
                         WorkflowDTO.class);
