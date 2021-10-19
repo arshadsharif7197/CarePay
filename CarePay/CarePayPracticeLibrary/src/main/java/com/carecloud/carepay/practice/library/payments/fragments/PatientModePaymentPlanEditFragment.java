@@ -86,6 +86,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
             message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
         }
         ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance(title, message);
+        fragment.setNegativeAction(true);
         fragment.setOnCancelListener(onDialogCancelListener);
         fragment.setCallback(new ConfirmationCallback() {
             @Override
