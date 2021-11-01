@@ -215,14 +215,18 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     private void logMixPanelPrepaymentAppointmentRequestedEvent(AppointmentDTO appointmentDTO) {
-        String[] params = {getString(R.string.param_payment_amount),
+        String[] params = {
+                getString(R.string.param_payment_amount),
                 getString(R.string.param_provider_id),
                 getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
                 getString(R.string.param_location_id)
         };
-        Object[] values = {appointmentDTO.getPayload().getVisitType().getAmount(),
+        Object[] values = {
+                appointmentDTO.getPayload().getVisitType().getAmount(),
                 appointmentDTO.getPayload().getProvider().getGuid(),
                 selectedPractice.getPracticeId(),
+                getPracticeName(selectedPractice.getPracticeId()),
                 appointmentDTO.getPayload().getLocation().getGuid()
         };
 

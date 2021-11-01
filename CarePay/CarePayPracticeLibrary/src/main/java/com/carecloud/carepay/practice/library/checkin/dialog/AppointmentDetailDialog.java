@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -777,7 +779,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
-        getWorkflowServiceHelper().interrupt();
+//        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, getPatientBalancesCallback(showInline), queryMap);
 
     }
@@ -847,7 +849,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         };
     }
 
-    private void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
+    private void showPaymentDistributionDialog(PaymentsModel paymentsModelValue) {
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModelValue);
         PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);

@@ -60,6 +60,9 @@ public class LocationListFragment extends BaseLocationListFragment {
         if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
             ImageView close = view.findViewById(R.id.cancel_img);
             close.setImageResource(R.drawable.icn_close);
+        }else  if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+            ImageView close = view.findViewById(R.id.cancel_img);
+            close.setImageResource(R.drawable.icn_close);
         }
     }
 }
