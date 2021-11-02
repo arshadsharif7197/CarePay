@@ -786,7 +786,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
-        paymentsModel = new PaymentsModel();
+//        paymentsModel = new PaymentsModel();
         paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
                 .getPaymentSettings());
         paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
@@ -798,6 +798,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(appointmentsResultModel
                 .getMetadata().getTransitions().getAddCreditCard());
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
