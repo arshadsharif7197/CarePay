@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:state_selected="true" android:color="@color/white"/>
+    <item app:tsquare_state_range_middle="true" android:color="@color/black"/>
+    <item  app:tsquare_state_range_first="true" android:color="@color/white"/>
+    <item  app:tsquare_state_range_last="true" android:color="@color/white"/>
     <item app:tsquare_state_current_month="false" android:color="@color/white"/>
     <item app:tsquare_state_selectable="false" android:color="@color/light_gray"/>
     <item android:color="@color/black"/>

@@ -83,6 +83,10 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
             calendarPickerView.init(new Date(), getNextFifteenMonthCalendar().getTime())
                     .inMode(CalendarPickerView.SelectionMode.RANGE)
                     .withSelectedDates(selectedDates);
+
+            //if having some selected date range then apply button will be enabled by Saleem Haider
+
+
         } else {
             /*Instantiate calendar by default a week as a date range*/
             Calendar rangeStart = Calendar.getInstance();
@@ -105,6 +109,9 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
             callback.setDateRange(newStartDate, newEndDate);
             dismiss();
         });
+       // if(selectedDates.size()>2)
+
+       // else
         applyDateRangeButton.setEnabled(false);
     }
 
@@ -144,7 +151,16 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
                         }
                     }
 
-                    applyDateRangeButton.setEnabled(newStartDate != null && acceptableRange);
+                    applyDateRangeButton.setEnabled(newEndDate != null && acceptableRange);
+                    if(previousStartDate !=null && previousEndDate!=null && newStartDate!=null && newEndDate!=null) {
+                        if (!(previousStartDate.getDate() == newStartDate.getDate()) && (previousStartDate.getMonth() == newStartDate.getMonth())
+                                || !(previousEndDate.getDate() == newEndDate.getDate()) && (previousEndDate.getMonth() == newEndDate.getMonth()))
+                            applyDateRangeButton.setEnabled(newStartDate != null && acceptableRange);
+                        else
+                            applyDateRangeButton.setEnabled(false);
+                    }
+
+
                 }
 
                 @Override

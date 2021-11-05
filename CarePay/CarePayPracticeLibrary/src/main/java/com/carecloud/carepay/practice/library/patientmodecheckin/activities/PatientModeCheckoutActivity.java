@@ -164,8 +164,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             LinksDTO linksDTO = appointmentsResultModel.getMetadata().getLinks();
             TransitionsDTO transitionsDTO = appointmentsResultModel.getMetadata().getTransitions();
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            appointmentsResultModel.getMetadata().getLinks().setAppointmentAvailability(linksDTO.getAppointmentAvailability());
             appointmentsResultModel.getMetadata().getLinks().setResourcesToSchedule(linksDTO.getResourcesToSchedule());
             appointmentsResultModel.getMetadata().getTransitions().setContinueTransition(transitionsDTO.getContinueTransition());
+            appointmentsResultModel.getMetadata().getTransitions().setMakeAppointment(transitionsDTO.getMakeAppointment());
             showCheckOutFormFragment();
         }
 
@@ -784,7 +786,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
-        paymentsModel = new PaymentsModel();
+//        paymentsModel = new PaymentsModel();
         paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
                 .getPaymentSettings());
         paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
@@ -796,6 +798,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(appointmentsResultModel
                 .getMetadata().getTransitions().getAddCreditCard());
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
+        patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
