@@ -172,6 +172,7 @@ public class CarePayTextInputLayout extends TextInputLayout {
 
     @Override
     public void setError(CharSequence errorMessage) {
+        super.setHelperText(null);
         super.setHelperText(errorMessage);
         if (errorMessage != null && requestFocusWhenError) {
             requestFocus();
