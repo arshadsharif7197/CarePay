@@ -3,7 +3,9 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -51,7 +53,7 @@ import java.util.List;
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
 public class DemographicsFragment extends CheckInDemographicsBaseFragment
-        implements EmergencyContactFragmentInterface, PhysicianFragmentInterface{
+        implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
     private DemographicExtendedInterface callback;
     private PatientModel demographicPersonalDetailsPayloadDTO;
@@ -651,7 +653,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             TextInputLayout socialSecurityInputLayout = view.findViewById(R.id.socialSecurityInputLayout);
             if (dataModel.getDemographic().getPersonalDetails().getProperties()
-                    .getSocialSecurityNumber().isRequired()&&socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+                    .getSocialSecurityNumber().isRequired() && socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(ssnEditText.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(ssnEditText.getText().toString().trim(),
                             ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
@@ -686,6 +688,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emailContainer));
                     setFieldError(emailLayout, Label.getLabel("demographics_email_validation_msg"), isUserAction());
                 }
+                nextButton.setEnabled(true);
+                nextButton.setClickable(true);
                 return false;
             } else {
                 unsetFieldError(emailLayout);
@@ -911,8 +915,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
 
             return true;
-        }
-        finally {
+        } finally {
             setUserAction(false);
         }
     }
