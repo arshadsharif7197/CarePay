@@ -21,6 +21,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -37,6 +39,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -232,6 +235,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected abstract DemographicDTO updateDemographicDTO(View view);
 
     protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
+        patientResponsibilityViewModel.setDemographicDTOModel(demographicDTO);
         Map<String, String> queries = new HashMap<>();
         if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
@@ -261,15 +265,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
                 if (getActivityProxy()!=null)
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
             } else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
                 if (getActivityProxy()!=null)
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
             }
 
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
                 if (getActivityProxy()!=null)
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
                 if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                         || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
                     onUpdate(checkinFlowCallback, workflowDTO);
@@ -640,7 +644,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         } else {
             showErrorViews(false, (ViewGroup) view.findViewById(containerId));
         }
-         return false;
+        return false;
     }
 
     protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {

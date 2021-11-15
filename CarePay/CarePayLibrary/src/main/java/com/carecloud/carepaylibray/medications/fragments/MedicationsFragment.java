@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -29,9 +30,12 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.CheckinSettingsDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -74,9 +78,10 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private String photoPath;
     private View newPhotoButton;
     private View changePhotoButton;
-    public boolean shouldRemove=false;
+    public boolean shouldRemove = false;
 
     protected DemographicsPresenter callback;
+    private WorkflowDTO workflowDTOMedicine;
 
     private MedicationsOnlyResultModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
@@ -316,7 +321,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             item.setAction(MedicationAllergiesAction.add);
             currentMedications.add((MedicationsObject) item);
             addMedications.add((MedicationsObject) item);
-            shouldRemove=true;
+            shouldRemove = true;
         }
         setAdapters();
     }
@@ -413,8 +418,9 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_medications));
+            updateMedicationsList(workflowDTO);
 
-            onUpdate(callback, workflowDTO);
+
         }
 
         @Override
@@ -422,6 +428,55 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
             Log.e("Server Error", exceptionMessage);
+        }
+    };
+
+    private void updateMedicationsList(WorkflowDTO workflowDTO) {
+        workflowDTOMedicine=workflowDTO;
+        DemographicDTO demographicDTO = patientResponsibilityViewModel.getDemographicDTOData();
+
+
+        Map<String, String> queries = new HashMap<>();
+        if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
+            queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+            queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+        }
+
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        header.put("transition", Boolean.valueOf(true).toString());
+
+        Gson gson = new Gson();
+        String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                demographicDTO.getPayload().getDemographics().getPayload().getAddress());
+
+        getWorkflowServiceHelper().execute(transitionDTO, consentFormCallback, demogrPayloadString, queries, header);
+
+    }
+
+    private WorkflowServiceCallback consentFormCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            MedicationsOnlyResultModel medicationsAllergiesDTO = new Gson().fromJson(workflowDTO.toString(), MedicationsOnlyResultModel.class);
+            currentMedications = medicationsAllergiesDTO.getPayload().getMedications().getPayload();
+            addMedications.clear();
+            setAdapters();
+            onUpdate(callback, workflowDTOMedicine);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+
         }
     };
 
