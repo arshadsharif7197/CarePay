@@ -30,6 +30,11 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
 
     }

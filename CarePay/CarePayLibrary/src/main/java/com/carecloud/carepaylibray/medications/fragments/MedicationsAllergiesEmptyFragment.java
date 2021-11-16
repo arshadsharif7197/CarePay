@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -35,12 +36,15 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
 
     private DemographicsPresenter callback;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     private int selectedMode;
 
     public static MedicationsAllergiesEmptyFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
-                                                                int mode) {
+                                                                MedicationsOnlyResultModel medicationsOnlyResultModel, int mode) {
         Bundle args = new Bundle();
+        if (mode==ALLERGY_MODE)
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+        else DtoHelper.bundleDto(args, medicationsOnlyResultModel);
         args.putInt(KEY_DISPLAY_MODE, mode);
 
         MedicationsAllergiesEmptyFragment fragment = new MedicationsAllergiesEmptyFragment();
@@ -52,8 +56,11 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, args);
         selectedMode = args.getInt(KEY_DISPLAY_MODE, MEDICATION_MODE);
+        if (selectedMode==ALLERGY_MODE)
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, args);
+        else medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, args);
+
     }
 
     @Override
@@ -102,7 +109,14 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WorkflowDTO workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsAllergiesDTO));
+                WorkflowDTO workflowDTO;
+                if (selectedMode==ALLERGY_MODE){
+                    workflowDTO  = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsAllergiesDTO));
+                }else {
+                    workflowDTO  = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(medicationsOnlyResultModel));
+                }
+
+
                 switch (selectedMode) {
                     case ALLERGY_MODE:
                         callback.navigateToAllergy(workflowDTO, false);
@@ -152,11 +166,11 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
             queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getPracticeMgmt());
             queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getAppointmentId());
         } else {
-            transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
-            queryMap.put("patient_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
-            queryMap.put("practice_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
-            queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
-            queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
+            transitionDTO = medicationsOnlyResultModel.getMetadata().getTransitions().getMedications();
+            queryMap.put("patient_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPatientId());
+            queryMap.put("practice_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeId());
+            queryMap.put("practice_mgmt", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeMgmt());
+            queryMap.put("appointment_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getAppointmentId());
         }
 
 

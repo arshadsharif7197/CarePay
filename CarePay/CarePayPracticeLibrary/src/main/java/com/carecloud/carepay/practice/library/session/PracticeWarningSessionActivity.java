@@ -27,7 +27,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  */
 public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +46,13 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     protected void onContinueButton() {
-        ((CarePayApplication) getApplicationContext()).cancelSession();
+        ((CarePayApplication) getApplication()).cancelSession();
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         Data.Builder builder = new Data.Builder();
         builder.putString("logout_transition",
@@ -67,6 +72,7 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
 
     @Override
     protected void restartApp() {
+        ((CarePayApplication) getApplication()).cancelSession();
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
         logOut(logoutTransition, false);
     }

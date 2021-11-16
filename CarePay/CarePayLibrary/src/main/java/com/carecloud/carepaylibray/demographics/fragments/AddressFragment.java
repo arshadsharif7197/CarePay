@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -31,7 +32,7 @@ import com.smartystreets.api.us_zipcode.City;
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
-public class AddressFragment extends CheckInDemographicsBaseFragment {
+public class AddressFragment extends CheckInDemographicsBaseFragment{
 
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private EditText cityEditText;
@@ -42,6 +43,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
@@ -247,7 +249,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                             .getState().isRequired(), stateValue, R.id.stateContainer,
                     R.id.stateTextInputLayout, isUserAction())) return false;
-
             return true;
         } finally {
             setUserAction(false);
@@ -302,4 +303,5 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     protected int getContentId() {
         return R.layout.fragment_review_demographic_address;
     }
+
 }

@@ -19,7 +19,8 @@ public class IntegratedPaymentCardData {
 
     @StringDef({TOKENIZATION_CLOVER, TOKENIZATION_PAYEEZY, TOKENIZATION_ANDROID})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TokenizationService{}
+    public @interface TokenizationService {
+    }
 
     @SerializedName("card_type")
     private String cardType;
@@ -42,8 +43,15 @@ public class IntegratedPaymentCardData {
     @SerializedName("token")
     private String token;
 
+    @SerializedName("cvv")
+    private String cvv;
+
+    @SerializedName("card_number")
+    private String card_number;
+
     @SerializedName("tokenization_service")
-    private @TokenizationService String tokenizationService;
+    private @TokenizationService
+    String tokenizationService;
 
     public String getCardType() {
         return cardType;
@@ -101,7 +109,8 @@ public class IntegratedPaymentCardData {
         this.token = token;
     }
 
-    public @TokenizationService String getTokenizationService() {
+    public @TokenizationService
+    String getTokenizationService() {
         return tokenizationService;
     }
 
@@ -109,4 +118,19 @@ public class IntegratedPaymentCardData {
         this.tokenizationService = tokenizationService;
     }
 
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
+    public String getCard_number() {
+        return card_number;
+    }
+
+    public void setCard_number(String card_number) {
+        this.card_number = card_number;
+    }
 }

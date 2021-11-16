@@ -6,8 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.widget.Toolbar;
-
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +46,8 @@ import java.util.Map;
 
 public abstract class BaseNextAppointmentFragment extends BaseFragment
         implements TranslatableFragment, CreateAppointmentFragmentInterface {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 1500;
     protected CheckOutInterface callback;
     protected AppointmentsResultModel appointmentsResultModel;
     protected VisitTypeDTO selectedVisitType;

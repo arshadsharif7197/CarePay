@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +37,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
-
+    public long mLastClickTime = 0;
     private ShamrockPaymentsCallback shamrockCallback;
 
     /**
@@ -96,6 +98,10 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 2000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 if (isCloverDevice) {
                     handleSwipeCard();
                 } else if (isPracticeMode) {

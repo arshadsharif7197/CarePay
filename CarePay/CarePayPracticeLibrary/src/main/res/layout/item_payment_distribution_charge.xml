@@ -90,7 +90,7 @@
                     android:maxLines="2"
                     android:paddingEnd="@dimen/distributionCellPadding"
                     android:paddingStart="@dimen/distributionCellPadding"
-                    android:text="Dr. Nina Simone"
+                    android:text="@string/apt_choose_provider_title"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/distributionItemTextSize"
                     app:customAssetFont="proxima_nova_regular" />

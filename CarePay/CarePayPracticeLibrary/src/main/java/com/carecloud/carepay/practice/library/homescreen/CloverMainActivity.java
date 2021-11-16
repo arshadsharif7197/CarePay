@@ -61,7 +61,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 3000;
     private ImageView modeSwitchImageView;
     private ImageView homeLockImageView;
     private HomeScreenDTO homeScreenDTO;
@@ -375,6 +376,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
+//to prevent mutli click at the same time
+        long nowMs = System.currentTimeMillis();
+        if (lastClickMs != 0 && (nowMs - lastClickMs) < TOO_SOON_DURATION_MS) {
+            return;
+        }
+        lastClickMs = nowMs;
+//......................
+
         int viewId = view.getId();
 
         if (viewId == R.id.homeModeSwitchClickable) {
@@ -806,13 +815,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            Gson gson = new Gson();
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson
-                    .fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            logOut(transitionsDTO.getLogout());
-            getAppAuthorizationHelper().setUser(null);
-            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
+           createChangeModeDialog();
         }
     }
 

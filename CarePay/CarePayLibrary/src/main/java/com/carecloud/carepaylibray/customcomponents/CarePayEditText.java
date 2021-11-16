@@ -5,9 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
-
 import com.carecloud.carepaylibrary.R;
-
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_LIGHT;
@@ -31,7 +29,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
  * This is a custom textview component that allow t set custom font from assets
  */
 
-public class CarePayEditText extends AppCompatEditText {
+public class CarePayEditText extends AppCompatEditText{
     Context context;
     int fontAttribute;
 
@@ -45,7 +43,6 @@ public class CarePayEditText extends AppCompatEditText {
         this.context = context;
         init(null);
     }
-
     /**
      * Public constructor with context and Attribute.
      * All the custom styleable declare are apply here also.
@@ -90,7 +87,7 @@ public class CarePayEditText extends AppCompatEditText {
      *
      * @param fontAttribute styleable attributes
      */
-    public void setFontAttribute(int fontAttribute) {
+    public void setFontAttribute(int fontAttribute){
         this.fontAttribute = fontAttribute;
         setFont();
         invalidate();
@@ -102,7 +99,7 @@ public class CarePayEditText extends AppCompatEditText {
      *
      * @param attrs styleable attributes
      */
-    private void init(AttributeSet attrs) {
+    private void init(AttributeSet attrs){
         try {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -162,5 +159,4 @@ public class CarePayEditText extends AppCompatEditText {
         invalidate();
         requestLayout();
     }
-
 }

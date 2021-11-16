@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -11,9 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelStore;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -34,6 +40,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
@@ -42,13 +52,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.internal.Primitives;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
     private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
     private static boolean isForeground = false;
     private static Handler handler;
@@ -57,6 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     protected boolean isVisible = false;
+    View rootView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             handler = new Handler();
         }
         setNewRelicInteraction(getClass().getName());
+
     }
 
     @Override
@@ -77,7 +87,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         isForeground = false;
         handler.postDelayed(backgroundLogoutSessionRunnable, LOGOUT_SESSION_TIMEOUT);
     }
-
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (manageSession()&&ev.getAction()==MotionEvent.ACTION_UP)
+            ((CarePayApplication) getApplicationContext()).restartSession(this);
+        return super.dispatchTouchEvent(ev);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -85,17 +100,22 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         getAppAuthorizationHelper();
         isVisible = true;
         isForeground = true;
-        final View rootView = findViewById(android.R.id.content);
+        rootView = findViewById(android.R.id.content);
         rootView.setSoundEffectsEnabled(false);
         rootView.setOnClickListener(view -> {
             SystemUtil.hideSoftKeyboard(BaseActivity.this);
             view.requestFocus();
             onProgressDialogCancel();
         });
+
+
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
         expectingResult = false;
     }
+
+    public abstract boolean manageSession();
+
 
     private void handleFragmentDialogs() {
         FragmentManager fm = getSupportFragmentManager();
@@ -184,6 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         progressDialog.show();
     }
 
+
     @Override
     public void hideProgressDialog() {
         if (null != progressDialog && progressDialog.isShowing()) {
@@ -210,11 +231,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             if (null == errorNotification) {
 
                 if (!StringUtil.isNullOrEmpty(errorMessage)) {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                    errorNotification = new CustomPopupNotification(getApplicationContext(), getCurrentFocus(),
                             getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION,
                             errorNotificationSwipeListener());
                 } else {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                    errorNotification = new CustomPopupNotification(getApplicationContext(), getCurrentFocus(),
                             getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE,
                             CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
                 }
@@ -504,5 +525,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
         return null;
     }
+
+    ArrayList<View> result = new ArrayList<View>();
+
 
 }

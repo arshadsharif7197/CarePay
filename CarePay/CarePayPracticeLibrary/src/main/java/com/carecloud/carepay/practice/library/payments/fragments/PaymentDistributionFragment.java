@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +84,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
-
+    private long mLastClickTime=0;
+    String locationID = null;
+    String providerID = null;
     private View unappliedLayout;
 
     private NestedScrollView scrollView;
@@ -264,6 +268,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
         paymentPlanEmptyButton = view.findViewById(R.id.payment_plans_empty_button);
+        if (!paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans().isPaymentPlansEnabled()){
+            paymentPlanButton.setVisibility(View.GONE);
+        }
         View.OnClickListener displayPlans = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -283,11 +290,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 2000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 clearPickers();
                 clearLastSwipeView();
                 if (validateBalanceItems()) {
                     distributeAmountOverBalanceItems(paymentAmount);
-
                     generatePaymentsModel();
                     if (!hasPaymentError) {
                         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
@@ -523,6 +533,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                         }
                         default: {
                             balanceItems.addAll(pendingBalancePayload.getDetails());
+
                         }
                     }
                 }
@@ -552,8 +563,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
         String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
                 .getBalances().get(0).getMetadata().getPatientId();
-        String locationID = null;
-        String providerID = null;
         for (LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()) {
             for (String locationPatientID : locationIndex.getPatientIds()) {
                 if (locationPatientID.equals(patientID)) {
@@ -940,6 +949,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private boolean isValidItem(BalanceItemDTO balanceItem) {
         boolean isValid = true;
         if (balanceItem.getBalance() > 0) {
+            if (balanceItem.getLocation() != null && balanceItem.getLocation().getId() == null && locationID!=null){
+                balanceItem.getLocation().setId(Integer.valueOf(locationID));
+            }
+            if (balanceItem.getProvider() != null && balanceItem.getProvider().getId() == null && providerID!=null){
+                balanceItem.getProvider().setId(Integer.valueOf(providerID));
+            }
             if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                 isValid = false;
                 if (balanceItem.getLocation() != null) {
