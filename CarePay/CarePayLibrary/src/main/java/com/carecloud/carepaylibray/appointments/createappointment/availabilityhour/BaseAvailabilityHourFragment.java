@@ -161,29 +161,15 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
     protected void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-
-        String[] partsStartTime = slot.getStartTime().split("-");
-        String start = partsStartTime[0];
-        String start1 = partsStartTime[1];
-        String start2 = partsStartTime[2];
-        payloadDTO.setStartTime(start+"-"+start1+"-"+start2);
-
-        String[] partsEndTime = slot.getEndTime().split("-");
-        String end = partsEndTime[0];
-        String end1 = partsEndTime[1];
-        String end2 = partsEndTime[2];
-        payloadDTO.setEndTime(end+"-"+end1+"-"+end2);
-
+        payloadDTO.setStartTime(slot.getStartTime());
+        payloadDTO.setEndTime(slot.getEndTime());
         payloadDTO.setLocation(selectedLocation);
         payloadDTO.setVisitReasonId(selectedVisitReason.getId());
-
         payloadDTO.setVisitType(selectedVisitReason);
-
         payloadDTO.setProvider(selectedResource.getProvider());
         payloadDTO.setProviderId(String.valueOf(selectedResource.getProvider().getId()));
         payloadDTO.setResource(selectedResource);
         payloadDTO.setResourceId(selectedResource.getId());
-
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
         callback.showAppointmentConfirmationFragment(appointmentDTO, this);
