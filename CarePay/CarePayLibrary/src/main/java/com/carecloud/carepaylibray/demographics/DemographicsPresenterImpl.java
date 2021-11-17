@@ -474,15 +474,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void showMedicationAllergySearchFragment(int searchType) {
 
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO, searchType);
+                .newInstance(medicationsAllergiesDTO, medicationsOnlyResultModel, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 
     @Override
-    public void showMedicationAllergySearchFragment(int searchType,MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
-
+    public void showMedicationAllergySearchFragment(int searchType, MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO,medicationsOnlyResultModel, searchType);
+                .newInstance(medicationsAllergiesDTO, medicationsOnlyResultModel, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 

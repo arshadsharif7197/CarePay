@@ -94,7 +94,6 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private List<MedicationsObject> tempMedications = new ArrayList<>();
 
     private Handler handler = new Handler();
-    public boolean shouldRemove=false;
     private boolean shouldAllowMedPicture = true;
 
     public static MedicationsFragment newInstance(MedicationsOnlyResultModel medicationsAllergiesDTO) {
@@ -346,7 +345,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private View.OnClickListener chooseMedicationClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM,medicationsAllergiesDTO);
+            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
     };
 
