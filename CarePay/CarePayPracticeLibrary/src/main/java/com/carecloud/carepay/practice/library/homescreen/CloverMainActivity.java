@@ -62,7 +62,7 @@ import java.util.Set;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
     private long lastClickMs = 0;
-    private long TOO_SOON_DURATION_MS = 3000;
+    private long TOO_SOON_DURATION_MS = 2000;
     private ImageView modeSwitchImageView;
     private ImageView homeLockImageView;
     private HomeScreenDTO homeScreenDTO;
