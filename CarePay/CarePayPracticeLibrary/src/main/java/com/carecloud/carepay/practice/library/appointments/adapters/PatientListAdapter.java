@@ -423,7 +423,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             timeTextView.setText(dateFormat.format(patient.appointmentStartTime));
             if (patient.isRequested) {
                 timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (patient.isAppointmentOver) {
+            } else if (patient.isAppointmentOver || System.currentTimeMillis() >= patient.appointmentStartTime.getTime()  ) {
                 timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
