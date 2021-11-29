@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +58,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                                    @Defs.AppointmentNavigationTypeDef int appointmentNavigationType,
                                    UserPracticeDTO practiceInfo) {
         this.context = context;
-        this.appointmentsArrayList = appointmentsArrayList;
+        this.appointmentsArrayList = filterOfficeAppointments(appointmentsArrayList);
         this.appointmentsResultModel = appointmentInfo;
         this.appointmentNavigationType = appointmentNavigationType;
         this.practiceInfo = practiceInfo;
@@ -86,7 +88,24 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     }
 
     public void setList(List<AppointmentDTO> appointmentsArrayList) {
-        this.appointmentsArrayList = appointmentsArrayList;
+        // removing TeleHealth Appointments for talkEHR Practice
+        // https://jira.carecloud.com/browse/BREEZ-987
+        this.appointmentsArrayList = filterOfficeAppointments(appointmentsArrayList);
+    }
+
+    private List<AppointmentDTO> filterOfficeAppointments(List<AppointmentDTO> allAppointments) {
+        List<AppointmentDTO> officeAppointments = new ArrayList<>();
+        String practiceManagement = ((IApplicationSession) context.getApplicationContext()).getApplicationPreferences().getStartPracticeManagement();
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            for (AppointmentDTO appointmentDTO : allAppointments) {
+                if (!appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                    officeAppointments.add(appointmentDTO);
+                }
+            }
+            return officeAppointments;
+        } else {
+            return allAppointments;
+        }
     }
 
     @Override
@@ -256,7 +275,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     .getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
             appointmentTime.setText(dateUtil.getTime12Hour());
             String action = appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ? "CHECK-OUT" : "CHECK-IN";
-            startCheckIn.setContentDescription("START " +  action + " AT " + dateUtil.getTime12Hour());
+            startCheckIn.setContentDescription("START " + action + " AT " + dateUtil.getTime12Hour());
         }
 
         void setLocation(LocationDTO location) {
