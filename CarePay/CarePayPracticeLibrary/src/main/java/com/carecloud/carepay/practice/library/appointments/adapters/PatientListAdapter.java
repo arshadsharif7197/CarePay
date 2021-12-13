@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,8 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -57,6 +60,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int sizeFilteredPatients;
     private int sizeFilteredPendingPatients;
     private Section currentSection;
+
     private enum Section {
         APPOINTMENTS,
         PAYMENTS
@@ -144,7 +148,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
         holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
-        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
+        if (this.currentSection == Section.APPOINTMENTS) {
+            holder.setCellAvatar(patient);
+        }
 
         PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
                 this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
@@ -238,11 +244,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
         Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(patientBalances);
         Map<String, Double> totalBalanceMap = PracticeUtil.getTotalBalanceMap(patientBalances);
-        this.allPatients = new ArrayList<>(appointments.size());
 
+        // removing TeleHealth Appointments for talkEHR Practice
+        // https://jira.carecloud.com/browse/BREEZ-987
+        appointments = filterOfficeAppointments(appointments);
+
+        this.allPatients = new ArrayList<>(appointments.size());
         for (AppointmentDTO appointmentDTO : appointments) {
             if (!appointmentDTO.getPayload().getAppointmentStatus().getCode().equals("C")) {
-
                 // Set profile photo
                 PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
                 patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
@@ -253,6 +262,21 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         sortListByDate(this.allPatients);
+    }
+
+    private List<AppointmentDTO> filterOfficeAppointments(List<AppointmentDTO> allAppointments) {
+        List<AppointmentDTO> officeAppointments = new ArrayList<>();
+        String practiceManagement = ((IApplicationSession) context.getApplicationContext()).getApplicationPreferences().getStartPracticeManagement();
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            for (AppointmentDTO appointmentDTO : allAppointments) {
+                if (!appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                    officeAppointments.add(appointmentDTO);
+                }
+            }
+            return officeAppointments;
+        } else {
+            return allAppointments;
+        }
     }
 
     private void loadPatients(PaymentsModel paymentsModel) {
@@ -423,7 +447,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             timeTextView.setText(dateFormat.format(patient.appointmentStartTime));
             if (patient.isRequested) {
                 timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (patient.isAppointmentOver) {
+            } else if (patient.isAppointmentOver || System.currentTimeMillis() >= patient.appointmentStartTime.getTime()) {
                 timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
