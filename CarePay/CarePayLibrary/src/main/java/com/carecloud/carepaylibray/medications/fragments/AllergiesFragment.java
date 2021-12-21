@@ -3,11 +3,13 @@ package com.carecloud.carepaylibray.medications.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.carecloud.carepaylibray.medications.models.AllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -50,9 +53,10 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private RecyclerView allergyRecycler;
     private Button continueButton;
+    private WorkflowDTO workflowDTOAfterUpdate;
 
     protected DemographicsPresenter callback;
-    public boolean shouldRemove=false;
+    public boolean shouldRemove = false;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
@@ -249,15 +253,16 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             item.setAction(MedicationAllergiesAction.add);
             currentAllergies.add((AllergiesObject) item);
             addAllergies.add((AllergiesObject) item);
-            shouldRemove=true;
+            shouldRemove = true;
         }
         setAdapters();
     }
+
     private boolean isAllergyExist(MedicationsAllergiesObject item) {
 
-        for (AllergiesObject allergiesObject:currentAllergies){
-            if (allergiesObject.getInteroperableDesc().trim().equalsIgnoreCase(((AllergiesObject) item).getInteroperableDesc().trim())){
-               return true;
+        for (AllergiesObject allergiesObject : currentAllergies) {
+            if (allergiesObject.getInteroperableDesc().trim().equalsIgnoreCase(((AllergiesObject) item).getInteroperableDesc().trim())) {
+                return true;
             }
         }
         return false;
@@ -294,10 +299,29 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
             medicationsPostModel.setAllergiesList(getAllModifiedAllergies());
             String jsonBody = gson.toJson(medicationsPostModel);
-            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback,
+            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackBeforeUpdate,
                     jsonBody, queryMap, headers);
         }
     };
+
+    private void onUpdateAllergies() {
+        MedicationsOnlyResultModel medicationsAllergiesDTO = patientResponsibilityViewModel.getMedicationOnlyModel();
+        String jsonBody = patientResponsibilityViewModel.getJsonBody();
+        TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
+        queryMap.put("practice_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
+        queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
+        queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
+
+        Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        headers.put("transition", "true");
+
+
+        getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackAfterUpdate,
+                jsonBody, queryMap, headers);
+
+    }
 
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
@@ -308,7 +332,33 @@ public class AllergiesFragment extends BaseCheckinFragment implements
     };
 
 
-    private WorkflowServiceCallback submitMedicationAllergiesCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback submitMedicationAllergiesCallbackBeforeUpdate = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            workflowDTOAfterUpdate=workflowDTO;
+            hideProgressDialog();
+            List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
+            if (!modifiedAllergies.isEmpty()) {
+                MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
+            }
+
+            MixPanelUtil.endTimer(getString(R.string.timer_allergies));
+            onUpdateAllergies();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+    private WorkflowServiceCallback submitMedicationAllergiesCallbackAfterUpdate = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -318,14 +368,14 @@ public class AllergiesFragment extends BaseCheckinFragment implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
-            if (!modifiedAllergies.isEmpty()) {
-                MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
-            }
+            MedicationsAllergiesResultsModel medicationsAllergiesDTO = new Gson().fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            currentAllergies = medicationsAllergiesDTO.getPayload().getAllergies().getPayload();
+            addAllergies.clear();
+            removeAllergies.clear();
 
-            MixPanelUtil.endTimer(getString(R.string.timer_allergies));
-
-            onUpdate(callback, workflowDTO);
+            setAdapters();
+            if (workflowDTOAfterUpdate!=null)
+                onUpdate(callback, workflowDTOAfterUpdate);
         }
 
         @Override
