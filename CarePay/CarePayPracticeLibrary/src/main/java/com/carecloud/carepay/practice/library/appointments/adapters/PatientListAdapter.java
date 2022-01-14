@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -407,6 +408,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView provider;
         TextView balance;
         TextView timeTextView;
+        TextView appointmentStatusTextView;
         ImageView profilePicture;
         View videoVisitIndicator;
         ImageView cellAvatar;
@@ -426,6 +428,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             profilePicture = view.findViewById(R.id.patient_pic_image_view);
             cellAvatar = view.findViewById(R.id.cellAvatarImageView);
             videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+            appointmentStatusTextView = view.findViewById(R.id.appointment_status_text_view);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {
@@ -445,76 +448,91 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             timeTextView.setText(dateFormat.format(patient.appointmentStartTime));
-            if (patient.isRequested) {
-                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (patient.isAppointmentOver || System.currentTimeMillis() >= patient.appointmentStartTime.getTime()) {
-                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
-            } else {
-                timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
-            }
-
             timeTextView.setVisibility(View.VISIBLE);
         }
 
         void setCellAvatar(CardViewPatient patient) {
             AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(((AppointmentDTO) patient.raw).getPayload());
+            appointmentStatusTextView.setVisibility(View.VISIBLE);
             switch (style) {
                 case CHECKED_IN: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_checked_in"));
                     break;
                 }
                 case PENDING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
+
                     break;
                 }
                 case REQUESTED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    appointmentStatusTextView.setText(StringUtil.capitalize(Label.getLabel("request_pending_label")));
+
                     break;
                 }
                 case MISSED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_red);
+                    timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_missed"));
                     break;
                 }
                 case CANCELED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                     initials.setBackgroundResource(R.drawable.round_list_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_cancelled"));
+
                     break;
                 }
                 case PENDING_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
                     break;
                 }
                 case REQUESTED_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    appointmentStatusTextView.setText(StringUtil.capitalize(Label.getLabel("request_pending_label")));
                     break;
                 }
                 case CANCELED_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                     initials.setBackgroundResource(R.drawable.round_list_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_cancelled"));
                     break;
                 }
                 case CHECKED_OUT: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_checked_out"));
                     break;
                 }
                 default: {
                     cellAvatar.setVisibility(View.GONE);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
                 }
             }
 
