@@ -306,20 +306,22 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private void onUpdateAllergies() {
         MedicationsOnlyResultModel medicationsAllergiesDTO = patientResponsibilityViewModel.getMedicationOnlyModel();
-        String jsonBody = patientResponsibilityViewModel.getJsonBody();
-        TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
         Map<String, String> queryMap = new HashMap<>();
+        TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
+        Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        headers.put("transition", "true");
         queryMap.put("patient_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
         queryMap.put("practice_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
         queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
         queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
+        if (patientResponsibilityViewModel.getJsonBody() == null) {
+            getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, headers);
+        } else {
+            String jsonBody = patientResponsibilityViewModel.getJsonBody();
+            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackAfterUpdate,
+                    jsonBody, queryMap, headers);
+        }
 
-        Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
-        headers.put("transition", "true");
-
-
-        getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackAfterUpdate,
-                jsonBody, queryMap, headers);
 
     }
 
@@ -340,7 +342,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            workflowDTOAfterUpdate=workflowDTO;
+            workflowDTOAfterUpdate = workflowDTO;
             hideProgressDialog();
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
             if (!modifiedAllergies.isEmpty()) {
@@ -374,7 +376,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             removeAllergies.clear();
 
             setAdapters();
-            if (workflowDTOAfterUpdate!=null)
+            if (workflowDTOAfterUpdate != null)
                 onUpdate(callback, workflowDTOAfterUpdate);
         }
 
@@ -385,10 +387,34 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+    private WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
 
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            MedicationsAllergiesResultsModel medicationsAllergiesDTO = new Gson().fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            currentAllergies = medicationsAllergiesDTO.getPayload().getAllergies().getPayload();
+            addAllergies.clear();
+            removeAllergies.clear();
+
+            setAdapters();
+            if (workflowDTOAfterUpdate != null)
+                onUpdate(callback, workflowDTOAfterUpdate);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
     @Override
     public DTO getDto() {
         return medicationsAllergiesDTO;
     }
 }
-

@@ -43,7 +43,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
                                                                 MedicationsOnlyResultModel medicationsOnlyResultModel, int mode) {
         Bundle args = new Bundle();
         if (mode==ALLERGY_MODE)
-        DtoHelper.bundleDto(args, medicationsAllergiesDTO);
+            DtoHelper.bundleDto(args, medicationsAllergiesDTO);
         else DtoHelper.bundleDto(args, medicationsOnlyResultModel);
         args.putInt(KEY_DISPLAY_MODE, mode);
 
@@ -58,7 +58,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         Bundle args = getArguments();
         selectedMode = args.getInt(KEY_DISPLAY_MODE, MEDICATION_MODE);
         if (selectedMode==ALLERGY_MODE)
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, args);
+            medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, args);
         else medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class, args);
 
     }
@@ -167,6 +167,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
             queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getAllergies().getMetadata().getAppointmentId());
         } else {
             transitionDTO = medicationsOnlyResultModel.getMetadata().getTransitions().getMedications();
+            patientResponsibilityViewModel.setAllergiesdata(medicationsOnlyResultModel,null);
             queryMap.put("patient_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPatientId());
             queryMap.put("practice_id", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeId());
             queryMap.put("practice_mgmt", medicationsOnlyResultModel.getPayload().getMedications().getMetadata().getPracticeMgmt());
@@ -204,3 +205,4 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         return selectedMode;
     }
 }
+
