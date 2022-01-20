@@ -20,6 +20,8 @@ import com.carecloud.carepay.practice.library.adhocforms.adapters.AdHocFormRecyc
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -52,6 +54,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     private Button sendFormButton;
     private String patientId;
     private CarePayTextView tvHeader;
+    private String practiceManagement;
 
     public AdHocFormsListFragment() {
         // Required empty public constructor
@@ -77,6 +80,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         super.onCreate(savedInstanceState);
         dto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
         patientId = getArguments().getString("patientId");
+        practiceManagement = ((IApplicationSession) getActivity().getApplicationContext()).getApplicationPreferences().getStartPracticeManagement();
     }
 
     @Override
@@ -220,5 +224,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         }
         fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
         sendFormButton.setEnabled(!selectedForms.getForms().isEmpty());
+
+        // Disable send Form for talkEHR Practices
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR))
+            sendFormButton.setEnabled(false);
     }
 }
