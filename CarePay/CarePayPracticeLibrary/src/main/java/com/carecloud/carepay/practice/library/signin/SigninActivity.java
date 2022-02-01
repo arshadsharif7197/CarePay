@@ -526,9 +526,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         practiceManagementTitle = selectedPracticeManagement.getLabel();
         getApplicationPreferences().setStartPracticeManagement(practiceManagement);
         tvPartnerBtn.setText(practiceManagementTitle);
-        passwordEditText.setText("");
-        emailEditText.setText("");
-        cbPracticeManagement.setChecked(false);
     }
 
     public void requestPasswordFocus() {
