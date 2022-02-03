@@ -411,7 +411,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                 View.GONE : View.VISIBLE);
         if (practiceManagementTitle == null) {
-            tvPartnerBtn.setText( Label.getLabel("practice_management_system"));
+            tvPartnerBtn.setText(Label.getLabel("practice_management_system"));
             cbPracticeManagement.setChecked(false);
         } else {
             il_partner_btn.setHint(Label.getLabel("practice_management_system"));
@@ -440,7 +440,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private void signIn() {
-        if (practiceManagementTitle==null){
+        if (practiceManagementTitle == null) {
             showErrorNotification(Label.getLabel("practice_management_system_select"));
             return;
         }
@@ -524,8 +524,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         il_partner_btn.setHint(Label.getLabel("practice_management_system"));
         practiceManagement = selectedPracticeManagement.getPracticeMgmt();
         practiceManagementTitle = selectedPracticeManagement.getLabel();
-        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
         tvPartnerBtn.setText(practiceManagementTitle);
+        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+
+        if (cbPracticeManagement.isChecked()) {
+            getApplicationPreferences().setPracticeManagementTitle(practiceManagementTitle);
+        }
     }
 
     public void requestPasswordFocus() {
@@ -571,7 +575,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private boolean areAllFieldsValid(String email, String password) {
-        if (practiceManagementTitle==null){
+        if (practiceManagementTitle == null) {
             showErrorNotification(Label.getLabel("practice_management_system_select"));
             return false;
         }
