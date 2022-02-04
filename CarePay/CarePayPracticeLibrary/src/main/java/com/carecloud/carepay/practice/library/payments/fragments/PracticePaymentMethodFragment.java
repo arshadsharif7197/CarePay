@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
@@ -92,6 +93,9 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         final boolean isPracticeMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE;
         final boolean isDemo = HttpConstants.getEnvironment().equalsIgnoreCase("Demo");
         Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
+        if (Defs.START_PM_TALKEHR!=null&&getApplicationPreferences().getStartPracticeManagement().equalsIgnoreCase(Defs.START_PM_TALKEHR)){
+            swipeCreditCarNowButton.setVisibility(View.GONE);
+        }
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         swipeCreditCarNowButton.setEnabled(isCloverDevice || (isPracticeMode && !isDemo));
         swipeCreditCardNowLayout.setVisibility(isCloverDevice || (isPracticeMode && !isDemo) ? View.VISIBLE : View.GONE);
