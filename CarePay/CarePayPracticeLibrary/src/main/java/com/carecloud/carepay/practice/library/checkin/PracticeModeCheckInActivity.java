@@ -550,14 +550,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      */
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
-        if (getSupportFragmentManager().getBackStackEntryCount()>0)
-            return;
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO,
                 getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()), appointmentPayloadDTO, theRoom);
        Fragment fragment=getSupportFragmentManager().findFragmentByTag("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog");
-        if (fragment==null||!fragment.getClass().getName().equals("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog"))
-        displayDialogFragment(dialog, true);
+        if (fragment!=null){
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            displayDialogFragment(dialog,false);
+        }else {
+            displayDialogFragment(dialog, false);
+        }
     }
 
     @Override
