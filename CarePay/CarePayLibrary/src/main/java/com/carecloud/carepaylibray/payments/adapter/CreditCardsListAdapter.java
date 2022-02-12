@@ -68,8 +68,8 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PaymentCreditCardsPayloadDTO creditCardInfo = creditCardsList.get(position).getPayload();
-
-        holder.creditCardText.setText(String.format("%s ****%s", creditCardInfo.getCardType(),
+        String cardType = (creditCardInfo.getCardType().toLowerCase().contains("American Express".toLowerCase())) ? "AMEX" : creditCardInfo.getCardType();
+        holder.creditCardText.setText(String.format("%s ****%s", cardType,
                 creditCardInfo.getCardNumber()));
 
         String expiredDate = !StringUtil.isNullOrEmpty(creditCardInfo.getExpireDtDisplay()) ?
