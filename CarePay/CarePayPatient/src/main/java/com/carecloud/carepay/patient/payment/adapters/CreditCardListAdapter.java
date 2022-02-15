@@ -52,8 +52,8 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
     @Override
     public void onBindViewHolder(final SettingsCreditCardListViewHolder holder, int position) {
         final DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = creditCardList.get(position);
-        holder.creditCardTextView.setText(StringUtil.getEncodedCardNumber(
-                creditCardsPayloadDTO.getPayload().getCardType(),
+        String cardType = (creditCardsPayloadDTO.getPayload().getCardType().toLowerCase().contains("American Express".toLowerCase())) ? "AMEX" : creditCardsPayloadDTO.getPayload().getCardType();
+        holder.creditCardTextView.setText(String.format("%s ****%s", cardType,
                 creditCardsPayloadDTO.getPayload().getCardNumber()));
 
         Date expDate = DateUtil.getInstance().setDateRaw(creditCardsPayloadDTO.getPayload().getExpireDt()).getDate();
