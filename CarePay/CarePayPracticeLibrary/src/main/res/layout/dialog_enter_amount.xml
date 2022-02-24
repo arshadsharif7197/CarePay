@@ -63,7 +63,9 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_book"
-                breeze:textKey="payment_enter_amount" />
+                breeze:textKey="payment_how_much_text" />
+               <!-- breeze:textKey="payment_enter_amount"-->
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
