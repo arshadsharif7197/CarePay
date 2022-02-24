@@ -82,7 +82,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
 
         minimumPayment = getMinimumPayment();
         if (minimumPayment > 0) {
-            TextView header = view.findViewById(R.id.partialPaymentHeader);
+            TextView header = view.findViewById(R.id.partialPaymentHeaderMiddle);
             SpannableString headerText = new SpannableString(String
                     .format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
                             NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment)));
@@ -104,8 +104,8 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public void onClick(View view) {
         super.onClick(view);
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
-            double amount = Double.parseDouble(numberStr);
-            if (amount > fullAmount) {
+                double amount = Double.parseDouble(numberStr);
+                if (amount > fullAmount) {
                 String errorMessage = Label.getLabel("payment_partial_max_error")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(fullAmount);
                 CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage,
