@@ -468,7 +468,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
                     timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
-                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_ready_checkin"));
 
                     break;
                 }
@@ -503,7 +503,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
                     timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
-                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_ready_checkin"));
                     break;
                 }
                 case REQUESTED_UPCOMING: {
