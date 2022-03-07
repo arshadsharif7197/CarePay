@@ -3,7 +3,9 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -696,6 +698,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
 
             EditText driverLicenseEditText = view.findViewById(R.id.driverLicense);
+            if (driverLicenseEditText.getText().length() < 4)
+                return false;
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDriversLicenseNumber().isRequired(), driverLicenseEditText.getText().toString(),
                     R.id.driverLicenseContainer, R.id.driverLicenseInputLayout, isUserAction()))

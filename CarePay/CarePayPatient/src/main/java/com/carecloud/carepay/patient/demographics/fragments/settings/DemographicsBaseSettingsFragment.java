@@ -41,6 +41,11 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
+    protected boolean checkTextSizeValid(int textEditableId, View view, int minSize) {
+        EditText editText = view.findViewById(textEditableId);
+        return editText.getText().length() < minSize;
+    }
+
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
                                        String value, View optional) {
         storeOption.setName(value);
