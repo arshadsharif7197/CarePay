@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormsListFragment;
@@ -81,7 +82,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PracticeAppointmentDialogListener,
         ResponsibilityFragmentDialog.PayResponsibilityCallback,
         PaymentDetailInterface,
-        VideoAppointmentCallback {
+        VideoAppointmentCallback, SwipeRefreshLayout.OnRefreshListener {
     private long lastClickMs = 0;
     private long TOO_SOON_DURATION_MS = 1500;
     private FilterModel filterModel;
@@ -92,6 +93,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
     private View filterTextView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private View filterTextViewOn;
     private TextView patientCountLabelTextView;
     private FilterDialog filterDialog;
@@ -154,6 +156,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void initializeViews() {
         TextView findPatientTextView = findViewById(R.id.practice_find_patient);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         findPatientTextView.setOnClickListener(getFindPatientListener(true));
 
         TextView addAppointmentTextView = findViewById(R.id.activity_practice_appointments_add);
@@ -417,11 +421,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPreExecute() {
             showProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -430,6 +438,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
             showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -497,9 +507,14 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     public void onAppointmentRequestSuccess() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", getFormattedDate(startDate));
-        queryMap.put("end_date", getFormattedDate(endDate));
-
+        if (null != startDate)
+            queryMap.put("start_date", getFormattedDate(startDate));
+       // else
+           // queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        if (null != endDate)
+            queryMap.put("end_date", getFormattedDate(endDate));
+       // else
+          //  queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
         String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
         String userId = getApplicationMode().getUserPracticeDTO().getUserId();
         Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
@@ -740,5 +755,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPaymentCancel() {
 
+    }
+
+    @Override
+    public void onRefresh() {
+        onAppointmentRequestSuccess();
     }
 }
