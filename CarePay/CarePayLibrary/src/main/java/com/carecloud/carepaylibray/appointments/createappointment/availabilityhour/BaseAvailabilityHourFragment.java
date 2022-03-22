@@ -165,14 +165,11 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         payloadDTO.setEndTime(slot.getEndTime());
         payloadDTO.setLocation(selectedLocation);
         payloadDTO.setVisitReasonId(selectedVisitReason.getId());
-
         payloadDTO.setVisitType(selectedVisitReason);
-
         payloadDTO.setProvider(selectedResource.getProvider());
         payloadDTO.setProviderId(String.valueOf(selectedResource.getProvider().getId()));
         payloadDTO.setResource(selectedResource);
         payloadDTO.setResourceId(selectedResource.getId());
-
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
         callback.showAppointmentConfirmationFragment(appointmentDTO, this);
