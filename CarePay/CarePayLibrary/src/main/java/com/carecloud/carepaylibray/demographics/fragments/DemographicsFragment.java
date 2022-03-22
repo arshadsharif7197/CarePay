@@ -96,6 +96,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private EditText maritalStatusEditText;
     private EditText referralSourceEditText;
     private EditText employmentStatusEditText;
+    private View currentView;
 
     @Override
     public void attachCallback(Context context) {
@@ -229,6 +230,29 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 personalInfoSection.getProperties().getDriversLicenseNumber(),
                 R.id.driverLicenseContainer, R.id.driverLicenseInputLayout,
                 driverLicenseEditText, R.id.driverLicenseRequired, null, null);
+
+        driverLicenseEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!StringUtil.isNullOrEmpty(s.toString()) &&
+                        s.length() > 3 &&
+                        passConstraints(currentView)) {
+                    nextButton.setSelected(true);
+                } else {
+                    nextButton.setSelected(false);
+                }
+            }
+        });
 
         driverLicenseStateEditText = view.findViewById(R.id.driverLicenseStateEditText);
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseState(),
@@ -625,6 +649,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     @Override
     protected boolean passConstraints(View view) {
+        currentView = view;
         try {
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getGender().isRequired(), selectedGender.getName(), R.id.genderDemographicsLayout,
@@ -698,12 +723,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
 
             EditText driverLicenseEditText = view.findViewById(R.id.driverLicense);
-            if (driverLicenseEditText.getText().length() < 4)
-                return false;
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDriversLicenseNumber().isRequired(), driverLicenseEditText.getText().toString(),
-                    R.id.driverLicenseContainer, R.id.driverLicenseInputLayout, isUserAction()))
+                    R.id.driverLicenseContainer, R.id.driverLicenseInputLayout, isUserAction())) {
                 return false;
+            }
 
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDriversLicenseState().isRequired(), selectedDriverLicenseState.getName(),

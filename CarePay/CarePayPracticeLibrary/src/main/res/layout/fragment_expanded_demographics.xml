@@ -244,6 +244,7 @@
                     style="@style/DemographicsReviewEditTextStyle"
                     android:imeOptions="actionNext"
                     android:inputType="text"
+                    android:digits="@string/restrict_digits_letters"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_driver_license"
