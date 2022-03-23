@@ -207,6 +207,28 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getDriversLicenseNumber(),
                 R.id.driverLicenseContainer, R.id.driverLicenseInputLayout,
                 R.id.driverLicense, R.id.driverLicenseRequired, null, null);
+        final EditText editText = view.findViewById(R.id.driverLicense);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (passConstraints(true)) {
+                    nextButton.setSelected(true);
+                } else {
+                    nextButton.setSelected(false);
+                }
+            }
+        });
+
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseState(),
                 personalInfoSection.getProperties().getDriversLicenseState(),
@@ -555,6 +577,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
                 && checkTextEmptyValue(R.id.driverLicense, view)) {
+            return false;
+        }
+        if (!checkTextEmptyValue(R.id.driverLicense, view)
+                && checkTextSizeValid(R.id.driverLicense, view, 4)) {
             return false;
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseState().isRequired()
