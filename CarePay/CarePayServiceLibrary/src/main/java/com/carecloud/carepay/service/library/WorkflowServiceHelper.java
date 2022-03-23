@@ -50,6 +50,7 @@ public class WorkflowServiceHelper {
     private static final String REVOKED = "revoked";
     private static final String EXPIRED = "expired";
     private static final String UNAUTHORIZED = "unauthorized";
+    private static final String AUTHENTICATIONERROR = "authenticationerror";
 
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
@@ -370,7 +371,11 @@ public class WorkflowServiceHelper {
                         !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
                 } else {
-                    executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                    if (errorBodyString.contains(AUTHENTICATIONERROR)) {
+                        onFailure(response);
+                    } else {
+                        executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                    }
                 }
             }
 
