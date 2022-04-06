@@ -126,7 +126,6 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                                 "appointment_schedule_success_message_HTML" :
                                 "appointment_request_success_message_HTML");
                         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
-                        SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
                         try {
                             logMixPanelAppointmentRequestedEvent(appointmentModelDto.getPayload().getAppointments().get(0));
                         } catch (Exception e) {
@@ -135,6 +134,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getAppointments().get(0).getMetadata().getPracticeId())
                                 .getCheckin()
                                 .isMove_patient_pre_registration()) {
+                            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
                             callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
                         } else {
                             callback.appointmentScheduledSuccessfully();
@@ -156,6 +156,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                             if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getAppointments().get(0).getMetadata().getPracticeId())
                                     .getCheckin()
                                     .isMove_patient_pre_registration()) {
+                                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
                                 callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
                             } else {
                                 callback.appointmentScheduledSuccessfully();
