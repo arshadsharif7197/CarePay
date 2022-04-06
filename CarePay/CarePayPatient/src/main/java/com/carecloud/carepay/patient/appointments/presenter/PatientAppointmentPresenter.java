@@ -736,6 +736,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         viewHandler.refreshAppointments();
     }
 
+    @Override
+    public void appointmentScheduledSuccessfully(AppointmentDTO appointmentDTO) {
+        popOutFragments();
+        onCheckInStarted(appointmentDTO);
+    }
+
     private void popOutFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
