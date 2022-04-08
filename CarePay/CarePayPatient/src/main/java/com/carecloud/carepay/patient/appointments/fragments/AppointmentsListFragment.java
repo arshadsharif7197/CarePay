@@ -131,7 +131,7 @@ public class AppointmentsListFragment extends BaseFragment
         if (canScheduleAppointments) {
             floatingActionButton.setOnClickListener(view1 -> {
 
-                if (cdrMaguirePractice != null && cdrMaguirePractice.
+                if (cdrMaguirePractice != null && !cdrMaguirePractice.
                                 equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
                     LargeConfirmationAlertDialog largeAlertDialogFragment =
                             LargeConfirmationAlertDialog.newInstance(Label.getLabel("appointment_cdr_popup"),
@@ -152,7 +152,8 @@ public class AppointmentsListFragment extends BaseFragment
             });
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
             newAppointmentClassicButton.setOnClickListener(v -> {
-                if (appointmentsResultModel.getPayload().getUserPractices() != null && appointmentsResultModel.getPayload().getUserPractices().get(0) != null &&
+                if (appointmentsResultModel.getPayload().getUserPractices() != null && appointmentsResultModel.
+                        getPayload().getUserPractices().get(0) != null &&
                         appointmentsResultModel.getPayload().getUserPractices().get(0).getPracticeId().
                                 equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
                     LargeConfirmationAlertDialog largeAlertDialogFragment = LargeConfirmationAlertDialog.
