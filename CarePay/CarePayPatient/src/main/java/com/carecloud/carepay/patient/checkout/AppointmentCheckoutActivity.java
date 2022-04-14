@@ -766,6 +766,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void appointmentScheduledSuccessfully(AppointmentDTO appointmentDTO) {
+        // empty implementation
+    }
+
+    @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount, String practiceId) {
         AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
         slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
