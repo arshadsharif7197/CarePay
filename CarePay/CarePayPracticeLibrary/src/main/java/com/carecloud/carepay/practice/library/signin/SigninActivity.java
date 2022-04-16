@@ -290,6 +290,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         tvPartnerBtn = findViewById(R.id.tv_partner_btn);
         il_partner_btn = findViewById(R.id.il_partner_btn);
         cbPracticeManagement = findViewById(R.id.cb_practice_management);
+        if (practiceManagement != null && practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            signInEmailTextInputLayout.setHint(Label.getLabel("username"));
+        } else {
+            signInEmailTextInputLayout.setHint(Label.getLabel("email_label"));
+        }
 
 
         setUpLanguageSpinner();
@@ -529,6 +534,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
         if (cbPracticeManagement.isChecked()) {
             getApplicationPreferences().setPracticeManagementTitle(practiceManagementTitle);
+        }
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            signInEmailTextInputLayout.setHint(Label.getLabel("username"));
+        } else {
+            signInEmailTextInputLayout.setHint(Label.getLabel("email_label"));
         }
     }
 
