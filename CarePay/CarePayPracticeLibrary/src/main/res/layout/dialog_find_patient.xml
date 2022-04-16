@@ -92,5 +92,26 @@
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="practice_filter_patient_not_found" />
     </LinearLayout>
+    <FrameLayout
+        android:id="@+id/loader_container"
+        android:layout_width="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:visibility="invisible">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/bg_progress_spinner" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_indeterminate_custom" />
+
+    </FrameLayout>
 </LinearLayout>
