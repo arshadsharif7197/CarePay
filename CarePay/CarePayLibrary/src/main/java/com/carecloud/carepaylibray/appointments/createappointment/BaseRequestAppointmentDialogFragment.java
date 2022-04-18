@@ -131,14 +131,21 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getAppointments().get(0).getMetadata().getPracticeId())
-                                .getCheckin()
-                                .isMove_patient_pre_registration()) {
-                            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-                            callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+
+                        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
+                                !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
+                            if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
+                                    .getCheckin()
+                                    .isMove_patient_pre_registration()) {
+                                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+                            } else {
+                                callback.appointmentScheduledSuccessfully();
+                            }
                         } else {
                             callback.appointmentScheduledSuccessfully();
                         }
+
                         cancel();
                     }
 
@@ -153,11 +160,16 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
 
                         if (isFromPostExecute && callback != null) {
                             isFromPostExecute = false;
-                            if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getAppointments().get(0).getMetadata().getPracticeId())
-                                    .getCheckin()
-                                    .isMove_patient_pre_registration()) {
-                                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-                                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+                            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
+                                    !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
+                                if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
+                                        .getCheckin()
+                                        .isMove_patient_pre_registration()) {
+                                    SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                                    callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+                                } else {
+                                    callback.appointmentScheduledSuccessfully();
+                                }
                             } else {
                                 callback.appointmentScheduledSuccessfully();
                             }
