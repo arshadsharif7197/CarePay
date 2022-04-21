@@ -137,7 +137,7 @@ public class FindPatientDialog extends BaseDialogFragment {
                 if (charSequence.length() == 0) {
 
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
-                } else if (charSequence.length() > 3) {
+                } else if (charSequence.length() > 0) {
                     ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
 
                     query = charSequence.toString().toUpperCase();
@@ -156,14 +156,14 @@ public class FindPatientDialog extends BaseDialogFragment {
         @Override
         public void onPreExecute() {
             //   showProgressDialog();
-            loader_container.setVisibility(View.VISIBLE);
+           // loader_container.setVisibility(View.VISIBLE);
             findViewById(R.id.patient_not_found_text).setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             // hideProgressDialog();
-            loader_container.setVisibility(View.INVISIBLE);
+           // loader_container.setVisibility(View.INVISIBLE);
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
@@ -180,7 +180,7 @@ public class FindPatientDialog extends BaseDialogFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             // hideProgressDialog();
-            loader_container.setVisibility(View.INVISIBLE);
+           // loader_container.setVisibility(View.INVISIBLE);
             if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
