@@ -973,6 +973,13 @@
         <item name="android:maxHeight">20dip</item>
     </style>
 
+    <style name="surveyRating" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/light_gray</item>
+        <item name="colorControlActivated">@color/lightning_yellow</item>
+    </style>
+
+
+
     <style name="health_insurance_screen">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
