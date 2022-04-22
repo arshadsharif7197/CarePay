@@ -118,6 +118,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
+                        appointmentModelDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                         isFromPostExecute = true;
                         hideProgressDialog();
                         requestAppointmentButton.setEnabled(true);
@@ -125,8 +126,26 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                                 "appointment_schedule_success_message_HTML" :
                                 "appointment_request_success_message_HTML");
                         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
-                        logMixPanelAppointmentRequestedEvent(appointmentDTO);
-                        callback.appointmentScheduledSuccessfully();
+                        try {
+                            logMixPanelAppointmentRequestedEvent(appointmentModelDto.getPayload().getAppointments().get(0));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
+                                !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
+                            if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
+                                    .getCheckin()
+                                    .isMove_patient_pre_registration()) {
+                                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+                            } else {
+                                callback.appointmentScheduledSuccessfully();
+                            }
+                        } else {
+                            callback.appointmentScheduledSuccessfully();
+                        }
+
                         cancel();
                     }
 
@@ -141,7 +160,19 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
 
                         if (isFromPostExecute && callback != null) {
                             isFromPostExecute = false;
-                            callback.appointmentScheduledSuccessfully();
+                            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
+                                    !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
+                                if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
+                                        .getCheckin()
+                                        .isMove_patient_pre_registration()) {
+                                    SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                                    callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+                                } else {
+                                    callback.appointmentScheduledSuccessfully();
+                                }
+                            } else {
+                                callback.appointmentScheduledSuccessfully();
+                            }
                             cancel();
                         }
                     }
@@ -176,7 +207,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     private String getPracticeName(String practiceId) {
-        return appointmentModelDto.getPayload().getPractice(practiceId).getPracticeName();
+        return getPractice(practiceId).getPracticeName();
     }
 
 

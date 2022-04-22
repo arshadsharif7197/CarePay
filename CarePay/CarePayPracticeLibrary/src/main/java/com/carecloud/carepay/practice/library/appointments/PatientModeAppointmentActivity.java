@@ -203,6 +203,11 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
+    public void appointmentScheduledSuccessfully(AppointmentDTO appointmentDTO) {
+        // empty implementation
+    }
+
+    @Override
     public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
         //Not Apply
     }

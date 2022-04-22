@@ -598,6 +598,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
+    public void appointmentScheduledSuccessfully(AppointmentDTO appointmentDTO) {
+        // empty implementation
+    }
+
+    @Override
     public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
         //Not Apply
     }
