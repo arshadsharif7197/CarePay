@@ -374,7 +374,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
             TransitionDTO signInTransition;
             signInTransition = signinDTO.getMetadata().getTransitions().getSignIn();
-            setSignInButtonClickable(false);
             viewModel.unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(), signInTransition);
         }
     }
