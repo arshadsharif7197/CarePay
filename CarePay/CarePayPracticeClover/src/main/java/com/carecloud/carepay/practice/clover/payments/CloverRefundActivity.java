@@ -81,7 +81,7 @@ public class CloverRefundActivity extends BaseActivity {
      */
     public static final int refundIntentID = 444;
     private static final String TAG = CloverRefundActivity.class.getName();
-    private static final String CLOVER_MERCHANT_SETTINGS_URL = "%s/v3/merchants/%s/properties?access_token=%s";
+    private static final String CLOVER_MERCHANT_SETTINGS_URL = "%s/v3/merchants/%s";
 
 
     private Account account;
@@ -456,8 +456,11 @@ public class CloverRefundActivity extends BaseActivity {
                 boolean shouldPrint = false;
                 try {
                     if(authResult != null) {
+                        Map<String, String> header = new HashMap<>();
+                        header.put("Authorization", authResult.authToken);
+
                         RestCallService service = ServiceGenerator.getInstance().createService(RestCallService.class);
-                        Call<JsonElement> call = service.executeGet(String.format(CLOVER_MERCHANT_SETTINGS_URL, authResult.baseUrl, authResult.merchantId, authResult.authToken));
+                        Call<JsonElement> call = service.executeGet(String.format(CLOVER_MERCHANT_SETTINGS_URL, authResult.baseUrl, authResult.merchantId));
                         Response<JsonElement> response = call.execute();
                         if (response.isSuccessful()) {
                             JsonElement jsonResponse = response.body();
