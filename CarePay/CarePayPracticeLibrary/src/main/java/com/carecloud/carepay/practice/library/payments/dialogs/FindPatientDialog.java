@@ -155,10 +155,6 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onPreExecute() {
-<<<<<<< HEAD
-         //   showProgressDialog();
-            loader_container.setVisibility(View.VISIBLE);
-=======
             //   showProgressDialog();
             loader_container.setVisibility(View.VISIBLE);
             findViewById(R.id.patient_not_found_text).setVisibility(View.INVISIBLE);
