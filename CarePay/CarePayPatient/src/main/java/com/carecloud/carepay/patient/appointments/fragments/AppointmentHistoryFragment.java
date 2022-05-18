@@ -229,7 +229,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
         PracticesAdapter adapter = new PracticesAdapter(appointmentsResultModel.getPayload().getUserPractices());
-        adapter.setCallback(userPracticeDTO -> {
+        adapter.setCallback((userPracticeDTO, position) -> {
             selectedPractice = userPracticeDTO;
             callAppointmentService(userPracticeDTO, true, true);
         });

@@ -51,7 +51,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
             selectedHolder = holder;
             selectedHolder.practiceTextView.setSelected(true);
             if (!userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
-                callback.onPracticeSelected(userPracticeDTO);
+                callback.onPracticeSelected(userPracticeDTO,position);
             }
             selectedPractice = userPracticeDTO;
         });
@@ -72,7 +72,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     }
 
     public interface PracticeSelectInterface {
-        void onPracticeSelected(UserPracticeDTO userPracticeDTO);
+        void onPracticeSelected(UserPracticeDTO userPracticeDTO, int position);
     }
 
     public void setCallback(PracticeSelectInterface callback) {

@@ -12,6 +12,9 @@ public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("checkin")
     @Expose
     private AppointmentsCheckinDTO checkin = new AppointmentsCheckinDTO();
+    @SerializedName("schedule_resources_order")
+    @Expose
+    private ScheduleResourcesOrder scheduleResourcesOrder = new ScheduleResourcesOrder();
     @SerializedName("requests")
     @Expose
     private AppointmentsRequestsDTO requests = new AppointmentsRequestsDTO();
@@ -33,6 +36,9 @@ public class AppointmentsSettingDTO implements Serializable {
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
+    }
+    public ScheduleResourcesOrder getScheduleResourceOrder() {
+        return scheduleResourcesOrder;
     }
 
     public void setCheckin(AppointmentsCheckinDTO checkin) {

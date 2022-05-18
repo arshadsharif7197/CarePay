@@ -11,7 +11,7 @@ public class AvailableLocationDTO {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private double id;
     @SerializedName("guid")
     @Expose
     private String guid;
@@ -22,7 +22,7 @@ public class AvailableLocationDTO {
     @Expose
     private boolean isVisibleAppointmentScheduler = true;
 
-    public Integer getId() {
+    public double getId() {
         return id;
     }
 

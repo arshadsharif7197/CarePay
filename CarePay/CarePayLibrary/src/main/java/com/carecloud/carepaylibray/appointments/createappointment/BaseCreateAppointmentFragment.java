@@ -55,12 +55,18 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private TextView providersNoDataTextView;
     private TextView visitTypeNoDataTextView;
     private TextView locationNoDataTextView;
+    private TextView locationNoDataTextView1;
+    private View locationHeader1;
+    private View locationHeader;
+
     private View providerContainer;
     private View visitTypeContainer;
     private View locationContainer;
+    private View locationContainer1;
     private Button checkAvailabilityButton;
     protected boolean isReschedule;
     private boolean isAlreadyClicked;
+    protected boolean shouldVisible = false;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -107,6 +113,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     }
 
     private void setUpUI(View view) {
+
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
         providerContainer = view.findViewById(R.id.providerContainer);
         providersNoDataTextView.setOnClickListener(v -> {
@@ -139,14 +146,34 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
+        locationHeader1 = view.findViewById(R.id.locationHeader1);
+        locationHeader = view.findViewById(R.id.locationHeader);
+        locationNoDataTextView1 = view.findViewById(R.id.locationNoDataTextView1);
         locationContainer = view.findViewById(R.id.locationContainer);
+        locationContainer1 = view.findViewById(R.id.locationContainer1);
         locationNoDataTextView.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
+        locationNoDataTextView1.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showLocationList(selectedPractice, selectedResource, selectedVisitType);
+        });
+        if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(0).getScheduleResourceOrder().getOrder().startsWith("location")) {
+            shouldVisible = true;
+            setLocationVisibility(shouldVisible);
+        }
         locationContainer.setOnClickListener(v -> {
+            if (isAlreadyClicked)
+                return;
+            startDelayTimer();
+            showLocationList(selectedPractice, selectedResource, selectedVisitType);
+        });
+        locationContainer1.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
             startDelayTimer();
@@ -167,6 +194,34 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             setLocation(selectedLocation);
             view.findViewById(R.id.practicesRecyclerView).setVisibility(View.GONE);
         }
+    }
+
+    protected void setLocationVisibility(boolean shouldVisible) {
+        if (shouldVisible) {
+            locationHeader1.setVisibility(View.VISIBLE);
+            locationNoDataTextView1.setVisibility(View.VISIBLE);
+            // locationContainer1.setVisibility(View.VISIBLE);
+
+
+            // locationContainer.setVisibility(View.GONE);
+            locationNoDataTextView.setVisibility(View.GONE);
+            locationHeader.setVisibility(View.GONE);
+            providersNoDataTextView.setEnabled(false);
+            visitTypeNoDataTextView.setEnabled(false);
+        } else {
+            locationHeader1.setVisibility(View.GONE);
+            locationNoDataTextView1.setVisibility(View.GONE);
+            // locationContainer1.setVisibility(View.VISIBLE);
+
+
+            // locationContainer.setVisibility(View.GONE);
+            locationNoDataTextView.setVisibility(View.VISIBLE);
+            locationHeader.setVisibility(View.VISIBLE);
+            providersNoDataTextView.setEnabled(true);
+            locationNoDataTextView.setEnabled(false);
+            visitTypeNoDataTextView.setEnabled(false);
+        }
+
     }
 
     protected void callAvailabilityService() {
@@ -210,11 +265,11 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     @Override
     public void setResourceProvider(AppointmentResourcesItemDTO resource) {
         selectedResource = resource;
+        visitTypeNoDataTextView.setEnabled(true);
         providersNoDataTextView.setVisibility(View.GONE);
         String providerName = resource.getProvider().getName();
         String speciality = resource.getProvider().getSpecialty().getName();
         setCardViewContent(providerContainer, providerName, speciality, true, resource.getProvider().getPhoto());
-
         ImageView deleteImageView = providerContainer.findViewById(R.id.deleteImageView);
         deleteImageView.setOnClickListener(v -> {
             resetProvider();
@@ -228,6 +283,8 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     public void setVisitType(VisitTypeDTO visitType) {
         selectedVisitType = visitType;
         visitTypeNoDataTextView.setVisibility(View.GONE);
+        locationNoDataTextView1.setEnabled(true);
+        locationNoDataTextView.setEnabled(true);
         String title = StringUtil.capitalize(visitType.getName());
         String subtitle;
         TextView subTitleTextView = visitTypeContainer.findViewById(R.id.subTitleTextView);
@@ -253,13 +310,21 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
     @Override
     public void setLocation(LocationDTO locationDTO) {
+        ImageView deleteImageView;
         selectedLocation = locationDTO;
         locationNoDataTextView.setVisibility(View.GONE);
+        locationNoDataTextView1.setVisibility(View.GONE);
+        providersNoDataTextView.setEnabled(true);
         String title = StringUtil.capitalize(locationDTO.getName());
         String subtitle = locationDTO.getAddress().geAddressStringWithShortZipWOCounty2Lines();
-        setCardViewContent(locationContainer, title, subtitle, false, null);
+        if (shouldVisible) {
+            setCardViewContent(locationContainer1, title, subtitle, false, null);
+            deleteImageView = locationContainer1.findViewById(R.id.deleteImageView);
+        } else {
+            setCardViewContent(locationContainer, title, subtitle, false, null);
+            deleteImageView = locationContainer.findViewById(R.id.deleteImageView);
+        }
 
-        ImageView deleteImageView = locationContainer.findViewById(R.id.deleteImageView);
         deleteImageView.setOnClickListener(v -> {
             resetLocation();
             checkIfButtonEnabled();
@@ -308,13 +373,25 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private void resetLocation() {
         selectedLocation = null;
         locationContainer.setVisibility(View.GONE);
-        locationNoDataTextView.setVisibility(View.VISIBLE);
+        locationContainer1.setVisibility(View.GONE);
+        if (shouldVisible) {
+            locationNoDataTextView1.setVisibility(View.VISIBLE);
+        } else {
+            locationNoDataTextView.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     private void resetVisitType() {
         selectedVisitType = null;
         visitTypeContainer.setVisibility(View.GONE);
         visitTypeNoDataTextView.setVisibility(View.VISIBLE);
+        if (shouldVisible) {
+
+        } else {
+            resetLocation();
+        }
     }
 
     private void checkIfButtonEnabled() {

@@ -90,9 +90,18 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
             practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                     LinearLayoutManager.HORIZONTAL, false));
             PracticesAdapter adapter = new PracticesAdapter(filteredList);
-            adapter.setCallback(userPracticeDTO -> {
+            adapter.setCallback((userPracticeDTO, position) -> {
                 if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
+                    if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
+                        shouldVisible=true;
+                        setLocationVisibility(shouldVisible);
+                    }
+                    if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("provider")) {
+                        shouldVisible=false;
+                        setLocationVisibility(shouldVisible);
+                    }
+
                 }
                 selectedPractice = userPracticeDTO;
             });
