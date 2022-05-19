@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -133,10 +134,14 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         }
 
                         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
-                                !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
-                            if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
-                                    .getCheckin()
-                                    .isMove_patient_pre_registration()) {
+                                !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty() &&
+                                appointmentModelDto.getPayload().getPracticePatientIds() != null) {
+
+                            String practiceId = appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId();
+                            if (appointmentModelDto.getPayload().getAppointmentsSetting(practiceId) != null &&
+                                    appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
+                                            .getCheckin()
+                                            .isMove_patient_pre_registration()) {
                                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
                                 callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
                             } else {
@@ -161,10 +166,14 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                         if (isFromPostExecute && callback != null) {
                             isFromPostExecute = false;
                             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
-                                    !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty()) {
-                                if (appointmentModelDto.getPayload().getAppointmentsSetting(appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId())
-                                        .getCheckin()
-                                        .isMove_patient_pre_registration()) {
+                                    !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty() &&
+                                    appointmentModelDto.getPayload().getPracticePatientIds() != null) {
+
+                                String practiceId = appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId();
+                                if (appointmentModelDto.getPayload().getAppointmentsSetting(practiceId) != null &&
+                                        appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
+                                                .getCheckin()
+                                                .isMove_patient_pre_registration()) {
                                     SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
                                     callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
                                 } else {
