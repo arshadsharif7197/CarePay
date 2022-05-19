@@ -119,6 +119,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         providersNoDataTextView.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if (shouldVisible&&selectedLocation==null){
+                return;
+            }
             startDelayTimer();
             showProviderList(selectedPractice, selectedVisitType, selectedLocation);
         });
@@ -132,6 +135,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
         visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
         visitTypeNoDataTextView.setOnClickListener(v -> {
+            if (shouldVisible && selectedResource==null){
+                return;
+            }
+            if (!shouldVisible && selectedResource==null){
+                return;
+            }
             if (isAlreadyClicked)
                 return;
             startDelayTimer();
@@ -154,6 +163,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationNoDataTextView.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if (!shouldVisible&&selectedVisitType==null){
+                return;
+            }
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
@@ -368,6 +380,13 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         selectedResource = null;
         providerContainer.setVisibility(View.GONE);
         providersNoDataTextView.setVisibility(View.VISIBLE);
+        if (shouldVisible){
+            resetVisitType();
+        }else {
+            resetVisitType();
+            resetLocation();
+        }
+
     }
 
     private void resetLocation() {
@@ -376,6 +395,8 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationContainer1.setVisibility(View.GONE);
         if (shouldVisible) {
             locationNoDataTextView1.setVisibility(View.VISIBLE);
+            resetProvider();
+            resetVisitType();
         } else {
             locationNoDataTextView.setVisibility(View.VISIBLE);
         }
