@@ -197,7 +197,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         String currentPracticeId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId();
         List<DemographicsInfoDto> demographicInfoList = demographicDTO.getPayload().getCheckinSettings().getDemographicsInfoDtoList();
 
-        if (!currentPracticeId.equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
+        if (currentPracticeId.equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
             // check optional either check
             boolean isOptionalEitherCheckExist = false;
             for (DemographicsInfoDto demographicsInfoDto : demographicInfoList) {
@@ -211,8 +211,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     && isRequiredFieldValid) {
 
                 LargeConfirmationAlertDialog largeAlertDialogFragment =
-                        LargeConfirmationAlertDialog.newInstance(Label.getLabel("appointment_cdr_popup"),
-                                Label.getLabel("button_no"), Label.getLabel("button_yes"));
+                        LargeConfirmationAlertDialog.newInstance(Label.getLabel("payment_cdr_popup"),
+                                Label.getLabel("proceed_label"), Label.getLabel("go_back_label"));
                 largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
