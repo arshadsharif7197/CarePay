@@ -22,6 +22,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
+import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -86,12 +89,14 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         List<UserPracticeDTO> filteredList = filterPracticesList(appointmentsModelDto.getPayload().getUserPractices());
         selectedPractice = filteredList.get(0);
         if (filteredList.size() > 1 && !isReschedule) {
+            // by default no practice will be selected
+            selectedPractice = null;
             practicesRecyclerView.setVisibility(View.VISIBLE);
             practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                     LinearLayoutManager.HORIZONTAL, false));
             PracticesAdapter adapter = new PracticesAdapter(filteredList);
             adapter.setCallback((userPracticeDTO, position) -> {
-                if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
                         shouldVisible=true;
@@ -104,6 +109,12 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
                 }
                 selectedPractice = userPracticeDTO;
+                if (selectedPractice.getPracticeId().equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
+                    SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
+                            newInstance(Label.getLabel("insurance_cdr_popup"),
+                                    Label.getLabel("ok"), Label.getLabel("button_no"));
+                    selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
+                }
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {

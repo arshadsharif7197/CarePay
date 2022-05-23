@@ -144,6 +144,14 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         checkinFlowCallback.setCurrentStep(CheckinFlowCallback.DEMOGRAPHICS);
     }
 
+    @Override
+    protected boolean getCDRFieldsStatus() {
+        EditText ssn = (EditText) findViewById(R.id.socialSecurityNumber);
+        EditText dl = (EditText) findViewById(R.id.driverLicense);
+
+        return (StringUtil.isNullOrEmpty(ssn.getText().toString()) && StringUtil.isNullOrEmpty(dl.getText().toString()));
+    }
+
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
         DemographicsPersonalSection personalInfoSection = dataModel.getDemographic().getPersonalDetails();
@@ -244,64 +252,118 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             @Override
             public void afterTextChanged(Editable s) {
+                boolean isRequired = personalInfoSection.getProperties().getDriversLicenseNumber().isRequired();
                 if (!StringUtil.isNullOrEmpty(s.toString()) &&
                         s.length() > 3 &&
                         passConstraints(currentView)) {
                     nextButton.setSelected(true);
+                    nextButton.setEnabled(true);
+                } else if (StringUtil.isNullOrEmpty(s.toString()) && !isRequired) {
+                    nextButton.setSelected(true);
+                    nextButton.setEnabled(true);
                 } else {
                     nextButton.setSelected(false);
+                    nextButton.setEnabled(false);
                 }
             }
         });
 
         driverLicenseStateEditText = view.findViewById(R.id.driverLicenseStateEditText);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseState(),
-                personalInfoSection.getProperties().getDriversLicenseState(),
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().
+
+                        getDriversLicenseState(),
+                personalInfoSection.getProperties().
+
+                        getDriversLicenseState(),
+
                 R.id.driverLicenseStateDemographicsLayout, R.id.driverLicenseStateInputLayout,
                 driverLicenseStateEditText, R.id.driverLicenseStateRequired, selectedDriverLicenseState,
                 Label.getLabel("demographics_driver_license_state"));
 
         EditText secondaryPhoneEditText = view.findViewById(R.id.secondaryPhone);
+
         setUpDemographicField(view, StringUtil
-                        .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
-                personalInfoSection.getProperties().getSecondaryPhoneNumber(),
+                        .formatPhoneNumber(demographicPayload.getPersonalDetails().
+
+                                getSecondaryPhoneNumber()),
+                personalInfoSection.getProperties().
+
+                        getSecondaryPhoneNumber(),
+
                 R.id.secondaryPhoneDemographicsLayout, R.id.secondaryPhoneInputLayout,
                 secondaryPhoneEditText, R.id.secondaryPhoneRequired, null, null);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
+        if (dataModel.getDemographic().
+
+                getPersonalDetails().
+
+                getProperties().
+
+                getSecondaryPhoneNumber().
+
+                isRequired()) {
             secondaryPhoneEditText.addTextChangedListener(
                     clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout)));
         }
 
         secondaryPhoneTypeEditText = view.findViewById(R.id.secondaryPhoneTypeEditText);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType(),
-                personalInfoSection.getProperties().getSecondaryPhoneNumberType(),
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().
+
+                        getSecondaryPhoneNumberType(),
+                personalInfoSection.getProperties().
+
+                        getSecondaryPhoneNumberType(),
+
                 R.id.secondaryPhoneTypeDemographicsLayout, R.id.secondaryPhoneTypeInputLayout,
                 secondaryPhoneTypeEditText, R.id.secondaryPhoneTypeRequired, selectedSecondaryPhoneType,
                 Label.getLabel("demographics_secondary_phone_type"));
 
         preferredContactMethodEditText = view.findViewById(R.id.preferredContactMethodEditText);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredContact(),
-                personalInfoSection.getProperties().getPreferredContact(),
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().
+
+                        getPreferredContact(),
+                personalInfoSection.getProperties().
+
+                        getPreferredContact(),
+
                 R.id.preferredContactMethodDemographicsLayout, R.id.preferredContactMethodInputLayout,
                 preferredContactMethodEditText, R.id.contactMethodRequired, selectedContactMethod,
                 Label.getLabel("demographics_preferred_contact_method"));
 
         maritalStatusEditText = view.findViewById(R.id.maritalStatusEditText);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getMaritalStatus(),
-                personalInfoSection.getProperties().getMaritalStatus(),
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().
+
+                        getMaritalStatus(),
+                personalInfoSection.getProperties().
+
+                        getMaritalStatus(),
+
                 R.id.maritalStatusDemographicsLayout, R.id.maritalStatusInputLayout,
                 maritalStatusEditText, R.id.maritalStatusRequired, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
         referralSourceEditText = view.findViewById(R.id.referralSourceEditText);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
-                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().
+
+                        getReferralSource(),
+                personalInfoSection.getProperties().
+
+                        getReferralSource(), R.id.referralSourceDemographicsLayout,
                 R.id.referralSourceInputLayout, referralSourceEditText, R.id.referralSourceRequired,
                 selectedReferralSource, Label.getLabel("demographics_referral_source"));
 
-        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
-        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
+        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.
+
+                getPrimaryPhysician());
+
+        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.
+
+                getReferringPhysician());
     }
 
     private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,

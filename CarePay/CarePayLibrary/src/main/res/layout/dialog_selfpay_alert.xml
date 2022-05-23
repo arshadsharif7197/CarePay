@@ -57,29 +57,30 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_10dp"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="1">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/actionButtonNo"
+                android:id="@+id/actionButtonYes"
                 style="@style/ResponsButtonStyle"
                 android:layout_width="0dp"
                 android:layout_marginRight="@dimen/dimen_3dp"
                 android:layout_weight="1"
-                android:textAllCaps="false"
-                android:text="No"
+                android:textAllCaps="true"
+                android:text="Yes"
                 android:background="@color/colorPrimary"
                 android:foreground="?selectableItemBackground"
                 android:textColor="@color/white"
                 app:customAssetFont="gotham_rounded_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/actionButtonYes"
+                android:id="@+id/actionButtonNo"
                 style="@style/ResponsButtonStyle"
                 android:layout_width="0dp"
                 android:layout_marginLeft="@dimen/dimen_3dp"
                 android:layout_weight="1"
-                android:text="Yes"
-                android:textAllCaps="false"
+                android:text="No"
+                android:visibility="gone"
+                android:textAllCaps="true"
                 android:background="@color/colorPrimary"
                 android:foreground="?selectableItemBackground"
                 android:textColor="@color/white"

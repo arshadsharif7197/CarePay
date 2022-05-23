@@ -113,13 +113,17 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     }
 
     private void setUpUI(View view) {
-
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
         providerContainer = view.findViewById(R.id.providerContainer);
         providersNoDataTextView.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if (shouldVisible&&selectedLocation==null){
+
+            if (shouldVisible&&selectedLocation==null) {
+                return;
+            }
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
             startDelayTimer();
@@ -128,6 +132,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         providerContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
+                return;
+            }
             startDelayTimer();
             showProviderList(selectedPractice, selectedVisitType, selectedLocation);
         });
@@ -143,12 +151,20 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             }
             if (isAlreadyClicked)
                 return;
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
+                return;
+            }
             startDelayTimer();
             showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
         });
         visitTypeContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
+                return;
+            }
             startDelayTimer();
             showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
         });
@@ -172,6 +188,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationNoDataTextView1.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
+                return;
+            }
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
@@ -182,6 +202,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
+            if(selectedPractice == null){
+                showErrorNotification(Label.getLabel("practice_selection_first_label"));
+                return;
+            }
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });

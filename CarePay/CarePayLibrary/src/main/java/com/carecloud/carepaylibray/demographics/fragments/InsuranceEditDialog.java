@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
@@ -79,6 +80,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     public static final String KEY_POLICY_HOLDER_SELF = "self";
     private static final String KEY_POLICY_HOLDER_SELF_ES = "yo";
     public static final String KEY_PROVIDER_OTHER = "other";
+
+    public static final String KEY_PROVIDER_CIGNA = "Cigna";
+    public static final String KEY_PROVIDER_MEDICARE = "Medicare";
+    public static final String KEY_PROVIDER_MEDICAID = "Medicaid";
 
     public static final int NEW_INSURANCE = -1;
 
@@ -436,6 +441,19 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                             insuranceOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                             planInputLayout, planEditText, null, selectedPlanOption,
                             Label.getLabel("demographics_documents_title_select_plan"), null, false);
+                    // Applying conditions according to https://jira.carecloud.com/browse/BREEZ-1311
+                    String practiceId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId();
+                    if (practiceId != null &&
+                            practiceId.equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da") &&
+                            !selectedOption.getName().equalsIgnoreCase(KEY_PROVIDER_CIGNA) &&
+                            !selectedOption.getName().equalsIgnoreCase(KEY_PROVIDER_MEDICAID) &&
+                            !selectedOption.getName().equalsIgnoreCase(KEY_PROVIDER_MEDICARE)) {
+
+                        SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
+                                newInstance(Label.getLabel("payment_self_pay_label"),
+                                        Label.getLabel("ok"), Label.getLabel("button_no"));
+                        selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
+                    }
 
                     isProviderOther = selectedOption.getName().toLowerCase().equals(KEY_PROVIDER_OTHER);
                     if (isProviderOther) {
