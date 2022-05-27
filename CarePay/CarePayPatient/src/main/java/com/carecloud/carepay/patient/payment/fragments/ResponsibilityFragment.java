@@ -19,6 +19,9 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialo
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -145,6 +148,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         payLaterContainer.setVisibility(getArguments().getBoolean("payLaterButtonVisibility") ? View.VISIBLE : View.GONE);
         payLaterContainer.setOnClickListener(view13 -> actionCallback.onPayLaterClicked(selectedBalance));
 
+        // checking CDR Maguire checks for PayLater https://jira.carecloud.com/browse/BREEZ-1276
+        getCDRPaymentInfo(payLaterContainer);
+
         if (total > 0) {
             payTotalAmountContainer.setClickable(true);
             payTotalAmountContainer.setEnabled(true);
@@ -210,6 +216,36 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
         TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(total));
+    }
+
+    private void getCDRPaymentInfo(View payLaterContainer) {
+        if (paymentsModel.getPaymentPayload().getUserPractice("f1fe3157-5eae-4796-912f-16f297aac0da") != null) {
+            DemographicPayloadDTO demographicsInfo = paymentsModel.getPaymentPayload().getUserLinks().getLoggedInUser().getDemographics().getPayload();
+            if (demographicsInfo.getPersonalDetails().getDriversLicenseNumber() != null &&
+                    !demographicsInfo.getPersonalDetails().getDriversLicenseNumber().isEmpty() &&
+                    demographicsInfo.getPersonalDetails().getSocialSecurityNumber() != null &&
+                    !demographicsInfo.getPersonalDetails().getSocialSecurityNumber().isEmpty() &&
+                    isInsuranceCheckPass(demographicsInfo)) {
+
+                payLaterContainer.setVisibility(View.VISIBLE);
+            } else {
+                payLaterContainer.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private boolean isInsuranceCheckPass(DemographicPayloadDTO demographicsInfo) {
+        List<DemographicInsurancePayloadDTO> insurancesList = demographicsInfo.getInsurances();
+        if (insurancesList != null) {
+            for (DemographicInsurancePayloadDTO insuranceInfo : insurancesList) {
+                if (insuranceInfo.getInsuranceProvider().equalsIgnoreCase("Cigna") ||
+                        insuranceInfo.getInsuranceProvider().equalsIgnoreCase("Medicare") ||
+                        insuranceInfo.getInsuranceProvider().equalsIgnoreCase("Medicaid")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

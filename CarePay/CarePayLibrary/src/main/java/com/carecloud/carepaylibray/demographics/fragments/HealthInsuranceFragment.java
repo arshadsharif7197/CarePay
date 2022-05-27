@@ -304,6 +304,12 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
+    protected boolean getCDRFieldsStatus() {
+        // empty implementation
+        return false;
+    }
+
+    @Override
     protected boolean passConstraints(View view) {
         if (insuranceTypeRepeated || insuranceDataRepeated) {
             return false;

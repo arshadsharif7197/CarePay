@@ -31,10 +31,13 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
+import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicsInfoDto;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
@@ -164,7 +167,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 setUserAction(true);
                 if (buttonView.isSelected() && passConstraints(view)) {
                     DemographicDTO demographicDTO = updateDemographicDTO(view);
-                    openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > checkinFlowCallback.getTotalSteps());
+
+                    // checking for CDR Maguire Practice
+                    if ((checkinFlowCallback.getCurrentStep() == 3)) {
+                        if (!CDRPracticeFlowExist()) {
+                            gotoNextFragment(demographicDTO);
+                        }
+                    } else {
+                        gotoNextFragment(demographicDTO);
+                    }
                 }
             }
         });
@@ -179,6 +190,48 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 return false;
             }
         });
+    }
+
+    private boolean CDRPracticeFlowExist() {
+        boolean isRequiredFieldValid = getCDRFieldsStatus();
+        String currentPracticeId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId();
+        List<DemographicsInfoDto> demographicInfoList = demographicDTO.getPayload().getCheckinSettings().getDemographicsInfoDtoList();
+
+        if (currentPracticeId.equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
+            // check optional either check
+            boolean isOptionalEitherCheckExist = false;
+            for (DemographicsInfoDto demographicsInfoDto : demographicInfoList) {
+                if (demographicsInfoDto.getOptionalEitherFields() != null && demographicsInfoDto.getOptionalEitherFields().size() > 0) {
+                    isOptionalEitherCheckExist = true;
+                    break;
+                }
+            }
+
+            if (isOptionalEitherCheckExist
+                    && isRequiredFieldValid) {
+
+                LargeConfirmationAlertDialog largeAlertDialogFragment =
+                        LargeConfirmationAlertDialog.newInstance(Label.getLabel("payment_cdr_popup"),
+                                Label.getLabel("proceed_label"), Label.getLabel("go_back_label"));
+                largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                    @Override
+                    public void onActionButton() {
+                        gotoNextFragment(demographicDTO);
+                    }
+                });
+                largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
+            } else {
+                gotoNextFragment(demographicDTO);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    protected abstract boolean getCDRFieldsStatus();
+
+    protected void gotoNextFragment(DemographicDTO demographicDTO) {
+        openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > checkinFlowCallback.getTotalSteps());
     }
 
     protected void checkIfEnableButton(View view) {

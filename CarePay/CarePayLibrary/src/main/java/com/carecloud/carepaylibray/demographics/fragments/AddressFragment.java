@@ -68,6 +68,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         checkinFlowCallback.setCurrentStep(CheckinFlowCallback.ADDRESS);
     }
 
+    @Override
+    protected boolean getCDRFieldsStatus() {
+        // empty implementation
+        return false;
+    }
+
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
         DemographicsAddressSection addressSection = dataModel.getDemographic().getAddress();
