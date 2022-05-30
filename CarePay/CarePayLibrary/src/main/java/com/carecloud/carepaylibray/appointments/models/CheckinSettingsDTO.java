@@ -1,6 +1,10 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicsInfoDto;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lmenendez on 8/23/17
@@ -22,6 +26,9 @@ public class CheckinSettingsDTO {
 
     @SerializedName("allow_patients_upload_medications")
     private boolean allowMedicationPicture = true;
+
+    @SerializedName("demographic_info")
+    private List<DemographicsInfoDto> demographicsInfoDtoList = new ArrayList<>();
 
     public boolean shouldShowMedications() {
         return showMedications;
@@ -61,5 +68,13 @@ public class CheckinSettingsDTO {
 
     public void setAllowMedicationPicture(boolean allowMedicationPicture) {
         this.allowMedicationPicture = allowMedicationPicture;
+    }
+
+    public List<DemographicsInfoDto> getDemographicsInfoDtoList() {
+        return demographicsInfoDtoList;
+    }
+
+    public void setDemographicsInfoDtoList(List<DemographicsInfoDto> demographicsInfoDtoList) {
+        this.demographicsInfoDtoList = demographicsInfoDtoList;
     }
 }

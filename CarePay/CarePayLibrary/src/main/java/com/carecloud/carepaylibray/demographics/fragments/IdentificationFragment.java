@@ -100,6 +100,12 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     }
 
     @Override
+    protected boolean getCDRFieldsStatus() {
+        // empty implementation
+        return false;
+    }
+
+    @Override
     protected boolean passConstraints(View view) {
         return true;
     }

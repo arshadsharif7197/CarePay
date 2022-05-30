@@ -28,7 +28,7 @@ public class ScheduleAppointmentRequestDTO {
         private String endTime;
 
         @SerializedName("location_id")
-        private int locationId;
+        private double locationId;
 
         private transient String locationGuid;
 
@@ -68,11 +68,11 @@ public class ScheduleAppointmentRequestDTO {
             this.endTime = endTime;
         }
 
-        public int getLocationId() {
+        public double getLocationId() {
             return locationId;
         }
 
-        public void setLocationId(int locationId) {
+        public void setLocationId(double locationId) {
             this.locationId = locationId;
         }
 

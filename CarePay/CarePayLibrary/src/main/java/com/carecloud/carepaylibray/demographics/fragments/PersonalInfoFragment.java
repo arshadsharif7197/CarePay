@@ -100,6 +100,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         checkinFlowCallback.setCurrentStep(CheckinFlowCallback.PERSONAL_INFO);
     }
 
+    @Override
+    protected boolean getCDRFieldsStatus() {
+        // empty implementation
+        return false;
+    }
+
     private void initialiseUIFields(View view) {
         setHeaderTitle(
                 Label.getLabel("demographics_review_peronsonalinfo_section"),

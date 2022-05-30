@@ -8,12 +8,12 @@
 
     <RatingBar
         android:id="@+id/surveyQuestionRatingBar"
+        android:theme="@style/surveyRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/dimen_5dp"
-        android:layout_marginStart="@dimen/dimen_5dp"
-        android:progressDrawable="@drawable/rating_star" />
+        android:layout_marginStart="@dimen/dimen_5dp" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/surveyQuestionTextView"

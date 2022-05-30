@@ -25,7 +25,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
 
     public PracticesAdapter(List<UserPracticeDTO> userPractices) {
         this.userPractices = userPractices;
-        selectedPractice = userPractices.get(0);
+       // selectedPractice = userPractices.get(0);
     }
 
     @NonNull
@@ -40,7 +40,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final UserPracticeDTO userPracticeDTO = userPractices.get(position);
         holder.practiceTextView.setText(userPracticeDTO.getPracticeName());
-        if (userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
+        if (selectedPractice != null && userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
             holder.practiceTextView.setSelected(true);
             selectedHolder = holder;
         }
@@ -50,8 +50,13 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
             }
             selectedHolder = holder;
             selectedHolder.practiceTextView.setSelected(true);
-            if (!userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
-                callback.onPracticeSelected(userPracticeDTO);
+            if (selectedPractice==null){
+                selectedPractice=userPractices.get(position);
+                callback.onPracticeSelected(userPracticeDTO,position);
+            }
+
+            if (selectedPractice!=null && !userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
+                callback.onPracticeSelected(userPracticeDTO,position);
             }
             selectedPractice = userPracticeDTO;
         });
@@ -72,7 +77,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     }
 
     public interface PracticeSelectInterface {
-        void onPracticeSelected(UserPracticeDTO userPracticeDTO);
+        void onPracticeSelected(UserPracticeDTO userPracticeDTO, int position);
     }
 
     public void setCallback(PracticeSelectInterface callback) {

@@ -64,6 +64,12 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
     }
 
     @Override
+    protected boolean getCDRFieldsStatus() {
+        // empty implementation
+        return false;
+    }
+
+    @Override
     protected boolean passConstraints(View view) {
         return true;
     }
