@@ -109,6 +109,9 @@ public class PaymentsPayloadDTO extends DelegatePermissionBasePayloadDto impleme
     @SerializedName("auth")
     @Expose
     private UserAuthModel userAuthModel = new UserAuthModel();
+    @SerializedName("isFirstAppointmentCheckin")
+    @Expose
+    private boolean isFirstAppointmentCheckin;
     @SerializedName("patient_statements")
     private List<PatientStatementDTO> patientStatements = new ArrayList<>();
     @SerializedName("payment_plan_created")
@@ -747,4 +750,11 @@ public class PaymentsPayloadDTO extends DelegatePermissionBasePayloadDto impleme
         return null;
     }
 
+    public boolean isFirstAppointmentCheckin() {
+        return isFirstAppointmentCheckin;
+    }
+
+    public void setFirstAppointmentCheckin(boolean firstAppointmentCheckin) {
+        isFirstAppointmentCheckin = firstAppointmentCheckin;
+    }
 }
