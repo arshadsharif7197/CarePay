@@ -222,11 +222,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         if (paymentsModel.getPaymentPayload().getUserPractice("f1fe3157-5eae-4796-912f-16f297aac0da") != null) {
             DemographicPayloadDTO demographicsInfo = paymentsModel.getPaymentPayload().getUserLinks().getLoggedInUser().getDemographics().getPayload();
             if (paymentsModel.getPaymentPayload().isFirstAppointmentCheckin()) {
-                if (demographicsInfo.getPersonalDetails().getDriversLicenseNumber() != null &&
-                        demographicsInfo.getPersonalDetails().getDriversLicenseNumber().isEmpty() &&
-                        demographicsInfo.getPersonalDetails().getSocialSecurityNumber() != null &&
-                        demographicsInfo.getPersonalDetails().getSocialSecurityNumber().isEmpty()) {
-
+                if (demographicsInfo.getPersonalDetails().getDriversLicenseNumber() == null &&
+                        demographicsInfo.getPersonalDetails().getSocialSecurityNumber() == null) {
                     payLaterContainer.setVisibility(View.GONE);
                 } else {
                     payLaterContainer.setVisibility(View.VISIBLE);
@@ -238,8 +235,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                     payLaterContainer.setVisibility(View.GONE);
                 }
             }
-
-
         }
     }
 
