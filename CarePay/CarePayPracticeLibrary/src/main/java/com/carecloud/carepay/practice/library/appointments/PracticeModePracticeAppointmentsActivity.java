@@ -429,6 +429,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             dialogStyle = AppointmentDisplayStyle.REQUESTED;
+        } else if (appointmentPayloadDTO.canCheckIn()) {
+            dialogStyle = AppointmentDisplayStyle.PENDING;
 
         } else if (appointmentPayloadDTO.canCheckOut() || appointmentPayloadDTO.getVisitType().hasVideoOption()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
