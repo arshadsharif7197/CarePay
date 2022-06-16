@@ -9,10 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -23,7 +25,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
-import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -36,6 +37,8 @@ import java.util.List;
 public class CreateAppointmentFragment extends BaseCreateAppointmentFragment implements CreateAppointmentFragmentInterface {
 
     public static CreateAppointmentFragment fragment;
+    private AppointmentViewModel appointmentViewModel;
+
 
     public static CreateAppointmentFragment newInstance() {
         return new CreateAppointmentFragment();
@@ -73,6 +76,14 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
         showPracticeList(view);
+        initData();
+    }
+
+    private void initData() {
+        appointmentViewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
+        appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
+            tvAutoVisitType.setText(autoVisitType);
+        });
     }
 
     private void setUpToolbar(View view) {
@@ -99,11 +110,11 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
-                        shouldVisible=true;
+                        shouldVisible = true;
                         setLocationVisibility(shouldVisible);
                     }
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("provider")) {
-                        shouldVisible=false;
+                        shouldVisible = false;
                         setLocationVisibility(shouldVisible);
                     }
 
@@ -113,7 +124,18 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
                             newInstance(Label.getLabel("insurance_cdr_popup"),
                                     Label.getLabel("ok"), Label.getLabel("button_no"));
+                    selfPayAlertDialog.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                        @Override
+                        public void onActionButton() {
+                            // Intelligent Scheduler flow
+
+
+                        }
+                    });
                     selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
+                } else {
+                    // Intelligent Scheduler flow
+
                 }
             });
             practicesRecyclerView.setAdapter(adapter);

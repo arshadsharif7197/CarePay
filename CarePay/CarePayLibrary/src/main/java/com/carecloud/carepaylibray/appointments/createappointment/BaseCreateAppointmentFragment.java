@@ -68,6 +68,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private boolean isAlreadyClicked;
     protected boolean shouldVisible = false;
 
+    protected LinearLayout visitTypeCard, autoVisitTypeContainer;
+    protected TextView tvAutoVisitType;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -119,10 +122,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             if (isAlreadyClicked)
                 return;
 
-            if (shouldVisible&&selectedLocation==null) {
+            if (shouldVisible && selectedLocation == null) {
                 return;
             }
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
@@ -132,7 +135,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         providerContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
@@ -143,15 +146,15 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
         visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
         visitTypeNoDataTextView.setOnClickListener(v -> {
-            if (shouldVisible && selectedResource==null){
+            if (shouldVisible && selectedResource == null) {
                 return;
             }
-            if (!shouldVisible && selectedResource==null){
+            if (!shouldVisible && selectedResource == null) {
                 return;
             }
             if (isAlreadyClicked)
                 return;
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
@@ -161,13 +164,16 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         visitTypeContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
             startDelayTimer();
             showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
         });
+        visitTypeCard = (LinearLayout) findViewById(R.id.card_visit_type);
+        autoVisitTypeContainer = (LinearLayout) findViewById(R.id.auto_visit_type_container);
+        tvAutoVisitType = (TextView) findViewById(R.id.tv_auto_visit_type);
 
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
@@ -179,7 +185,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationNoDataTextView.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if (!shouldVisible&&selectedVisitType==null){
+            if (!shouldVisible && selectedVisitType == null) {
                 return;
             }
             startDelayTimer();
@@ -188,7 +194,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationNoDataTextView1.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
@@ -202,7 +208,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         locationContainer.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
-            if(selectedPractice == null){
+            if (selectedPractice == null) {
                 showErrorNotification(Label.getLabel("practice_selection_first_label"));
                 return;
             }
@@ -404,9 +410,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         selectedResource = null;
         providerContainer.setVisibility(View.GONE);
         providersNoDataTextView.setVisibility(View.VISIBLE);
-        if (shouldVisible){
+        if (shouldVisible) {
             resetVisitType();
-        }else {
+        } else {
             resetVisitType();
             resetLocation();
         }
@@ -433,10 +439,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         visitTypeContainer.setVisibility(View.GONE);
         visitTypeNoDataTextView.setVisibility(View.VISIBLE);
         if (shouldVisible) {
-
+//empty implementation
         } else {
             resetLocation();
         }
+        autoVisitTypeContainer.setVisibility(View.GONE);
+        visitTypeCard.setVisibility(View.VISIBLE);
     }
 
     private void checkIfButtonEnabled() {

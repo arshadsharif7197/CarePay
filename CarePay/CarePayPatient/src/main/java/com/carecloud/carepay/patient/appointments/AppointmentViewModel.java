@@ -34,6 +34,7 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
     private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
+    private MutableLiveData<String> autoScheduleVisitTypeObservable;
 
     public AppointmentViewModel(@NonNull Application application) {
         super(application);
@@ -164,5 +165,13 @@ public class AppointmentViewModel extends BaseViewModel {
 
             }
         }, queryMap);
+    }
+
+    public MutableLiveData<String> getAutoScheduleVisitTypeObservable() {
+        return autoScheduleVisitTypeObservable;
+    }
+
+    public void setAutoScheduleVisitTypeObservable(String autoScheduleVisitTypeObservable) {
+        this.autoScheduleVisitTypeObservable.setValue(autoScheduleVisitTypeObservable);
     }
 }

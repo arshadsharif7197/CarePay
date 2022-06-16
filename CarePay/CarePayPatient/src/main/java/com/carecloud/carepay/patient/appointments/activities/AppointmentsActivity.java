@@ -90,7 +90,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     protected void setUpViewModel() {
         patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
-        viewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {
