@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -83,6 +84,13 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         appointmentViewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
         appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
             tvAutoVisitType.setText(autoVisitType);
+            if (!autoVisitType.isEmpty()) {
+                autoVisitTypeContainer.setVisibility(View.VISIBLE);
+                visitTypeCard.setVisibility(View.GONE);
+            } else {
+                selectedPractice = null;
+                resetForm();
+            }
         });
     }
 
@@ -128,6 +136,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         @Override
                         public void onActionButton() {
                             // Intelligent Scheduler flow
+                            startIntelligentSchedular();
 
 
                         }
@@ -135,12 +144,25 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
                 } else {
                     // Intelligent Scheduler flow
+                    startIntelligentSchedular();
 
                 }
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {
             practicesRecyclerView.setVisibility(View.GONE);
+            // Intelligent Scheduler flow
+            startIntelligentSchedular();
+
+        }
+    }
+
+    private void startIntelligentSchedular() {
+        if (selectedPractice != null) {
+            AppointmentsSettingDTO appointmentsSettingDTO = appointmentsModelDto.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId());
+            if (appointmentsSettingDTO.getIntelligentSchedulerDTO().isEnabled()) {
+                
+            }
         }
     }
 

@@ -33,10 +33,14 @@ public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("charge_cancellation_fees")
     @Expose
     private boolean chargeCancellationFees;
+    @SerializedName("inteligent_shedule")
+    @Expose
+    private IntelligentSchedulerDTO intelligentSchedulerDTO;
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
     }
+
     public ScheduleResourcesOrder getScheduleResourceOrder() {
         return scheduleResourcesOrder;
     }
@@ -91,5 +95,25 @@ public class AppointmentsSettingDTO implements Serializable {
 
     public void setChargeCancellationFees(boolean chargeCancellationFees) {
         this.chargeCancellationFees = chargeCancellationFees;
+    }
+
+    public ScheduleResourcesOrder getScheduleResourcesOrder() {
+        return scheduleResourcesOrder;
+    }
+
+    public void setScheduleResourcesOrder(ScheduleResourcesOrder scheduleResourcesOrder) {
+        this.scheduleResourcesOrder = scheduleResourcesOrder;
+    }
+
+    public boolean isChargeCancellationFees() {
+        return chargeCancellationFees;
+    }
+
+    public IntelligentSchedulerDTO getIntelligentSchedulerDTO() {
+        return intelligentSchedulerDTO;
+    }
+
+    public void setIntelligentSchedulerDTO(IntelligentSchedulerDTO intelligentSchedulerDTO) {
+        this.intelligentSchedulerDTO = intelligentSchedulerDTO;
     }
 }

@@ -190,4 +190,60 @@ public class CarePayConstants {
     public static final int DOB_VERIFICATION_REQUEST = 007;
     public static final int TELEHEALTH_APPOINTMENT_REQUEST = 101;
     public static final int TELEHEALTH_APPOINTMENT_RESULT_CODE = 102;
+    public static final String INTELLIGENT_SCHEDULER_QUESTIONS_KEY = "intelligent_questions";
+    public static final String INTELLIGENT_SCHEDULER_QUESTIONS = "{\n" +
+            "  \"inteligent_shedule\": {\n" +
+            "    \"enabled\": true,\n" +
+            "    \"question\": {\n" +
+            "      \"title\": \"Question 1\",\n" +
+            "      \"options\": [\n" +
+            "        {\n" +
+            "          \"title\": \"Option 1\",\n" +
+            "          \"visitType\": \"string\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"title\": \"Option 2\",\n" +
+            "          \"question\": {\n" +
+            "            \"title\": \"Question 2\",\n" +
+            "            \"options\": [\n" +
+            "              {\n" +
+            "                \"title\": \"Option 1\",\n" +
+            "                \"question\": {\n" +
+            "                  \"title\": \"Question title\",\n" +
+            "                  \"options\": [\n" +
+            "                    {\n" +
+            "                      \"title\": \"Option title\",\n" +
+            "                      \"visitType\": \"11111\"\n" +
+            "                    },\n" +
+            "                    {\n" +
+            "                      \"title\": \"Other\",\n" +
+            "                      \"visitType\": \"222\"\n" +
+            "                    }\n" +
+            "                  ]\n" +
+            "                }\n" +
+            "              },\n" +
+            "              {\n" +
+            "                \"title\": \"Option 2\",\n" +
+            "                \"visitType\": \"string\"\n" +
+            "              },\n" +
+            "              {\n" +
+            "                \"title\": \"Option 3\",\n" +
+            "                \"question\": {\n" +
+            "                  \"title\": \"Question 3\",\n" +
+            "                  \"options\": [\n" +
+            "                    {\n" +
+            "                      \"title\": \"Option title\",\n" +
+            "                      \"visitType\": \"string\"\n" +
+            "                    },\n" +
+            "                    {}\n" +
+            "                  ]\n" +
+            "                }\n" +
+            "              }\n" +
+            "            ]\n" +
+            "          }\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
 }
