@@ -190,6 +190,8 @@ public class CarePayConstants {
     public static final int DOB_VERIFICATION_REQUEST = 007;
     public static final int TELEHEALTH_APPOINTMENT_REQUEST = 101;
     public static final int TELEHEALTH_APPOINTMENT_RESULT_CODE = 102;
+
+    public static final int INTELLIGENT_SCHEDULER_REQUEST = 103;
     public static final String INTELLIGENT_SCHEDULER_QUESTIONS_KEY = "intelligent_questions";
     public static final String INTELLIGENT_SCHEDULER_QUESTIONS = "{\n" +
             "  \"inteligent_shedule\": {\n" +

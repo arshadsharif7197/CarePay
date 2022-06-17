@@ -1,5 +1,6 @@
-package com.carecloud.carepaylibray.appointments.fragments;
+package com.carecloud.carepay.patient.appointments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,15 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.carecloud.carepay.patient.appointments.interfaces.IntelligentSchedulerCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
     protected Button nextButton;
     private String allQuestions = "";
+    private IntelligentSchedulerCallback callback;
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
         Bundle args = new Bundle();
@@ -36,7 +40,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            allQuestions = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
+            allQuestions = arguments.getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
         }
     }
 
@@ -51,6 +55,16 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         initializeViews(view);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentActivityInterface) {
+            callback = (IntelligentSchedulerCallback) context;
+        } else {
+            throw new ClassCastException("context must implements FragmentActivityInterface");
+        }
+    }
+
     private void setupTitleViews(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
@@ -59,7 +73,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(view12 -> getActivity().onBackPressed());
+                toolbar.setNavigationOnClickListener(view12 -> callback.onCancel());
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.createappointment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.activities.IntelligentSchedulerActivity;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
@@ -81,13 +84,13 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     }
 
     private void initData() {
-        appointmentViewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
+        appointmentViewModel = new ViewModelProvider(requireActivity()).get(AppointmentViewModel.class);
         appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
-            tvAutoVisitType.setText(autoVisitType);
-            if (!autoVisitType.isEmpty()) {
+            if (autoVisitType != null){
+                tvAutoVisitType.setText(autoVisitType.getName());
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
                 visitTypeCard.setVisibility(View.GONE);
-            } else {
+            } else{
                 selectedPractice = null;
                 resetForm();
             }
@@ -136,7 +139,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         @Override
                         public void onActionButton() {
                             // Intelligent Scheduler flow
-                            startIntelligentSchedular();
+                            startIntelligentScheduler();
 
 
                         }
@@ -144,7 +147,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
                 } else {
                     // Intelligent Scheduler flow
-                    startIntelligentSchedular();
+                    startIntelligentScheduler();
 
                 }
             });
@@ -152,17 +155,22 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         } else {
             practicesRecyclerView.setVisibility(View.GONE);
             // Intelligent Scheduler flow
-            startIntelligentSchedular();
+            startIntelligentScheduler();
 
         }
     }
 
-    private void startIntelligentSchedular() {
+    private void startIntelligentScheduler() {
         if (selectedPractice != null) {
             AppointmentsSettingDTO appointmentsSettingDTO = appointmentsModelDto.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId());
-            if (appointmentsSettingDTO.getIntelligentSchedulerDTO().isEnabled()) {
-                
-            }
+         /*   if (appointmentsSettingDTO.getIntelligentSchedulerDTO().isEnabled()) {
+          requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class),
+                    CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
+                                }*/
+
+            requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class),
+                    CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
+
         }
     }
 

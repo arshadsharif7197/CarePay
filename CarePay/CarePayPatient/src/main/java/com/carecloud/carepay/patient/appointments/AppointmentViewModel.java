@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -34,7 +35,7 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
     private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
-    private MutableLiveData<String> autoScheduleVisitTypeObservable;
+    private MutableLiveData<VisitTypeDTO> autoScheduleVisitTypeObservable = new MutableLiveData<>();
 
     public AppointmentViewModel(@NonNull Application application) {
         super(application);
@@ -167,11 +168,11 @@ public class AppointmentViewModel extends BaseViewModel {
         }, queryMap);
     }
 
-    public MutableLiveData<String> getAutoScheduleVisitTypeObservable() {
+    public MutableLiveData<VisitTypeDTO> getAutoScheduleVisitTypeObservable() {
         return autoScheduleVisitTypeObservable;
     }
 
-    public void setAutoScheduleVisitTypeObservable(String autoScheduleVisitTypeObservable) {
+    public void setAutoScheduleVisitTypeObservable(VisitTypeDTO autoScheduleVisitTypeObservable) {
         this.autoScheduleVisitTypeObservable.setValue(autoScheduleVisitTypeObservable);
     }
 }

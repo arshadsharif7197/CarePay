@@ -35,6 +35,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -287,6 +288,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                     }, 1000);
                 } else {
                     refreshUI();
+                }
+                break;
+                case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
+                    viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+                }else{
+                    viewModel.setAutoScheduleVisitTypeObservable(null);
                 }
                 break;
             default:
