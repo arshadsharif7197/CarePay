@@ -26,7 +26,7 @@
             android:visibility="visible" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/addNewCardButton"
+            android:id="@+id/exitFlowBtn"
             style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,20 +37,20 @@
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_add_new_credit_card_button" />
+            breeze:textKey="demographics_exit" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/nextButton"
             style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/addNewCardButton"
+            android:layout_above="@id/exitFlowBtn"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector_green"
             android:contentDescription="@string/content_description_pay_button"
             android:textAllCaps="true"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_pay_button_text" />
+            breeze:textKey="next_question_button_text" />
     </RelativeLayout>
 
 </LinearLayout>

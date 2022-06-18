@@ -22,15 +22,12 @@ import com.carecloud.carepaylibray.interfaces.DTO;
  */
 public class IntelligentSchedulerActivity extends BasePatientActivity implements AppointmentViewHandler, IntelligentSchedulerCallback {
 
-    private AppointmentDTO appointmentDto;
-
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_intelligent_scheduler);
-
-        appointmentDto = ((CarePayApplication) getApplicationContext()).getAppointmentDTO();
-        replaceFragment(IntelligentSchedulerFragment.newInstance(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS), false);
+        IntelligentSchedulerFragment fragment = IntelligentSchedulerFragment.newInstance(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS);
+        replaceFragment(fragment, false);
     }
 
     @Override

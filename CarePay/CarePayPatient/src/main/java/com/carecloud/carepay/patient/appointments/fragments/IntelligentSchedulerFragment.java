@@ -22,7 +22,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
-    protected Button nextButton;
+    protected Button nextButton, exitBtn;
     private String allQuestions = "";
     private IntelligentSchedulerCallback callback;
 
@@ -89,7 +89,20 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
     private void initializeViews(View view) {
         nextButton = view.findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(nextButtonListener);
+        exitBtn = view.findViewById(R.id.exitFlowBtn);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                requireActivity().finish();
+            }
+        });
         nextButton.setEnabled(false);
 //        nextButton.setText(Label.getLabel("common.button.continue"));
 
@@ -99,25 +112,6 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 creditCardList, this, true);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);*/
     }
-
-    private View.OnClickListener nextButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-         /*   if (selectedCreditCard != null) {
-                if (onlySelectMode) {
-                    callback.onCreditCardSelected(selectedCreditCard);
-                } else {
-                    nextButton.setEnabled(false);
-                    IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-                    if (postModel != null && postModel.getAmount() > 0) {
-                        processPayment(postModel);
-                    } else {
-                        processPayment();
-                    }
-                }
-            }*/
-        }
-    };
 
   /*  @Override
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {

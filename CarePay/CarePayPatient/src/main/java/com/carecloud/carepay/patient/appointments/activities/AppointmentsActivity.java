@@ -290,11 +290,15 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                     refreshUI();
                 }
                 break;
-                case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
+            case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
-                    viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
-                }else{
+                    if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY)) {
+                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
+                        viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+                    } else {
+                        viewModel.setAutoScheduleVisitTypeObservable(null);
+                    }
+                } else {
                     viewModel.setAutoScheduleVisitTypeObservable(null);
                 }
                 break;
