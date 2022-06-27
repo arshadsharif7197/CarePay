@@ -5,5 +5,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 public interface IntelligentSchedulerCallback {
     void onVisitTypeSelected(VisitTypeDTO visitTypeDTO);
 
-    void onCancel();
+    void onExit();
+
+    void onBack();
 }

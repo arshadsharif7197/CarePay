@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,14 @@ import com.carecloud.carepay.patient.appointments.interfaces.IntelligentSchedule
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.google.gson.Gson;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
-    protected Button nextButton, exitBtn;
+    protected Button nextButton;
     private String allQuestions = "";
     private IntelligentSchedulerCallback callback;
 
@@ -41,6 +42,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             allQuestions = arguments.getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
+            IntelligentSchedulerDTO intelligentSchedulerDTO = new Gson().fromJson(allQuestions, IntelligentSchedulerDTO.class);
         }
     }
 
@@ -66,41 +68,28 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
         if (toolbar != null) {
-            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
+            TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
             title.setText(Label.getLabel("add_appointment_header"));
+            exit.setText(Label.getLabel("demographics_exit"));
             toolbar.setTitle("");
+
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(view12 -> callback.onCancel());
-            } else {
-                View close = view.findViewById(R.id.closeViewLayout);
-                if (close != null) {
-                    close.setOnClickListener(view1 -> cancel());
-                }
-                ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
-                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                title.setLayoutParams(layoutParams);
-                title.setGravity(Gravity.CENTER_HORIZONTAL);
+                toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
             }
+            exit.setOnClickListener((view1) -> callback.onExit());
         }
     }
 
     private void initializeViews(View view) {
         nextButton = view.findViewById(R.id.nextButton);
-        exitBtn = view.findViewById(R.id.exitFlowBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            }
-        });
-        exitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                requireActivity().finish();
             }
         });
         nextButton.setEnabled(false);

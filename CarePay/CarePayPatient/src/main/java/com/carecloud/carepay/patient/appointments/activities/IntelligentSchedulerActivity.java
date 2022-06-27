@@ -68,7 +68,14 @@ public class IntelligentSchedulerActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onCancel() {
+    public void onExit() {
         finish();
     }
+
+    @Override
+    public void onBack() {
+
+    }
+
+
 }

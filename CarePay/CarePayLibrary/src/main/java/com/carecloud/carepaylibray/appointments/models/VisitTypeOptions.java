@@ -19,7 +19,7 @@ public class VisitTypeOptions {
     private String visitType;
     @SerializedName("question")
     @Expose
-    private List<VisitTypeQuestions> question;
+    private VisitTypeQuestions question;
 
     public String getTitle() {
         return title;
@@ -37,11 +37,11 @@ public class VisitTypeOptions {
         this.visitType = visitType;
     }
 
-    public List<VisitTypeQuestions> getQuestion() {
+    public VisitTypeQuestions getQuestion() {
         return question;
     }
 
-    public void setQuestion(List<VisitTypeQuestions> question) {
+    public void setQuestion(VisitTypeQuestions question) {
         this.question = question;
     }
 }

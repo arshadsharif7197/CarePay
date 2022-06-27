@@ -6,26 +6,51 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class VisitTypeQuestions {
-    @SerializedName("title")
+    @SerializedName("id")
     @Expose
-    private String title;
-    @SerializedName("options")
+    private String id;
+
+    @SerializedName("name")
     @Expose
-    private List<VisitTypeOptions> options;
+    private String name;
 
-    public String getTitle() {
-        return title;
+    @SerializedName("visittype")
+    @Expose
+    private VisitTypeDTO visittype;
+
+    @SerializedName("childrens")
+    @Expose
+    private List<VisitTypeQuestions> childrens;
+
+    public String getId() {
+        return id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public List<VisitTypeOptions> getOptions() {
-        return options;
+    public String getName() {
+        return name;
     }
 
-    public void setOptions(List<VisitTypeOptions> options) {
-        this.options = options;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public VisitTypeDTO getVisittype() {
+        return visittype;
+    }
+
+    public void setVisittype(VisitTypeDTO visittype) {
+        this.visittype = visittype;
+    }
+
+    public List<VisitTypeQuestions> getChildrens() {
+        return childrens;
+    }
+
+    public void setChildrens(List<VisitTypeQuestions> childrens) {
+        this.childrens = childrens;
     }
 }
