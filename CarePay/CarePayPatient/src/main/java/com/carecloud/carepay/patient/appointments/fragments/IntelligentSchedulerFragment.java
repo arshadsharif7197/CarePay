@@ -11,13 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.carecloud.carepay.patient.appointments.interfaces.IntelligentSchedulerCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.createappointment.visittype.VisitTypePagerAdapter;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.google.gson.Gson;
 
@@ -26,6 +30,12 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     protected Button nextButton;
     private String allQuestions = "";
     private IntelligentSchedulerCallback callback;
+    private IntelligentSchedulerDTO intelligentSchedulerDTO;
+    private CarePayViewPager viewPager;
+    private VisitTypeQuestions currentQuestion;
+    private VisitTypePagerAdapter questionPagerAdapter;
+    private VisitTypeQuestions selectedOption;
+
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
         Bundle args = new Bundle();
@@ -42,13 +52,14 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             allQuestions = arguments.getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
-            IntelligentSchedulerDTO intelligentSchedulerDTO = new Gson().fromJson(allQuestions, IntelligentSchedulerDTO.class);
+            intelligentSchedulerDTO = new Gson().fromJson(allQuestions, IntelligentSchedulerDTO.class);
+            currentQuestion = intelligentSchedulerDTO.getQuestion();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_intelligent_scheduler_questions, container, false);
+        return inflater.inflate(R.layout.fragment_intelligent_scheduler, container, false);
     }
 
     @Override
@@ -85,25 +96,61 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     }
 
     private void initializeViews(View view) {
+        viewPager = view.findViewById(R.id.visit_type_question_pager);
+        viewPager.setPagingEnabled(false);
         nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nextButton.setEnabled(false);
+                if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
+                    startQuestionFragment(selectedOption);
+                    viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
+                } else {
+                    callback.onVisitTypeSelected(selectedOption.getVisittype());
+                }
 
             }
         });
         nextButton.setEnabled(false);
-//        nextButton.setText(Label.getLabel("common.button.continue"));
 
-/*        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
-        creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
-                creditCardList, this, true);
-        creditCardsRecyclerView.setAdapter(creditCardsListAdapter);*/
+        setupViewPager();
+
+//        nextButton.setText(Label.getLabel("common.button.continue"));
     }
 
-  /*  @Override
-    public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
-            nextButton.setEnabled(!expDate.before(new Date()));
-    }*/
+    private void setupViewPager() {
+        questionPagerAdapter = new VisitTypePagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(questionPagerAdapter);
+        startQuestionFragment(currentQuestion);
+    }
+
+    private void startQuestionFragment(VisitTypeQuestions currentQuestion) {
+        IntelligentSchedulerQuestionFragment questionsFragment = IntelligentSchedulerQuestionFragment
+                .newInstance(new Gson().toJson(currentQuestion));
+        questionPagerAdapter.addFragment(questionsFragment);
+    }
+
+    public void onVisitOptionSelected(VisitTypeQuestions visitTypeQuestions) {
+        selectedOption = visitTypeQuestions;
+        // getting message from activity that some option has been selected
+        if (visitTypeQuestions.getChildrens() != null && visitTypeQuestions.getChildrens().size() != 0) {
+            nextButton.setText(Label.getLabel("next_question_button_text"));
+        } else {
+            nextButton.setText(Label.getLabel("common.button.continue"));
+        }
+        nextButton.setEnabled(true);
+
+    }
+
+    public void onBack() {
+        if (questionPagerAdapter.getCount() > 1) {
+            nextButton.setEnabled(true);
+            viewPager.setCurrentItem(questionPagerAdapter.getCount() - 2, true);
+            questionPagerAdapter.removeFragment();
+        } else {
+            callback.onExit();
+        }
+
+    }
 }

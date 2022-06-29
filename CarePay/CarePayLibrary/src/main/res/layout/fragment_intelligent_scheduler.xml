@@ -15,26 +15,22 @@
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_items"
+        <com.carecloud.carepaylibray.customcomponents.CarePayViewPager
+            android:id="@+id/visit_type_question_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/nextButton"
-            android:choiceMode="singleChoice"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/content_description_credit_cards_list"
-            android:visibility="visible" />
+            android:layout_above="@+id/nextButton" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/nextButton"
             style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector_green"
             android:contentDescription="@string/content_description_pay_button"
             android:textAllCaps="true"
-            android:layout_alignParentBottom="true"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="next_question_button_text" />
     </RelativeLayout>

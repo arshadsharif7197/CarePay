@@ -292,8 +292,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
             case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY)) {
-                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
+                    if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY)) {
+                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
                         viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
                     } else {
                         viewModel.setAutoScheduleVisitTypeObservable(null);

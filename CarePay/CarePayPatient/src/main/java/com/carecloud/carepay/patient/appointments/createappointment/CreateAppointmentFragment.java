@@ -86,11 +86,13 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     private void initData() {
         appointmentViewModel = new ViewModelProvider(requireActivity()).get(AppointmentViewModel.class);
         appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
-            if (autoVisitType != null){
+            if (autoVisitType != null) {
+                selectedVisitType = autoVisitType;
                 tvAutoVisitType.setText(autoVisitType.getName());
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
                 visitTypeCard.setVisibility(View.GONE);
-            } else{
+            } else {
+                selectedVisitType = null;
                 selectedPractice = null;
                 resetForm();
             }
@@ -135,15 +137,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
                             newInstance(Label.getLabel("insurance_cdr_popup"),
                                     Label.getLabel("ok"), Label.getLabel("button_no"));
-                    selfPayAlertDialog.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                            // Intelligent Scheduler flow
-                            startIntelligentScheduler();
-
-
-                        }
-                    });
+                    // Intelligent Scheduler flow
+                    selfPayAlertDialog.setOnDismissListener(dialogInterface -> startIntelligentScheduler());
                     selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
                 } else {
                     // Intelligent Scheduler flow

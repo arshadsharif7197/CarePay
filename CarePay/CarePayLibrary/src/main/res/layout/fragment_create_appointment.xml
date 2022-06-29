@@ -73,7 +73,7 @@
                     android:textColor="@color/myHealthTextColor"
                     android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="add_appointment_location"
+                    breeze:textKey="visit_type_heading"
                     tools:text="Visit Type" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -89,7 +89,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="add_appointment_location"
+                    breeze:textKey="visit_type_heading"
                     tools:text="Visit Type" />
             </LinearLayout>
 
