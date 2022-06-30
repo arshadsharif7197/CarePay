@@ -3,28 +3,30 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class IntelligentSchedulerDTO {
 
-    @SerializedName("enabled")
+    @SerializedName("isSchedulerEnabled")
     @Expose
-    private boolean enabled;
-    @SerializedName("question")
+    private boolean isSchedulerEnabled;
+    @SerializedName("intelligent_scheduler_questions")
     @Expose
-    private VisitTypeQuestions question;
+    private List<VisitTypeQuestions> intelligent_scheduler_questions;
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isSchedulerEnabled() {
+        return isSchedulerEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setSchedulerEnabled(boolean schedulerEnabled) {
+        this.isSchedulerEnabled = schedulerEnabled;
     }
 
-    public VisitTypeQuestions getQuestion() {
-        return question;
+    public List<VisitTypeQuestions> getIntelligent_scheduler_questions() {
+        return intelligent_scheduler_questions;
     }
 
-    public void setQuestion(VisitTypeQuestions question) {
-        this.question = question;
+    public void setIntelligent_scheduler_questions(List<VisitTypeQuestions> intelligent_scheduler_questions) {
+        this.intelligent_scheduler_questions = intelligent_scheduler_questions;
     }
 }

@@ -29,8 +29,13 @@ public class IntelligentSchedulerActivity extends BasePatientActivity implements
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_intelligent_scheduler);
-        fragment = IntelligentSchedulerFragment.newInstance(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS);
-        replaceFragment(fragment, false);
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY)) {
+            String allQuestions = intent.getExtras().getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
+            fragment = IntelligentSchedulerFragment.newInstance(allQuestions);
+            replaceFragment(fragment, false);
+        }
+
     }
 
     @Override

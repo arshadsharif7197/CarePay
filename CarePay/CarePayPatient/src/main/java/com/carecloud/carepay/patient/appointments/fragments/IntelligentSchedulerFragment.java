@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.carecloud.carepay.patient.appointments.interfaces.IntelligentSchedulerCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -53,7 +52,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         if (arguments != null) {
             allQuestions = arguments.getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
             intelligentSchedulerDTO = new Gson().fromJson(allQuestions, IntelligentSchedulerDTO.class);
-            currentQuestion = intelligentSchedulerDTO.getQuestion();
+            currentQuestion = intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0);
         }
     }
 

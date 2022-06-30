@@ -23,14 +23,16 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     public static CreateAppointmentFragment fragment;
     private AppointmentViewModel appointmentViewModel;
+    private boolean isSchedulerStarted = false;
 
 
     public static CreateAppointmentFragment newInstance() {
@@ -79,8 +82,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
-        showPracticeList(view);
         initData();
+        showPracticeList(view);
     }
 
     private void initData() {
@@ -92,9 +95,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
                 visitTypeCard.setVisibility(View.GONE);
             } else {
-                selectedVisitType = null;
-                selectedPractice = null;
-                resetForm();
+                if (isSchedulerStarted)
+                    onBackPressed();
             }
         });
     }
@@ -156,17 +158,36 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     }
 
     private void startIntelligentScheduler() {
-        if (selectedPractice != null) {
-            AppointmentsSettingDTO appointmentsSettingDTO = appointmentsModelDto.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId());
-         /*   if (appointmentsSettingDTO.getIntelligentSchedulerDTO().isEnabled()) {
-          requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class),
-                    CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
-                                }*/
+        IntelligentSchedulerDTO intelligentSchedulerDTO = appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0);
+        if (selectedPractice != null &&
+                intelligentSchedulerDTO != null &&
+                intelligentSchedulerDTO.isSchedulerEnabled() &&
+                intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
+                isNewUser(appointmentsModelDto.getPayload().getAppointments())) {
 
-            requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class),
+            isSchedulerStarted = true;
+            requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
+                            .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions())),
                     CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
-
         }
+    }
+
+    private boolean isNewUser(List<AppointmentDTO> appointments) {
+        int appointmentSize = 0;
+        for (AppointmentDTO appointmentDTO : appointments) {
+            String appointmentCode = appointmentDTO.getPayload().getAppointmentStatus().getCode();
+            if (appointmentCode.equals(CarePayConstants.PENDING) ||
+                    appointmentCode.equals(CarePayConstants.REQUESTED) ||
+                    appointmentCode.equals(CarePayConstants.DENIED) ||
+                    appointmentCode.equals(CarePayConstants.CANCELLED) ||
+                    appointmentDTO.getPayload().isAppointmentOver()) {
+                continue;
+            } else {
+                appointmentSize++;
+                break;
+            }
+        }
+        return appointmentSize > 0 ? false : true;
     }
 
     private List<UserPracticeDTO> filterPracticesList(List<UserPracticeDTO> userPractices) {

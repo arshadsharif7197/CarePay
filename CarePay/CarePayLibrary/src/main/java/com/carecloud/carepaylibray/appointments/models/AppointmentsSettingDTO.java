@@ -33,9 +33,6 @@ public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("charge_cancellation_fees")
     @Expose
     private boolean chargeCancellationFees;
-    @SerializedName("inteligent_shedule")
-    @Expose
-    private IntelligentSchedulerDTO intelligentSchedulerDTO;
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
@@ -109,11 +106,5 @@ public class AppointmentsSettingDTO implements Serializable {
         return chargeCancellationFees;
     }
 
-    public IntelligentSchedulerDTO getIntelligentSchedulerDTO() {
-        return intelligentSchedulerDTO;
-    }
 
-    public void setIntelligentSchedulerDTO(IntelligentSchedulerDTO intelligentSchedulerDTO) {
-        this.intelligentSchedulerDTO = intelligentSchedulerDTO;
-    }
 }
