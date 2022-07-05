@@ -46,9 +46,9 @@ public class CareTeamDetailFragment extends BaseFragment {
      * @param id the provider id
      * @return a new instance of AllergyDetailFragment
      */
-    public static CareTeamDetailFragment newInstance(Integer id) {
+    public static CareTeamDetailFragment newInstance(String id) {
         Bundle args = new Bundle();
-        args.putInt("providerId", id);
+        args.putString("providerId", id);
         CareTeamDetailFragment fragment = new CareTeamDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -75,10 +75,10 @@ public class CareTeamDetailFragment extends BaseFragment {
         super.onCreate(icicle);
         MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
         myHealthDto = model.getMyHealthDto().getValue();
-        provider = getProvider(getArguments().getInt("providerId"));
+        provider = getProvider(getArguments().getString("providerId"));
     }
 
-    private MyHealthProviderDto getProvider(int providerId) {
+    private MyHealthProviderDto getProvider(String  providerId) {
         for (MyHealthProviderDto provider : myHealthDto.getPayload().getMyHealthData().getProviders().getProviders()) {
             if (providerId == provider.getId()) {
                 return provider;
