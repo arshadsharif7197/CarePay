@@ -80,7 +80,7 @@ public class PayloadAppointmentModel {
     private Integer resourceId;
     @SerializedName("provider_id")
     @Expose
-    private Integer providerId;
+    private String providerId;
     @SerializedName("start_time")
     @Expose
     private String startTime;
@@ -543,7 +543,7 @@ public class PayloadAppointmentModel {
      * @return
      *     The providerId
      */
-    public Integer getProviderId() {
+    public String  getProviderId() {
         return providerId;
     }
 
@@ -552,7 +552,7 @@ public class PayloadAppointmentModel {
      * @param providerId
      *     The provider_id
      */
-    public void setProviderId(Integer providerId) {
+    public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
 

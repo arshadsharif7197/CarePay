@@ -45,7 +45,7 @@ public class BalanceItemDTO {
     private Integer attendingProviderId;
     @SerializedName("provider_id")
     @Expose
-    private Integer providerId;
+    private String providerId;
     @SerializedName("provider")
     @Expose
     private ProviderDTO provider = new ProviderDTO();
@@ -166,11 +166,11 @@ public class BalanceItemDTO {
         this.attendingProviderId = attendingProviderId;
     }
 
-    public Integer getProviderId() {
+    public String getProviderId() {
         return providerId;
     }
 
-    public void setProviderId(Integer providerId) {
+    public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
 
