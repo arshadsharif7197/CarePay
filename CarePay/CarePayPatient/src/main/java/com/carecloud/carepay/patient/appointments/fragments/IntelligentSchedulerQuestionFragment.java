@@ -25,6 +25,7 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
     private String questionString = "";
     private IntelligentSchedulerCallback callback;
     private VisitTypeQuestions visitTypeQuestion;
+    private VisitTypeQuestions selectedVisitTypeOption;
 
     public static IntelligentSchedulerQuestionFragment newInstance(String intelligentQuestions) {
         Bundle args = new Bundle();
@@ -71,13 +72,22 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
 
         RecyclerView rvOptions = view.findViewById(R.id.list_items);
         rvOptions.setLayoutManager(new LinearLayoutManager(getContext()));
-        final VisitTypeOptionsListAdapter visitTypeOptionsListAdapterListAdapter = new VisitTypeOptionsListAdapter(getContext(),
+        VisitTypeOptionsListAdapter visitTypeOptionsListAdapterListAdapter = new VisitTypeOptionsListAdapter(getContext(),
                 visitTypeQuestion.getChildrens(), this, true);
         rvOptions.setAdapter(visitTypeOptionsListAdapterListAdapter);
     }
 
     @Override
     public void onOptionSelected(VisitTypeQuestions visitTypeQuestions) {
+        selectedVisitTypeOption = visitTypeQuestions;
         callback.onOptionSelected(visitTypeQuestions);
+    }
+
+    public VisitTypeQuestions getVisitTypeQuestion() {
+        return visitTypeQuestion;
+    }
+
+    public VisitTypeQuestions getVisitTypeOption() {
+        return selectedVisitTypeOption;
     }
 }

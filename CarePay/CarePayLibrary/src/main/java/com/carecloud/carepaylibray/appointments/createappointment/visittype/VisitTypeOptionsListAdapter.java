@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import java.util.List;
 
 /**
- * Created by lmenendez on 5/30/17
+ * Created by Muhammad Noman on 02/july/22
  */
 
 public class VisitTypeOptionsListAdapter extends RecyclerView.Adapter<VisitTypeOptionsListAdapter.ViewHolder> {

@@ -73,8 +73,7 @@
                     android:textColor="@color/myHealthTextColor"
                     android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="visit_type_heading"
-                    tools:text="Visit Type" />
+                    breeze:textKey="intelligent_scheduler_auto_selected_label" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/tv_auto_visit_type"

@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.appointments.createappointment.visittype;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,5 +37,10 @@ public class VisitTypePagerAdapter extends FragmentStatePagerAdapter {
     public void removeFragment() {
         fragments.remove(fragments.size() - 1);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return PagerAdapter.POSITION_NONE;
     }
 }

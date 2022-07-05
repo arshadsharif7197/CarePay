@@ -25,12 +25,11 @@ import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppo
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -136,7 +135,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 }
                 selectedPractice = userPracticeDTO;
                 if (selectedPractice.getPracticeId().equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
-                    SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
+                    ExitAlertDialog selfPayAlertDialog = ExitAlertDialog.
                             newInstance(Label.getLabel("insurance_cdr_popup"),
                                     Label.getLabel("ok"), Label.getLabel("button_no"));
                     // Intelligent Scheduler flow
@@ -158,7 +157,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     }
 
     private void startIntelligentScheduler() {
-        IntelligentSchedulerDTO intelligentSchedulerDTO = appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0);
+        IntelligentSchedulerDTO intelligentSchedulerDTO = getIntelligentScheduler(selectedPractice);
         if (selectedPractice != null &&
                 intelligentSchedulerDTO != null &&
                 intelligentSchedulerDTO.isSchedulerEnabled() &&
@@ -167,9 +166,23 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
             isSchedulerStarted = true;
             requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
-                            .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions())),
+                            .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))),
                     CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
         }
+
+/*        isSchedulerStarted = true; // For local testing
+        requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
+                        .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS),
+                CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);*/
+    }
+
+    private IntelligentSchedulerDTO getIntelligentScheduler(UserPracticeDTO selectedPractice) {
+        for (IntelligentSchedulerDTO intelligentSchedulerDTO : appointmentsModelDto.getPayload().getIntelligent_scheduler()) {
+            if (intelligentSchedulerDTO.getPractice_id().equals(selectedPractice.getPracticeId())) {
+                return intelligentSchedulerDTO;
+            }
+        }
+        return null;
     }
 
     private boolean isNewUser(List<AppointmentDTO> appointments) {

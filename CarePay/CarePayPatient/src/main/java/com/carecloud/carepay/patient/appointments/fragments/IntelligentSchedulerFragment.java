@@ -29,7 +29,6 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     protected Button nextButton;
     private String allQuestions = "";
     private IntelligentSchedulerCallback callback;
-    private IntelligentSchedulerDTO intelligentSchedulerDTO;
     private CarePayViewPager viewPager;
     private VisitTypeQuestions currentQuestion;
     private VisitTypePagerAdapter questionPagerAdapter;
@@ -51,8 +50,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             allQuestions = arguments.getString(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY);
-            intelligentSchedulerDTO = new Gson().fromJson(allQuestions, IntelligentSchedulerDTO.class);
-            currentQuestion = intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0);
+            currentQuestion = new Gson().fromJson(allQuestions, VisitTypeQuestions.class);
         }
     }
 
@@ -82,7 +80,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
             TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
-            title.setText(Label.getLabel("add_appointment_header"));
+            title.setText(Label.getLabel("intelligent_scheduler_title"));
             exit.setText(Label.getLabel("demographics_exit"));
             toolbar.setTitle("");
 
@@ -103,8 +101,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             public void onClick(View v) {
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
-                    startQuestionFragment(selectedOption);
-                    viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
+                    startQuestionFragment(selectedOption.getChildrens().get(0));
                 } else {
                     callback.onVisitTypeSelected(selectedOption.getVisittype());
                 }
@@ -112,10 +109,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             }
         });
         nextButton.setEnabled(false);
-
         setupViewPager();
-
-//        nextButton.setText(Label.getLabel("common.button.continue"));
     }
 
     private void setupViewPager() {
@@ -124,29 +118,39 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         startQuestionFragment(currentQuestion);
     }
 
-    private void startQuestionFragment(VisitTypeQuestions currentQuestion) {
+    private void startQuestionFragment(VisitTypeQuestions currentVisitTypeQuestion) {
+        currentQuestion = currentVisitTypeQuestion;
         IntelligentSchedulerQuestionFragment questionsFragment = IntelligentSchedulerQuestionFragment
                 .newInstance(new Gson().toJson(currentQuestion));
         questionPagerAdapter.addFragment(questionsFragment);
+        viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
     }
 
     public void onVisitOptionSelected(VisitTypeQuestions visitTypeQuestions) {
         selectedOption = visitTypeQuestions;
         // getting message from activity that some option has been selected
+        updateNextButton(visitTypeQuestions);
+        nextButton.setEnabled(true);
+    }
+
+    private void updateNextButton(VisitTypeQuestions visitTypeQuestions) {
         if (visitTypeQuestions.getChildrens() != null && visitTypeQuestions.getChildrens().size() != 0) {
             nextButton.setText(Label.getLabel("next_question_button_text"));
         } else {
             nextButton.setText(Label.getLabel("common.button.continue"));
         }
-        nextButton.setEnabled(true);
-
     }
 
     public void onBack() {
         if (questionPagerAdapter.getCount() > 1) {
-            nextButton.setEnabled(true);
-            viewPager.setCurrentItem(questionPagerAdapter.getCount() - 2, true);
+            int previousIndex = questionPagerAdapter.getCount() - 2;
             questionPagerAdapter.removeFragment();
+
+            IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(previousIndex));
+            selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
+            viewPager.setCurrentItem(previousIndex, true);
+            updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
+            nextButton.setEnabled(false);
         } else {
             callback.onExit();
         }
