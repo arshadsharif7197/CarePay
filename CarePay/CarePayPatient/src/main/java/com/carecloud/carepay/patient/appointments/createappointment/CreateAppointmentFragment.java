@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.createappointment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,23 +10,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.activities.IntelligentSchedulerActivity;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
-import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
-import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +42,9 @@ import java.util.List;
 public class CreateAppointmentFragment extends BaseCreateAppointmentFragment implements CreateAppointmentFragmentInterface {
 
     public static CreateAppointmentFragment fragment;
+    private AppointmentViewModel appointmentViewModel;
+    private boolean isSchedulerStarted = false;
+
 
     public static CreateAppointmentFragment newInstance() {
         return new CreateAppointmentFragment();
@@ -72,7 +81,23 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
+        initData();
         showPracticeList(view);
+    }
+
+    private void initData() {
+        appointmentViewModel = new ViewModelProvider(requireActivity()).get(AppointmentViewModel.class);
+        appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
+            if (autoVisitType != null) {
+                selectedVisitType = autoVisitType;
+                tvAutoVisitType.setText(autoVisitType.getName());
+                autoVisitTypeContainer.setVisibility(View.VISIBLE);
+                visitTypeCard.setVisibility(View.GONE);
+            } else {
+                if (isSchedulerStarted)
+                    onBackPressed();
+            }
+        });
     }
 
     private void setUpToolbar(View view) {
@@ -99,27 +124,83 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
-                        shouldVisible=true;
+                        shouldVisible = true;
                         setLocationVisibility(shouldVisible);
                     }
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("provider")) {
-                        shouldVisible=false;
+                        shouldVisible = false;
                         setLocationVisibility(shouldVisible);
                     }
 
                 }
                 selectedPractice = userPracticeDTO;
                 if (selectedPractice.getPracticeId().equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
-                    SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
+                    ExitAlertDialog selfPayAlertDialog = ExitAlertDialog.
                             newInstance(Label.getLabel("insurance_cdr_popup"),
                                     Label.getLabel("ok"), Label.getLabel("button_no"));
+                    // Intelligent Scheduler flow
+                    selfPayAlertDialog.setOnDismissListener(dialogInterface -> startIntelligentScheduler());
                     selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());
+                } else {
+                    // Intelligent Scheduler flow
+                    startIntelligentScheduler();
+
                 }
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {
             practicesRecyclerView.setVisibility(View.GONE);
+            // Intelligent Scheduler flow
+            startIntelligentScheduler();
+
         }
+    }
+
+    private void startIntelligentScheduler() {
+        IntelligentSchedulerDTO intelligentSchedulerDTO = getIntelligentScheduler(selectedPractice);
+        if (selectedPractice != null &&
+                intelligentSchedulerDTO != null &&
+                intelligentSchedulerDTO.isSchedulerEnabled() &&
+                intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
+                isNewUser(appointmentsModelDto.getPayload().getAppointments())) {
+
+            isSchedulerStarted = true;
+            requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
+                            .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))),
+                    CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
+        }
+
+/*        isSchedulerStarted = true; // For local testing
+        requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
+                        .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS),
+                CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);*/
+    }
+
+    private IntelligentSchedulerDTO getIntelligentScheduler(UserPracticeDTO selectedPractice) {
+        for (IntelligentSchedulerDTO intelligentSchedulerDTO : appointmentsModelDto.getPayload().getIntelligent_scheduler()) {
+            if (intelligentSchedulerDTO.getPractice_id().equals(selectedPractice.getPracticeId())) {
+                return intelligentSchedulerDTO;
+            }
+        }
+        return null;
+    }
+
+    private boolean isNewUser(List<AppointmentDTO> appointments) {
+        int appointmentSize = 0;
+        for (AppointmentDTO appointmentDTO : appointments) {
+            String appointmentCode = appointmentDTO.getPayload().getAppointmentStatus().getCode();
+            if (appointmentCode.equals(CarePayConstants.PENDING) ||
+                    appointmentCode.equals(CarePayConstants.REQUESTED) ||
+                    appointmentCode.equals(CarePayConstants.DENIED) ||
+                    appointmentCode.equals(CarePayConstants.CANCELLED) ||
+                    appointmentDTO.getPayload().isAppointmentOver()) {
+                continue;
+            } else {
+                appointmentSize++;
+                break;
+            }
+        }
+        return appointmentSize > 0 ? false : true;
     }
 
     private List<UserPracticeDTO> filterPracticesList(List<UserPracticeDTO> userPractices) {

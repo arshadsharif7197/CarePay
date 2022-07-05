@@ -4,11 +4,13 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Model for Visit Type
  * Created by jorge on 17/12/16.
  */
-public class VisitTypeDTO {
+public class VisitTypeDTO implements Serializable {
 
     @SerializedName("id")
     @Expose

@@ -98,6 +98,9 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
     @SerializedName("video_visit")
     @Expose
     private VideoVisitModel videoVisitModel = new VideoVisitModel();
+    @SerializedName("intelligent_scheduler")
+    @Expose
+    private List<IntelligentSchedulerDTO> intelligent_scheduler;
 
     /**
      * @return languages
@@ -391,5 +394,13 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
         }
 
         return canScheduleAppointments(practiceId);
+    }
+
+    public List<IntelligentSchedulerDTO> getIntelligent_scheduler() {
+        return intelligent_scheduler;
+    }
+
+    public void setIntelligent_scheduler(List<IntelligentSchedulerDTO> intelligent_scheduler) {
+        this.intelligent_scheduler = intelligent_scheduler;
     }
 }
