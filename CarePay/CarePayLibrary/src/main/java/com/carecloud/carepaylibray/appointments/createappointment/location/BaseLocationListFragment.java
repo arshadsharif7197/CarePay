@@ -2,8 +2,10 @@ package com.carecloud.carepaylibray.appointments.createappointment.location;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 
@@ -72,7 +74,8 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
     public void onStart() {
         super.onStart();
         if (!alreadyCalled) {
-            callLocationService();
+            if (selectedPractice != null)
+                callLocationService();
             alreadyCalled = true;
         }
     }
