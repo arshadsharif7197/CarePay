@@ -94,10 +94,13 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
                 visitTypeCard.setVisibility(View.GONE);
             } else {
+                autoVisitTypeContainer.setVisibility(View.GONE);
+                visitTypeCard.setVisibility(View.VISIBLE);
                 if (isSchedulerStarted)
                     onBackPressed();
             }
         });
+        appointmentViewModel.setAutoScheduleVisitTypeObservable(null);
     }
 
     private void setUpToolbar(View view) {
@@ -108,6 +111,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         title.setText(Label.getLabel("appointments_heading"));
         callback.displayToolbar(false, null);
     }
+
 
     private void showPracticeList(View view) {
         RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
