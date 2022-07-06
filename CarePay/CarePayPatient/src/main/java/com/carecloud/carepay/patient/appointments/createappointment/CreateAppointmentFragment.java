@@ -43,8 +43,6 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     public static CreateAppointmentFragment fragment;
     private AppointmentViewModel appointmentViewModel;
-    private boolean isSchedulerStarted = false;
-
 
     public static CreateAppointmentFragment newInstance() {
         return new CreateAppointmentFragment();
@@ -93,10 +91,15 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 tvAutoVisitType.setText(autoVisitType.getName());
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
                 visitTypeCard.setVisibility(View.GONE);
+                // Disable Location selection
+                if (!isLocationOnTop) {
+                    providersNoDataTextView.setEnabled(true);
+                    locationNoDataTextView.setEnabled(false);
+                }
             } else {
                 autoVisitTypeContainer.setVisibility(View.GONE);
                 visitTypeCard.setVisibility(View.VISIBLE);
-                if (isSchedulerStarted)
+                if (isSchedulerEnabled)
                     onBackPressed();
             }
         });
@@ -128,12 +131,12 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
-                        shouldVisible = true;
-                        setLocationVisibility(shouldVisible);
+                        isLocationOnTop = true;
+                        setLocationVisibility(isLocationOnTop);
                     }
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("provider")) {
-                        shouldVisible = false;
-                        setLocationVisibility(shouldVisible);
+                        isLocationOnTop = false;
+                        setLocationVisibility(isLocationOnTop);
                     }
 
                 }
@@ -168,7 +171,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
                 isNewUser(appointmentsModelDto.getPayload().getAppointments())) {
 
-            isSchedulerStarted = true;
+            isSchedulerEnabled = true;
             requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
                             .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))),
                     CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
