@@ -736,11 +736,15 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         String preferredName = ((TextView) findViewById(R.id.preferredName)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(preferredName)) {
             patientModel.setPreferredName(preferredName);
+        } else {
+            patientModel.setPreferredName("");
         }
 
         String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
             patientModel.setSocialSecurityNumber(StringUtil.revertToRawFormat(socialSecurity));
+        } else {
+            patientModel.setSocialSecurityNumber("");
         }
 
         String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
@@ -756,6 +760,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         String driverLicense = ((TextView) findViewById(R.id.driverLicense)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(driverLicense)) {
             patientModel.setDriversLicenseNumber(driverLicense);
+        } else {
+            patientModel.setDriversLicenseNumber("");
         }
 
         String driverLicenseState = selectedDriverLicenseState.getName();
@@ -766,11 +772,15 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
             patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawFormat(secondaryPhone));
+        } else {
+            patientModel.setSecondaryPhoneNumber("");
         }
 
         String secondaryPhoneType = selectedSecondaryPhoneType.getName();
         if (!StringUtil.isNullOrEmpty(secondaryPhoneType)) {
             patientModel.setSecondaryPhoneNumberType(secondaryPhoneType);
+        } else {
+            patientModel.setSecondaryPhoneNumberType("");
         }
 
         String contactMethod = selectedContactMethod.getName();
