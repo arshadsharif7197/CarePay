@@ -60,7 +60,7 @@
                 android:textSize="@dimen/createAppointmentTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 tools:text="Create Appointment"
-                breeze:textKey="patientMode.appointmentCreation.title.label.create" />
+                breeze:textKey="intelligent_scheduler_title" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_screen_sub_header"
@@ -73,36 +73,44 @@
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/stepsContainer"
+                android:weightSum="3"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/appointmentCreationstepsContainerTopMargin">
 
                 <include
+                    android:layout_weight="1"
                     android:id="@+id/visitTypeStepContainer"
                     layout="@layout/layout_appointment_creation_step"
-                    android:layout_width="wrap_content"
+                    android:visibility="visible"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/appointmentCreationStepContainerHorizontalSize"
-                    android:layout_marginEnd="@dimen/appointmentCreationStepContainerHorizontalSize" />
+                    />
 
                 <include
                     android:id="@+id/providerStepContainer"
+                    android:layout_weight="1"
                     layout="@layout/layout_appointment_creation_step"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/visitTypeStepContainer" />
+
+                    />
 
                 <include
                     android:id="@+id/locationStepContainer"
+                    android:layout_weight="1"
                     layout="@layout/layout_appointment_creation_step"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/visitTypeStepContainer" />
+                    />
+<!--                    android:layout_toEndOf="@id/visitTypeStepContainer" -->
 
-            </RelativeLayout>
+
+            </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/availabilityButton"

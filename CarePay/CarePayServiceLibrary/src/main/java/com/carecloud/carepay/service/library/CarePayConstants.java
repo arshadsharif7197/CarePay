@@ -184,10 +184,22 @@ public class CarePayConstants {
     public static final String NOTIFICATIONS_FLOW = "notifications";
     public static final String SHOW_SURVEY = "showSurvey";
     public static final String HANDLE_HOME = "handleHome";
+    public static final String navigation_link_appointments = "navigation_link_appointments";
+    public static final String appointments_check_in_now = "appointments_check_in_now";
+    public static final String title = "title";
+    public static final String practice_mgmt = "practice_mgmt";
+    public static final String patient_id = "patient_id";
+    public static final String practice_id = "practice_id";
+    public static final String appointment_id = "appointment_id";
 
     //Video Visit
     public static final int VIDEO_START_OFFSET_SECONDS = 60 * 30; //10 min
     public static final int DOB_VERIFICATION_REQUEST = 007;
     public static final int TELEHEALTH_APPOINTMENT_REQUEST = 101;
     public static final int TELEHEALTH_APPOINTMENT_RESULT_CODE = 102;
+
+    public static final int INTELLIGENT_SCHEDULER_REQUEST = 103;
+    public static final String INTELLIGENT_SCHEDULER_QUESTIONS_KEY = "intelligent_questions";
+    public static final String INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY = "visit_type_key";
+    public static final String INTELLIGENT_SCHEDULER_QUESTIONS = "{\"enable\":true,\"question\":{\"id\":202221655827951900,\"name\":\"VISIT TYPE\",\"childrens\":[{\"id\":202221655827968600,\"name\":\"Primary Care - Family Practice Medicine Visit\",\"childrens\":[{\"id\":202221655828034340,\"name\":\"New Patient Visit (18 years old +)\",\"childrens\":[{\"id\":202221655828095840,\"name\":\"Well Visit – annual physical, check-up, etc.\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19324,\"name\":\"ACNE\",\"description\":\"Acne\",\"is_for_requests\":false,\"video_option\":false,\"checked\":true}}],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false}},{\"id\":202221655828041570,\"name\":\"New Patient Visit (0 – 17 years old)\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19315,\"name\":\"ACUTE RENAL CARE\",\"description\":\"Acute Renal Disease\",\"is_for_requests\":false,\"video_option\":false,\"checked\":true}},{\"id\":202221655828055040,\"name\":\"Returning Patient (18 years old +)\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":43704,\"name\":\"IMMUNIZATIONS\",\"description\":\"Immunization visit\",\"is_for_requests\":false,\"video_option\":false,\"checked\":true}},{\"id\":202221655828077660,\"name\":\"Returning Patient (0 – 17 years old)\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19062,\"name\":\"CT SCAN - PULMONARY\",\"description\":\"CT Scan - Pulmonary\",\"is_for_requests\":false,\"video_option\":false,\"checked\":true}}],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false}},{\"id\":202221655827980260,\"name\":\"Telehealth Visit\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19096,\"name\":\"ALLERGY (FULL TEST)\",\"description\":\"ALLERGY (FULL TEST)\",\"is_for_requests\":true,\"video_option\":false,\"checked\":true}},{\"id\":202221655827992200,\"name\":\"Covid-Related Visit (i.e., testing, vaccine/booster, Regeneron)\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19097,\"name\":\"ANNUAL PHYSICAL (FULL)\",\"description\":\"ANNUAL PHYSICAL (FULL)\",\"is_for_requests\":true,\"video_option\":false,\"checked\":true}},{\"id\":202221655828003600,\"name\":\"FLU vacine\",\"childrens\":[],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false},\"visittype\":{\"id\":19376,\"name\":\"ABDOMINAL PAIN (NEW PATIENT)\",\"description\":\"Abdominal Pain\",\"is_for_requests\":false,\"video_option\":false,\"checked\":true}}],\"options\":{\"href\":\"#\",\"isHidden\":false,\"currentlyDragging\":false}}}";
 }
