@@ -10,7 +10,7 @@ public class ProviderModel {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("npi")
     @Expose
     private String npi;
@@ -29,7 +29,7 @@ public class ProviderModel {
      * @return
      *     The id
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -38,7 +38,7 @@ public class ProviderModel {
      * @param id
      *     The id
      */
-    public void setId(Integer id) {
+    public void setId(String  id) {
         this.id = id;
     }
 

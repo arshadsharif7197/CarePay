@@ -11,17 +11,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.practice.library.appointments.createappointment.IntelligentSchedulerFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.LocationListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.ProviderListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.interfaces.IntelligentSchedulerCallback;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -32,7 +39,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
-import com.carecloud.carepaylibray.appointments.interfaces.IntelligentSchedulerCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
@@ -82,6 +88,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     private TextView provider_screen_header;
     private IntelligentSchedulerFragment fragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +100,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         selectedPractice = appointmentsResultModel.getPayload().getUserPractices().get(0);
         setUpUI();
         startIntelligentScheduler();
+
     }
 
     private void startIntelligentScheduler() {
@@ -105,16 +113,22 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             visitTypeContainer.setVisibility(View.GONE);
             String allQuestions = new Gson().toJson(appointmentsResultModel.getPayload().getIntelligent_scheduler().get(0).getIntelligent_scheduler_questions().get(0));
             fragment = IntelligentSchedulerFragment.newInstance(allQuestions);
-            showFragment(fragment);
+            new Handler().postDelayed(() -> {
+                showFragment(fragment);
+            }, 500);
+            // showFragment(fragment);
+            //  fragment.setCancelable(false);
             // isSchedulerStarted = true;
             // requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
             //              .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))),
             //      CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
-        }else {
+        } else {
             visitTypeContainer.setVisibility(View.VISIBLE);
             provider_screen_header.setText(Label.getLabel("patientMode.appointmentCreation.title.label.create"));
         }
-
+        //for testing without intelligent scheduler check
+        //   visitTypeContainer.setVisibility(View.VISIBLE);
+        //  provider_screen_header.setText(Label.getLabel("patientMode.appointmentCreation.title.label.create"));
     }
 
     private IntelligentSchedulerDTO getIntelligentScheduler(UserPracticeDTO selectedPractice) {
@@ -209,7 +223,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         locationStepTitleTextView.setText(Label.getLabel("add_appointment_location"));
         locationStepNoDataTextView = locationContainer.findViewById(R.id.stepNoDataTextView);
         locationStepNoDataTextView.setText(Label.getLabel("add_appointment_location_hint"));
-        locationStepNoDataTextView.setOnClickListener(v -> showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource)));
+        locationStepNoDataTextView.setOnClickListener(v -> {
+            if (selectedResource == null)
+                return;
+            showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
+        });
+
         locationCard = locationContainer.findViewById(R.id.stepContainer);
         locationCard.setOnClickListener(v -> showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource)));
         ImageView profilePicImageView = locationCard.findViewById(R.id.profilePicImageView);
@@ -217,7 +236,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     private void setUpVisitTypeStep() {
-         visitTypeContainer = findViewById(R.id.visitTypeStepContainer);
+        visitTypeContainer = findViewById(R.id.visitTypeStepContainer);
         if (appointmentsResultModel.getPayload().getAppointments() != null && appointmentsResultModel.getPayload().getAppointments().size() != 0) {
             visitTypeContainer.setVisibility(View.GONE);
         }
@@ -241,9 +260,19 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         providerStepTitleTextView.setText(Label.getLabel("add_appointment_provider"));
         providerStepNoDataTextView = providerContainer.findViewById(R.id.stepNoDataTextView);
         providerStepNoDataTextView.setText(Label.getLabel("add_appointment_provider_hint"));
-        providerStepNoDataTextView.setOnClickListener(v -> showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation)));
+        providerStepNoDataTextView.setOnClickListener(v ->
+        {
+            if (selectedVisitType == null)
+                return;
+            showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
+        });
         providerCard = providerContainer.findViewById(R.id.stepContainer);
-        providerCard.setOnClickListener(v -> showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation)));
+        providerCard.setOnClickListener(v ->
+        {
+            if (selectedVisitType == null)
+                return;
+            showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
+        });
     }
 
     @Override
@@ -298,6 +327,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         profileShortNameTextView.setText(StringUtil.getShortName(resource.getProvider().getSpecialty().getName()));
         profileShortNameTextView.setVisibility(View.VISIBLE);
         resetImageView.setOnClickListener(v -> {
+            resetLocation();
             selectedResource = null;
             providerCard.setVisibility(View.GONE);
             providerStepNoDataTextView.setVisibility(View.VISIBLE);
@@ -307,6 +337,22 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                 resource.getProvider().getPhoto());
         enableAvailableButton();
     }
+
+    private void resetLocation() {
+
+        selectedLocation = null;
+        locationCard.setVisibility(View.GONE);
+        locationStepNoDataTextView.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private void resetProvider() {
+        selectedResource = null;
+        providerCard.setVisibility(View.GONE);
+        providerStepNoDataTextView.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void setVisitType(VisitTypeDTO visitTypeDTO) {
@@ -329,6 +375,8 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             selectedVisitType = null;
             visitTypeCard.setVisibility(View.GONE);
             visitTypeStepNoDataTextView.setVisibility(View.VISIBLE);
+            resetProvider();
+            resetLocation();
         });
         enableAvailableButton();
     }
@@ -413,7 +461,6 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     public void onOptionSelected(VisitTypeQuestions visitTypeQuestion) {
         fragment.onVisitOptionSelected(visitTypeQuestion);
     }
-
 
     @Override
     public void onExit() {

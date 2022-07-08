@@ -41,7 +41,6 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = new ArrayList<>();
-
     @SerializedName("providers_schedule")
     @Expose
     private List<ProvidersScheduleDTO> providersSchedule = new ArrayList<>();
@@ -99,11 +98,10 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
     @SerializedName("video_visit")
     @Expose
     private VideoVisitModel videoVisitModel = new VideoVisitModel();
- //new feature intelligent scheduler with github branch 1429
     @SerializedName("intelligent_scheduler")
     @Expose
     private List<IntelligentSchedulerDTO> intelligent_scheduler;
-    //............................................................
+
     /**
      * @return languages
      */
@@ -397,10 +395,10 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
 
         return canScheduleAppointments(practiceId);
     }
-//new feature of intelligent scheduler
-public List<IntelligentSchedulerDTO> getIntelligent_scheduler() {
-    return intelligent_scheduler;
-}
+
+    public List<IntelligentSchedulerDTO> getIntelligent_scheduler() {
+        return intelligent_scheduler;
+    }
 
     public void setIntelligent_scheduler(List<IntelligentSchedulerDTO> intelligent_scheduler) {
         this.intelligent_scheduler = intelligent_scheduler;
