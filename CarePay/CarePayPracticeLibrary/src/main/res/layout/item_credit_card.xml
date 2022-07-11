@@ -56,7 +56,7 @@
             app:customAssetFont="proxima_nova_regular" />
 
         <ImageView
-            android:id="@+id/credit_card_check"
+            android:id="@+id/item_check"
             android:layout_width="@dimen/radioButtonSize"
             android:layout_height="@dimen/radioButtonSize"
             android:padding="@dimen/radioButtonPadding"

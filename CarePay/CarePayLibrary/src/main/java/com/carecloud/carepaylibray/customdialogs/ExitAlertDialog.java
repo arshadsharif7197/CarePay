@@ -14,8 +14,8 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-public class SelfPayAlertDialog extends BaseDialogFragment implements View.OnClickListener {
-    private LargeAlertDialogFragment.LargeAlertInterface largeAlertInterface;
+public class ExitAlertDialog extends BaseDialogFragment implements View.OnClickListener {
+    private ExitAlertInterface exitAlertInterface;
     private String message,yes,no;
     private int headerBackGroundColor;
     CarePayTextView largeMssageLabel;
@@ -24,18 +24,18 @@ public class SelfPayAlertDialog extends BaseDialogFragment implements View.OnCli
 
 
     //For callback
-    public interface LargeAlertInterface {
+    public interface ExitAlertInterface {
         void onActionButton();
     }
 
 
 
-    public static SelfPayAlertDialog newInstance(String message, String yes, String no) {
+    public static ExitAlertDialog newInstance(String message, String yes, String no) {
         Bundle args = new Bundle();
         args.putString("message", message);
         args.putString("yes", yes);
         args.putString("no", no);
-        SelfPayAlertDialog fragment = new SelfPayAlertDialog();
+        ExitAlertDialog fragment = new ExitAlertDialog();
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,8 +77,8 @@ public class SelfPayAlertDialog extends BaseDialogFragment implements View.OnCli
         if (viewId == R.id.actionButtonNo) {
             cancel();
         } else if (viewId == R.id.actionButtonYes) {
-            if (largeAlertInterface != null) {
-                largeAlertInterface.onActionButton();
+            if (exitAlertInterface != null) {
+                exitAlertInterface.onActionButton();
             }
             cancel();
         }
@@ -97,8 +97,8 @@ public class SelfPayAlertDialog extends BaseDialogFragment implements View.OnCli
         }
     }
 
-    public void setLargeAlertInterface(LargeAlertDialogFragment.LargeAlertInterface largeAlertInterface) {
-        this.largeAlertInterface = largeAlertInterface;
+    public void setExitAlertInterface(ExitAlertInterface exitAlertInterface) {
+        this.exitAlertInterface = exitAlertInterface;
     }
 
 

@@ -50,6 +50,48 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/createAppointmentMainPadding"
             android:paddingBottom="@dimen/createAppointmentMainPadding">
+
+            <!-- Auto visit type container -->
+            <LinearLayout
+                android:id="@+id/auto_visit_type_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/auto_visit_type_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/locationImageView1"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/myHealthTextColor"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="intelligent_scheduler_auto_selected_label" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/tv_auto_visit_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/locationImageView1"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="visit_type_heading"
+                    tools:text="Visit Type" />
+            </LinearLayout>
+
             <!--location1-->
             <RelativeLayout
                 android:id="@+id/locationHeader1"
@@ -68,8 +110,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:src="@drawable/ic_location"
-                     />
+                    android:src="@drawable/ic_location" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/locationNameTextView1"
@@ -125,8 +166,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/createAppointmentMainPadding"
-                android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginTop="@dimen/createAppointmentHeaderTopMargin"
+                android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginBottom="@dimen/createAppointmentHeaderVerticalMargin">
 
                 <ImageView
@@ -186,68 +227,76 @@
 
 
             <!--visit_type-->
-            <RelativeLayout
-                android:id="@+id/visitTypeHeader"
+            <LinearLayout
+                android:id="@+id/card_visit_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/createAppointmentMainPadding"
-                android:layout_marginTop="@dimen/createAppointmentHeaderTopMargin"
-                android:layout_marginEnd="@dimen/createAppointmentMainPadding"
-                android:layout_marginBottom="@dimen/createAppointmentHeaderVerticalMargin">
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/visitTypeImageView"
-                    android:layout_width="@dimen/createAppointmentSectionImageSize"
-                    android:layout_height="@dimen/createAppointmentSectionImageSize"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:src="@drawable/icon_condition" />
+                <RelativeLayout
+                    android:id="@+id/visitTypeHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/createAppointmentMainPadding"
+                    android:layout_marginTop="@dimen/createAppointmentHeaderTopMargin"
+                    android:layout_marginEnd="@dimen/createAppointmentMainPadding"
+                    android:layout_marginBottom="@dimen/createAppointmentHeaderVerticalMargin">
+
+                    <ImageView
+                        android:id="@+id/visitTypeImageView"
+                        android:layout_width="@dimen/createAppointmentSectionImageSize"
+                        android:layout_height="@dimen/createAppointmentSectionImageSize"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:src="@drawable/icon_condition" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/visitTypeNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/visitTypeImageView"
+                        android:ellipsize="end"
+                        android:gravity="start"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/myHealthTextColor"
+                        android:textSize="@dimen/createAppointmentSectionTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        breeze:textKey="add_appointment_visit_type"
+                        tools:text="Visit Type" />
+                </RelativeLayout>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/visitTypeNameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/visitTypeImageView"
-                    android:ellipsize="end"
-                    android:gravity="start"
-                    android:lines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/myHealthTextColor"
-                    android:textSize="@dimen/createAppointmentSectionTextSize"
-                    app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="add_appointment_visit_type"
-                    tools:text="Visit Type" />
-            </RelativeLayout>
+                    android:id="@+id/visitTypeNoDataTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/createAppointmentNoDataTextViewHeight"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="@dimen/createAppointmentMainPadding"
+                    android:layout_marginTop="@dimen/createAppointmentNoDataVerticalMargin"
+                    android:layout_marginEnd="@dimen/createAppointmentMainPadding"
+                    android:layout_marginBottom="@dimen/createAppointmentNoDataVerticalMargin"
+                    android:background="@drawable/no_data_background"
+                    android:contentDescription="@string/content_description_choose_visit_type"
+                    android:foreground="?selectableItemBackground"
+                    android:gravity="center"
+                    android:padding="@dimen/createAppointmentNoDataPadding"
+                    android:textSize="@dimen/createAppointmentNoDataTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="add_appointment_visit_type_hint"
+                    tools:text="Tap here to choose a visit Type" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/visitTypeNoDataTextView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/createAppointmentNoDataTextViewHeight"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="@dimen/createAppointmentMainPadding"
-                android:layout_marginTop="@dimen/createAppointmentNoDataVerticalMargin"
-                android:layout_marginEnd="@dimen/createAppointmentMainPadding"
-                android:layout_marginBottom="@dimen/createAppointmentNoDataVerticalMargin"
-                android:background="@drawable/no_data_background"
-                android:contentDescription="@string/content_description_choose_visit_type"
-                android:foreground="?selectableItemBackground"
-                android:gravity="center"
-                android:padding="@dimen/createAppointmentNoDataPadding"
-                android:textSize="@dimen/createAppointmentNoDataTextSize"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="add_appointment_visit_type_hint"
-                tools:text="Tap here to choose a visit Type" />
-
-            <include
-                android:id="@+id/visitTypeContainer"
-                layout="@layout/layout_create_appointment_step"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/createAppointmentDataTextViewHeight"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:visibility="gone" />
+                <include
+                    android:id="@+id/visitTypeContainer"
+                    layout="@layout/layout_create_appointment_step"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/createAppointmentDataTextViewHeight"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:visibility="gone" />
+            </LinearLayout>
             <!--visit_type-->
 
             <!--location-->

@@ -33,7 +33,7 @@ public class ScheduleAppointmentRequestDTO {
         private transient String locationGuid;
 
         @SerializedName("provider_id")
-        private int providerId;
+        private String providerId;
 
         private transient String providerGuid;
 
@@ -76,11 +76,11 @@ public class ScheduleAppointmentRequestDTO {
             this.locationId = locationId;
         }
 
-        public int getProviderId() {
+        public String getProviderId() {
             return providerId;
         }
 
-        public void setProviderId(int providerId) {
+        public void setProviderId(String providerId) {
             this.providerId = providerId;
         }
 
