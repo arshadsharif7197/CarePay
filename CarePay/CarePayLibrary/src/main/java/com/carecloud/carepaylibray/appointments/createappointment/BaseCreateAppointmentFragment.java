@@ -458,7 +458,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             if (!isLocationOnTop) {
                 resetLocation();
             }
+            if (autoVisitTypeContainer!=null)
             autoVisitTypeContainer.setVisibility(View.GONE);
+            if (visitTypeCard!=null)
             visitTypeCard.setVisibility(View.VISIBLE);
         }
     }
