@@ -192,6 +192,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
+        if (locationNoDataTextView1!=null)
         locationNoDataTextView1.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
@@ -202,7 +203,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
-        if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(0).getScheduleResourceOrder().getOrder().startsWith("location")) {
+        if (appointmentsModelDto.getPayload().getAppointmentsSettings()!=null&&
+                appointmentsModelDto.getPayload().getAppointmentsSettings().size()!=0&&
+                appointmentsModelDto.getPayload().getAppointmentsSettings().get(0).
+                        getScheduleResourceOrder().getOrder().startsWith("location")) {
             isLocationOnTop = true;
             setLocationVisibility(isLocationOnTop);
         }
@@ -216,6 +220,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             startDelayTimer();
             showLocationList(selectedPractice, selectedResource, selectedVisitType);
         });
+        if (locationContainer1!=null)
         locationContainer1.setOnClickListener(v -> {
             if (isAlreadyClicked)
                 return;
@@ -241,10 +246,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
     protected void setLocationVisibility(boolean shouldVisible) {
         if (shouldVisible) {
-            locationHeader1.setVisibility(View.VISIBLE);
-            locationNoDataTextView1.setVisibility(View.VISIBLE);
-            // locationContainer1.setVisibility(View.VISIBLE);
-
+            if (locationHeader1!=null&&locationNoDataTextView1!=null){
+                locationHeader1.setVisibility(View.VISIBLE);
+                if (locationNoDataTextView1!=null)
+                    locationNoDataTextView1.setVisibility(View.VISIBLE);
+                // locationContainer1.setVisibility(View.VISIBLE);
+            }
 
             // locationContainer.setVisibility(View.GONE);
             locationNoDataTextView.setVisibility(View.GONE);
@@ -252,8 +259,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             providersNoDataTextView.setEnabled(false);
             visitTypeNoDataTextView.setEnabled(false);
         } else {
-            locationHeader1.setVisibility(View.GONE);
-            locationNoDataTextView1.setVisibility(View.GONE);
+            if (locationHeader1!=null&&locationNoDataTextView1!=null){
+                locationHeader1.setVisibility(View.GONE);
+                locationNoDataTextView1.setVisibility(View.GONE);
+            }
             // locationContainer1.setVisibility(View.VISIBLE);
 
 
@@ -329,6 +338,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     public void setVisitType(VisitTypeDTO visitType) {
         selectedVisitType = visitType;
         visitTypeNoDataTextView.setVisibility(View.GONE);
+        if (locationNoDataTextView1!=null)
         locationNoDataTextView1.setEnabled(true);
         locationNoDataTextView.setEnabled(true);
         String title = StringUtil.capitalize(visitType.getName());
@@ -359,11 +369,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         ImageView deleteImageView;
         selectedLocation = locationDTO;
         locationNoDataTextView.setVisibility(View.GONE);
+        if (locationNoDataTextView1!=null)
         locationNoDataTextView1.setVisibility(View.GONE);
         providersNoDataTextView.setEnabled(true);
         String title = StringUtil.capitalize(locationDTO.getName());
         String subtitle = locationDTO.getAddress().geAddressStringWithShortZipWOCounty2Lines();
-        if (isLocationOnTop) {
+        if (isLocationOnTop&&locationContainer1!=null) {
             setCardViewContent(locationContainer1, title, subtitle, false, null);
             deleteImageView = locationContainer1.findViewById(R.id.deleteImageView);
         } else {
@@ -427,8 +438,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private void resetLocation() {
         selectedLocation = null;
         locationContainer.setVisibility(View.GONE);
+        if (locationContainer1!=null)
         locationContainer1.setVisibility(View.GONE);
         if (isLocationOnTop) {
+            if(locationNoDataTextView1!=null)
             locationNoDataTextView1.setVisibility(View.VISIBLE);
             resetProvider();
             resetVisitType();
@@ -445,7 +458,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
             if (!isLocationOnTop) {
                 resetLocation();
             }
+            if (autoVisitTypeContainer!=null)
             autoVisitTypeContainer.setVisibility(View.GONE);
+            if (visitTypeCard!=null)
             visitTypeCard.setVisibility(View.VISIBLE);
         }
     }
