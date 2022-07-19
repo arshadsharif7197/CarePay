@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -173,7 +172,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
+        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_items);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
                 creditCardList, this, true);

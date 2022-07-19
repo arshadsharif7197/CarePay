@@ -35,7 +35,7 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.SelfPayAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
@@ -449,7 +449,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                             !selectedOption.getName().equalsIgnoreCase(KEY_PROVIDER_MEDICAID) &&
                             !selectedOption.getName().equalsIgnoreCase(KEY_PROVIDER_MEDICARE)) {
 
-                        SelfPayAlertDialog selfPayAlertDialog = SelfPayAlertDialog.
+                        ExitAlertDialog selfPayAlertDialog = ExitAlertDialog.
                                 newInstance(Label.getLabel("payment_self_pay_label"),
                                         Label.getLabel("ok"), Label.getLabel("button_no"));
                         selfPayAlertDialog.show(requireActivity().getSupportFragmentManager(), selfPayAlertDialog.getClass().getName());

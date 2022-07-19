@@ -6,6 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:showIn="@layout/activity_providers_patient">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView

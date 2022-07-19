@@ -1035,11 +1035,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         String preferredName = ((TextView) findViewById(R.id.preferredName)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(preferredName)) {
             demographicPersonalDetailsPayloadDTO.setPreferredName(preferredName);
+        } else {
+            demographicPersonalDetailsPayloadDTO.setPreferredName("");
         }
 
         String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
             demographicPersonalDetailsPayloadDTO.setSocialSecurityNumber(StringUtil.revertToRawFormat(socialSecurity));
+        } else {
+            demographicPersonalDetailsPayloadDTO.setSocialSecurityNumber("");
         }
 
         String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
@@ -1055,6 +1059,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         String driverLicense = ((TextView) findViewById(R.id.driverLicense)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(driverLicense)) {
             demographicPersonalDetailsPayloadDTO.setDriversLicenseNumber(driverLicense);
+        } else {
+            demographicPersonalDetailsPayloadDTO.setDriversLicenseNumber("");
         }
 
         String driverLicenseState = selectedDriverLicenseState.getName();

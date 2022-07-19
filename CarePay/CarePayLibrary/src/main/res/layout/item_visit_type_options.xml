@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_gray"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+        android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/visit_option_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/radio_button_selector"
+            android:textSize="@dimen/text_size_17"
+            app:customAssetFont="proxima_nova_regular" />
+
+
+        <ImageView
+            android:id="@+id/item_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/payment_method_layout_checkbox_margin"
+            android:src="@drawable/radio_button_selector" />
+
+    </LinearLayout>
+
+</RelativeLayout>

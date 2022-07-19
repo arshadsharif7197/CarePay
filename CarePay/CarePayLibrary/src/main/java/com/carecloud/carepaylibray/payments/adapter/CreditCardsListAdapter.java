@@ -146,7 +146,7 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         ViewHolder(View itemView) {
             super(itemView);
             paymentMethodImage = itemView.findViewById(R.id.credit_card_image);
-            paymentMethodCheck = itemView.findViewById(R.id.credit_card_check);
+            paymentMethodCheck = itemView.findViewById(R.id.item_check);
             defaultCardText = itemView.findViewById(R.id.credit_card_default);
             creditCardText = itemView.findViewById(R.id.credit_card_text);
             divider = itemView.findViewById(R.id.divider);
