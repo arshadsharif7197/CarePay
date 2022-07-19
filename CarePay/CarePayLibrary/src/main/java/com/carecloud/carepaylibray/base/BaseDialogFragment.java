@@ -324,7 +324,8 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     protected DialogInterface.OnCancelListener onDialogCancelListener = dialogInterface -> showDialog();
 
     public void onBackPressed() {
-        getActivity().onBackPressed();
+        if (getActivity() != null)
+            getActivity().onBackPressed();
         if (onBackPressedInterface != null) {
             onBackPressedInterface.onBackPressed();
         }

@@ -37,6 +37,7 @@ public class AppointmentsSettingDTO implements Serializable {
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
     }
+
     public ScheduleResourcesOrder getScheduleResourceOrder() {
         return scheduleResourcesOrder;
     }
@@ -92,4 +93,18 @@ public class AppointmentsSettingDTO implements Serializable {
     public void setChargeCancellationFees(boolean chargeCancellationFees) {
         this.chargeCancellationFees = chargeCancellationFees;
     }
+
+    public ScheduleResourcesOrder getScheduleResourcesOrder() {
+        return scheduleResourcesOrder;
+    }
+
+    public void setScheduleResourcesOrder(ScheduleResourcesOrder scheduleResourcesOrder) {
+        this.scheduleResourcesOrder = scheduleResourcesOrder;
+    }
+
+    public boolean isChargeCancellationFees() {
+        return chargeCancellationFees;
+    }
+
+
 }

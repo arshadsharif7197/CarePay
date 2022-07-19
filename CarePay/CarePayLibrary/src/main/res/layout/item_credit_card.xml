@@ -54,7 +54,7 @@
             app:customAssetFont="proxima_nova_regular" />
 
         <ImageView
-            android:id="@+id/credit_card_check"
+            android:id="@+id/item_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/payment_method_layout_checkbox_margin"

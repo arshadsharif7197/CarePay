@@ -117,6 +117,7 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
         adapter.addFragment(paymentHistoryFragment, historyTabTitle);
         viewPager.setAdapter(adapter);
 
+
         TabLayout.Tab pending = tabs.getTabAt(0);
         if (pending != null) {
             pending.setCustomView(R.layout.page_tab_layout);
