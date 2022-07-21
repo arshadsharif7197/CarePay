@@ -129,6 +129,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     LinearLayoutManager.HORIZONTAL, false));
             PracticesAdapter adapter = new PracticesAdapter(filteredList);
             adapter.setCallback((userPracticeDTO, position) -> {
+                isSchedulerEnabled = false;
                 if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
