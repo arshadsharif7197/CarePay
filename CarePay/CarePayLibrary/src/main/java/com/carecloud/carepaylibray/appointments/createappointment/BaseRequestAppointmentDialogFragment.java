@@ -133,24 +133,9 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                             e.printStackTrace();
                         }
 
-                        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
-                                !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty() &&
-                                appointmentModelDto.getPayload().getPracticePatientIds() != null) {
-
-                            String practiceId = appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId();
-                            if (appointmentModelDto.getPayload().getAppointmentsSetting(practiceId) != null &&
-                                    appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
-                                            .getCheckin()
-                                            .isMove_patient_pre_registration()) {
-                                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-                                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
-                            } else {
-                                callback.appointmentScheduledSuccessfully();
-                            }
-                        } else {
+                        if (!isPreRegistrationRequired()) {
                             callback.appointmentScheduledSuccessfully();
                         }
-
                         cancel();
                     }
 
@@ -165,21 +150,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
 
                         if (isFromPostExecute && callback != null) {
                             isFromPostExecute = false;
-                            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
-                                    !appointmentModelDto.getPayload().getPracticePatientIds().isEmpty() &&
-                                    appointmentModelDto.getPayload().getPracticePatientIds() != null) {
-
-                                String practiceId = appointmentModelDto.getPayload().getPracticePatientIds().get(0).getPracticeId();
-                                if (appointmentModelDto.getPayload().getAppointmentsSetting(practiceId) != null &&
-                                        appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
-                                                .getCheckin()
-                                                .isMove_patient_pre_registration()) {
-                                    SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-                                    callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
-                                } else {
-                                    callback.appointmentScheduledSuccessfully();
-                                }
-                            } else {
+                            if (!isPreRegistrationRequired()) {
                                 callback.appointmentScheduledSuccessfully();
                             }
                             cancel();
@@ -187,6 +158,20 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                     }
                 },
                 gson.toJson(appointmentRequestDto), queryMap);
+    }
+
+    private boolean isPreRegistrationRequired() {
+        String practiceId = selectedPractice.getPracticeId();
+        if (appointmentModelDto.getPayload().getAppointmentsSetting(practiceId) != null &&
+                appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
+                        .getCheckin()
+                        .isMove_patient_pre_registration()) {
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+            callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected void logMixPanelAppointmentRequestedEvent(AppointmentDTO appointmentRequestDto) {
