@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -88,7 +89,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback,
         FragmentActivityInterface, PaymentPlanEditInterface,
         CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback,
-        PaymentPlanCreateInterface {
+        PaymentPlanCreateInterface ,SwipeRefreshLayout.OnRefreshListener {
 
 
     private RecyclerView checkingInRecyclerView;
@@ -105,6 +106,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     CheckedInAppointmentAdapter checkingOutAdapter;
     CheckedInAppointmentAdapter checkedOutAdapter;
 
+    SwipeRefreshLayout swipeRefreshLayout;
     CarePayTextView goBackTextView;
     CarePayTextView filterTextViewOn;
     CarePayTextView filterTextView;
@@ -161,6 +163,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     private void initializationView() {
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         goBackTextView = findViewById(R.id.goBackTextview);
         checkingInCounterTextView = findViewById(R.id.checkingInCounterTextview);
         waitingCounterTextView = findViewById(R.id.waitingCounterTextview);
@@ -550,14 +554,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      */
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
-        if (getSupportFragmentManager().getBackStackEntryCount()>0)
-            return;
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO,
                 getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()), appointmentPayloadDTO, theRoom);
        Fragment fragment=getSupportFragmentManager().findFragmentByTag("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog");
-        if (fragment==null||!fragment.getClass().getName().equals("com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog"))
-        displayDialogFragment(dialog, true);
+        if (fragment!=null){
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            displayDialogFragment(dialog,false);
+        }else {
+            displayDialogFragment(dialog, false);
+        }
     }
 
     @Override
@@ -797,6 +803,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 if (isBlocking) {
                     showProgressDialog();
                 }
@@ -805,6 +813,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
                 populateLists();
                 setAdapter();
@@ -813,6 +823,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 showErrorNotification(exceptionMessage);
             }
         };
@@ -1019,5 +1031,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public boolean manageSession() {
         return false;
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshLists(true);
     }
 }

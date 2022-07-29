@@ -121,6 +121,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private double overPaymentAmount;
     private double unappliedCredit = 0D;
     private double originalUnapplied = 0D;
+    private int position;
 
     private NumberFormat currencyFormatter;
 
@@ -316,7 +317,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
-                showAmountEntryDialog(null, null);
+                showAmountEntryDialog(balanceItems.get(position), null);
             }
         });
         actionButton = view.findViewById(R.id.action_button);
@@ -465,7 +466,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void scrollAdapterToItem(BalanceItemDTO balanceItemDTO) {
-        int position;
         int locationY = -1;
         position = balanceItems.indexOf(balanceItemDTO);
         if (position > 0) {

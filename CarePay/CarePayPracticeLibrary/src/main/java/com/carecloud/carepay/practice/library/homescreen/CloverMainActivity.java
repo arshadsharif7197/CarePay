@@ -819,4 +819,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastClickMs=0;
+    }
 }

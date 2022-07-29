@@ -240,16 +240,19 @@
                 breeze:textKey="pending_appointments_label" />
         </RelativeLayout>
     </LinearLayout>
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/paymentContainerHorizontalMargin"
+        android:layout_marginTop="@dimen/listPatientsMarginTop"
+        android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
+        android:layout_marginBottom="@dimen/paymentContainerBottomMargin">
     <com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list_patients"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/paymentContainerHorizontalMargin"
-        android:layout_marginTop="@dimen/paymentContainerTopMargin"
-        android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
-        android:layout_marginBottom="@dimen/paymentContainerBottomMargin"
         android:background="@drawable/payments_list_background"
         android:contentDescription="@string/content_description_appointments_list"/>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

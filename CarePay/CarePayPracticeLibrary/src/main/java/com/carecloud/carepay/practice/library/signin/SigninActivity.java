@@ -290,6 +290,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         tvPartnerBtn = findViewById(R.id.tv_partner_btn);
         il_partner_btn = findViewById(R.id.il_partner_btn);
         cbPracticeManagement = findViewById(R.id.cb_practice_management);
+        if (practiceManagement != null && practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            signInEmailTextInputLayout.setHint(Label.getLabel("username"));
+        } else {
+            signInEmailTextInputLayout.setHint(Label.getLabel("email_label"));
+        }
 
 
         setUpLanguageSpinner();
@@ -411,7 +416,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         partnerBtnLayout.setVisibility(appType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                 View.GONE : View.VISIBLE);
         if (practiceManagementTitle == null) {
-            tvPartnerBtn.setText( Label.getLabel("practice_management_system"));
+            tvPartnerBtn.setText(Label.getLabel("practice_management_system"));
             cbPracticeManagement.setChecked(false);
         } else {
             il_partner_btn.setHint(Label.getLabel("practice_management_system"));
@@ -440,7 +445,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private void signIn() {
-        if (practiceManagementTitle==null){
+        if (practiceManagementTitle == null) {
             showErrorNotification(Label.getLabel("practice_management_system_select"));
             return;
         }
@@ -524,11 +529,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         il_partner_btn.setHint(Label.getLabel("practice_management_system"));
         practiceManagement = selectedPracticeManagement.getPracticeMgmt();
         practiceManagementTitle = selectedPracticeManagement.getLabel();
-        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
         tvPartnerBtn.setText(practiceManagementTitle);
-        passwordEditText.setText("");
-        emailEditText.setText("");
-        cbPracticeManagement.setChecked(false);
+        getApplicationPreferences().setStartPracticeManagement(practiceManagement);
+
+        if (cbPracticeManagement.isChecked()) {
+            getApplicationPreferences().setPracticeManagementTitle(practiceManagementTitle);
+        }
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            signInEmailTextInputLayout.setHint(Label.getLabel("username"));
+        } else {
+            signInEmailTextInputLayout.setHint(Label.getLabel("email_label"));
+        }
     }
 
     public void requestPasswordFocus() {
@@ -574,7 +585,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private boolean areAllFieldsValid(String email, String password) {
-        if (practiceManagementTitle==null){
+        if (practiceManagementTitle == null) {
             showErrorNotification(Label.getLabel("practice_management_system_select"));
             return false;
         }

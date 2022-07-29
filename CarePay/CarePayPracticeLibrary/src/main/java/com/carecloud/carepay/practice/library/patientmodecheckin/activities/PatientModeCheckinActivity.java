@@ -31,6 +31,8 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -68,7 +70,9 @@ import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewM
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +89,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private boolean paymentStarted = false;
     private WorkflowDTO paymentConfirmationWorkflow;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private String practiceManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
+        practiceManagement = getApplicationPreferences().getStartPracticeManagement();
+
 
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
@@ -308,6 +315,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             View view = checkInFlowViews[i];
             ((TextView) view.findViewById(R.id.checkin_flow_title)).setText(labels[i]);
         }
+
+        hideIntakeView();
+
+    }
+
+    private void hideIntakeView() {
+        // Hide intakeView for talkEHR Practices on Phase 1 integration
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR))
+            findViewById(R.id.checkin_flow_intake).setVisibility(View.GONE);
     }
 
     /**
@@ -571,6 +587,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
+        hideIntakeView();
+
         for (int i = 0; i < checkInFlowViews.length; i++) {
             View flowView = checkInFlowViews[i];
             CarePayTextView section = flowView.findViewById(R.id.checkin_flow_title);
