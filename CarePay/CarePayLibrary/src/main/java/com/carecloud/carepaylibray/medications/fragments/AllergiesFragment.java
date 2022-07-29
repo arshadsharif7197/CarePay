@@ -3,11 +3,13 @@ package com.carecloud.carepaylibray.medications.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -348,6 +350,21 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_allergies));
+            onUpdateAllergies();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+    private WorkflowServiceCallback submitMedicationAllergiesCallbackAfterUpdate = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
