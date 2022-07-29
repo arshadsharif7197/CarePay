@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.medications.models.AllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -50,8 +51,10 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     private RecyclerView allergyRecycler;
     private Button continueButton;
+    private WorkflowDTO workflowDTOAfterUpdate;
+
     protected DemographicsPresenter callback;
-    public boolean shouldRemove=false;
+    public boolean shouldRemove = false;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
@@ -103,9 +106,6 @@ public class AllergiesFragment extends BaseCheckinFragment implements
         if (callback == null) {
             attachCallback(getContext());
         }
-
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args,medicationsAllergiesDTO);
         callback.setCheckinFlow(CheckinFlowState.ALLERGIES, 0, 0);
         hideProgressDialog();
     }
@@ -251,15 +251,16 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             item.setAction(MedicationAllergiesAction.add);
             currentAllergies.add((AllergiesObject) item);
             addAllergies.add((AllergiesObject) item);
-            shouldRemove=true;
+            shouldRemove = true;
         }
         setAdapters();
     }
+
     private boolean isAllergyExist(MedicationsAllergiesObject item) {
 
-        for (AllergiesObject allergiesObject:currentAllergies){
-            if (allergiesObject.getInteroperableDesc().trim().equalsIgnoreCase(((AllergiesObject) item).getInteroperableDesc().trim())){
-               return true;
+        for (AllergiesObject allergiesObject : currentAllergies) {
+            if (allergiesObject.getInteroperableDesc().trim().equalsIgnoreCase(((AllergiesObject) item).getInteroperableDesc().trim())) {
+                return true;
             }
         }
         return false;
@@ -275,7 +276,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
     private View.OnClickListener chooseAllergyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM,medicationsAllergiesDTO);
+            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
         }
     };
 
@@ -296,10 +297,31 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
             medicationsPostModel.setAllergiesList(getAllModifiedAllergies());
             String jsonBody = gson.toJson(medicationsPostModel);
-            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback,
+            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackBeforeUpdate,
                     jsonBody, queryMap, headers);
         }
     };
+
+    private void onUpdateAllergies() {
+        MedicationsOnlyResultModel medicationsAllergiesDTO = patientResponsibilityViewModel.getMedicationOnlyModel();
+        Map<String, String> queryMap = new HashMap<>();
+        TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
+        Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        headers.put("transition", "true");
+        queryMap.put("patient_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
+        queryMap.put("practice_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
+        queryMap.put("practice_mgmt", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
+        queryMap.put("appointment_id", medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
+        if (patientResponsibilityViewModel.getJsonBody() == null) {
+            getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, headers);
+        } else {
+            String jsonBody = patientResponsibilityViewModel.getJsonBody();
+            getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallbackAfterUpdate,
+                    jsonBody, queryMap, headers);
+        }
+
+
+    }
 
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
@@ -310,7 +332,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
     };
 
 
-    private WorkflowServiceCallback submitMedicationAllergiesCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback submitMedicationAllergiesCallbackBeforeUpdate = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -318,27 +340,27 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            workflowDTOAfterUpdate = workflowDTO;
             hideProgressDialog();
-
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
             if (!modifiedAllergies.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
-
-                Bundle args = new Bundle();
-                DtoHelper.bundleDto(args, medicationsAllergiesDTO);
-
-                if(modifiedAllergies.size()>0)
-                {
-                    shouldRemove=true;
-
-                }else {
-                    shouldRemove=false;
-                }
             }
 
             MixPanelUtil.endTimer(getString(R.string.timer_allergies));
 
-            onUpdate(callback, workflowDTO);
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+
+            MedicationsAllergiesResultsModel medicationsAllergiesDTO = new Gson().fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            currentAllergies = medicationsAllergiesDTO.getPayload().getAllergies().getPayload();
+            addAllergies.clear();
+            removeAllergies.clear();
+
+            setAdapters();
+            if (workflowDTOAfterUpdate != null)
+                onUpdate(callback, workflowDTOAfterUpdate);
         }
 
         @Override
@@ -348,10 +370,34 @@ public class AllergiesFragment extends BaseCheckinFragment implements
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+    private WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
 
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            MedicationsAllergiesResultsModel medicationsAllergiesDTO = new Gson().fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            currentAllergies = medicationsAllergiesDTO.getPayload().getAllergies().getPayload();
+            addAllergies.clear();
+            removeAllergies.clear();
+
+            setAdapters();
+            if (workflowDTOAfterUpdate != null)
+                onUpdate(callback, workflowDTOAfterUpdate);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
     @Override
     public DTO getDto() {
         return medicationsAllergiesDTO;
     }
 }
-

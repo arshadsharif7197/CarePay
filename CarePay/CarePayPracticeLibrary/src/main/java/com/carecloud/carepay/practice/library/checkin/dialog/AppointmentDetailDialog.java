@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -31,6 +33,8 @@ import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistribu
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -114,6 +118,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
     private Handler handler;
     private PaymentsModel paymentDetailsModel;
     private View spacerView;
+    private String practiceManagement;
 
     /**
      * Constructor.
@@ -158,6 +163,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             appointmentPayloadDTO = DtoHelper.getConvertedDTO(AppointmentsPayloadDTO.class, args);
             theRoom = args.getInt("theRoom");
         }
+        practiceManagement = ((IApplicationSession) getActivity().getApplicationContext()).getApplicationPreferences().getStartPracticeManagement();
+
     }
 
     private void setHandlersAndListeners() {
@@ -259,6 +266,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
             title = String.format(Label.getLabel("practice_checkin_started_elapsed"),
                     DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+
+            // Hide intakeCheckbox for talkEHR Practices on Phase 1 integration
+            if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR))
+                intakeCheckbox.setVisibility(View.GONE);
+
+
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
             checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
@@ -434,24 +447,25 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                 Date checkinTime = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getAppointmentStatus()
                         .getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
                 String roomMessage;
-                if (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()!=null)
-                switch (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()) {
-                    case CarePayConstants.IN_PROGRESS_IN_ROOM:
-                    default:
-                        roomMessage = String.format(Label.getLabel("appointments_queue_in_room_message"),
-                                appointmentPayloadDTO.getPatient().getFirstName(),
-                                DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
-                        roomTitleTextView.setText(Label.getLabel("appointments_queue_in_room_title"));
-                        roomMessageTextView.setText(roomMessage);
-                        break;
-                    case CarePayConstants.IN_PROGRESS_OUT_ROOM:
-                        roomMessage = String.format(Label.getLabel("appointments_queue_out_room_message"),
-                                appointmentPayloadDTO.getPatient().getFirstName(),
-                                DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
-                        roomTitleTextView.setText(Label.getLabel("appointments_queue_out_room_title"));
-                        roomMessageTextView.setText(roomMessage);
-                        break;
-                }else
+                if (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode() != null)
+                    switch (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()) {
+                        case CarePayConstants.IN_PROGRESS_IN_ROOM:
+                        default:
+                            roomMessage = String.format(Label.getLabel("appointments_queue_in_room_message"),
+                                    appointmentPayloadDTO.getPatient().getFirstName(),
+                                    DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
+                            roomTitleTextView.setText(Label.getLabel("appointments_queue_in_room_title"));
+                            roomMessageTextView.setText(roomMessage);
+                            break;
+                        case CarePayConstants.IN_PROGRESS_OUT_ROOM:
+                            roomMessage = String.format(Label.getLabel("appointments_queue_out_room_message"),
+                                    appointmentPayloadDTO.getPatient().getFirstName(),
+                                    DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
+                            roomTitleTextView.setText(Label.getLabel("appointments_queue_out_room_title"));
+                            roomMessageTextView.setText(roomMessage);
+                            break;
+                    }
+                else
                     roomMessage = String.format(Label.getLabel("appointments_queue_in_room_message"),
                             appointmentPayloadDTO.getPatient().getFirstName(),
                             DateUtil.getContextualTimeElapsed(checkinTime, new Date()));

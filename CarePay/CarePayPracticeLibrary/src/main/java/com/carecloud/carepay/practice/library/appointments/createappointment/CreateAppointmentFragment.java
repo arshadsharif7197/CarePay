@@ -94,7 +94,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("appointments_heading"));
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> dismiss());
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> cancel());
     }
 
     protected void showLocationList(UserPracticeDTO selectedPractice,

@@ -64,6 +64,7 @@
             android:id="@+id/patient_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/paymentPatientNameTextSize"
+            android:layout_toLeftOf="@id/visit_type_video"
             android:gravity="start"
             android:maxLines="1"
             android:textColor="@color/charcoal"
@@ -98,8 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/appointmentCardTimeStartMargin"
+            android:layout_margin="@dimen/dimen_10dp"
             android:background="@drawable/bg_green_overlay"
             android:gravity="center"
             android:paddingStart="@dimen/appointmentCardTimeHorizontalPadding"
@@ -117,10 +117,27 @@
             android:layout_width="@dimen/dimen_24dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/dimen_12dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_toLeftOf="@id/timeTextView"
             android:src="@drawable/icn_video_visit"
             android:visibility="gone" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/appointment_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:gravity="start"
+            android:paddingStart="@dimen/appointmentCardTimeHorizontalPadding"
+            android:paddingTop="@dimen/appointmentCardTimeVerticalPadding"
+            android:paddingEnd="@dimen/appointmentCardTimeHorizontalPadding"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/providerNameTextSize"
+            android:visibility="gone"
+            card_view:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Pending" />
 
     </RelativeLayout>
 

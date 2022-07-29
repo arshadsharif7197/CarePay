@@ -301,8 +301,8 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
                         .getVisitReason().setAmount(availabilityDataDTO.getPayload().get(0)
                         .getVisitReason().getAmount());
-                appointmentModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload()
-                        .getAppointmentAvailability());
+                appointmentModelDto.getPayload().setAppointmentAvailability(getValidateSlots(availabilityDto.getPayload()
+                        .getAppointmentAvailability()));
                 setUpTimeSlotsList(getView());
             }
 
@@ -313,5 +313,21 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                 Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
+    }
+
+    private AppointmentAvailabilityDataDTO getValidateSlots(AppointmentAvailabilityDataDTO appointmentAvailability) {
+        // Removing Previous slots if any
+        List<AppointmentsSlotsDTO> currentSlots = appointmentAvailability.getPayload().get(0).getSlots();
+        List<AppointmentsSlotsDTO> validSlots = new ArrayList<>();
+
+        for (AppointmentsSlotsDTO appointmentsSlotsDTO : currentSlots) {
+            Date d1 = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime()).getDate();
+            if (d1.after(new Date())) {
+                validSlots.add(appointmentsSlotsDTO);
+            }
+        }
+
+        appointmentAvailability.getPayload().get(0).setSlots(validSlots);
+        return appointmentAvailability;
     }
 }

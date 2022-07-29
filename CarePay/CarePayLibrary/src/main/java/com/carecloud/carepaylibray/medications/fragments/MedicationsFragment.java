@@ -388,6 +388,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             medicationsPostModel.setMedicationsList(getAllModifiedMedications());
             setupImageBase64();
             String jsonBody = gson.toJson(medicationsPostModel);
+            patientResponsibilityViewModel.setAllergiesdata(medicationsAllergiesDTO,jsonBody);
             getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback,
                     jsonBody, queryMap, headers);
         }
