@@ -371,7 +371,8 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         noThanksButton.setVisibility(View.VISIBLE);
         SurveyModel settings = surveyDto.getPayload().getSurvey();
         if (settings.getNetworkLinks().isEnable()
-                && !settings.getNetworkLinks().getLinks().isEmpty()) {
+                && !settings.getNetworkLinks().getLinks().isEmpty()
+                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() > surveyDto.getPayload().getSurveySettings().getSatisfiedRate()) {
             subtitleTextView.setVisibility(View.VISIBLE);
             createSocialLinkViews(view, settings);
             noThanksButton.setOnClickListener(new View.OnClickListener() {
