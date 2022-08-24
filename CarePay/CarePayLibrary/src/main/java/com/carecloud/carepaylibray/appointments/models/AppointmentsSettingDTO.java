@@ -33,7 +33,7 @@ public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("charge_cancellation_fees")
     @Expose
     private boolean chargeCancellationFees;
-    @SerializedName("custom_text")
+    @SerializedName("custom_text_add_appointment")
     @Expose
     private AppointmentsPopUpDTO appointmentsPopUpDTO;
 
