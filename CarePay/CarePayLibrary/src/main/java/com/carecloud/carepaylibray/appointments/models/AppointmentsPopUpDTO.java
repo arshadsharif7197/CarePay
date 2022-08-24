@@ -9,7 +9,7 @@ public class AppointmentsPopUpDTO implements Serializable {
     @SerializedName("enabled")
     @Expose
     private boolean enabled;
-    @SerializedName("text")
+    @SerializedName("optional_text")
     @Expose
     private String text;
 
