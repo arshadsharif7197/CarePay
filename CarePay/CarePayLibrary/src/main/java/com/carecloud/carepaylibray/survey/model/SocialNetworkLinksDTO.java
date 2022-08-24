@@ -17,7 +17,7 @@ public class SocialNetworkLinksDTO {
     @SerializedName("links")
     private List<SocialNetworkLink> links;
     @Expose
-    @SerializedName("show_rate")
+    @SerializedName("networks_satisfaction_rate")
     private double linksRating;
 
     public boolean isEnable() {
