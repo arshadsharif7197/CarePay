@@ -372,7 +372,8 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         SurveyModel settings = surveyDto.getPayload().getSurvey();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()
-                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() > surveyDto.getPayload().getSurveySettings().getSatisfiedRate()) {
+                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() > surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() == average) {
             subtitleTextView.setVisibility(View.VISIBLE);
             createSocialLinkViews(view, settings);
             noThanksButton.setOnClickListener(new View.OnClickListener() {
