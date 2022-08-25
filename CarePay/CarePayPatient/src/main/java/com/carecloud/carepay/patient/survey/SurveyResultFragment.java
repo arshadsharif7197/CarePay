@@ -370,10 +370,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
         noThanksButton.setVisibility(View.VISIBLE);
         SurveyModel settings = surveyDto.getPayload().getSurvey();
+        double lowerRange = average - 0.30; // When Network link rating is set from PR its always return (in response) with less value than actual number
+        double linksRating = surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()
-                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() > surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
-                && surveyDto.getPayload().getSurveySettings().getNetworkLinks().getLinksRating() == average) {
+                && linksRating > surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                && (linksRating == average || (linksRating >= lowerRange && linksRating <= average))) {
             subtitleTextView.setVisibility(View.VISIBLE);
             createSocialLinkViews(view, settings);
             noThanksButton.setOnClickListener(new View.OnClickListener() {
