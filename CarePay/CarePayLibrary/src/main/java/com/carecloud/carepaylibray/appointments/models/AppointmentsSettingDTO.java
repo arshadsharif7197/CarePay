@@ -33,6 +33,9 @@ public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("charge_cancellation_fees")
     @Expose
     private boolean chargeCancellationFees;
+    @SerializedName("custom_text_add_appointment")
+    @Expose
+    private AppointmentsPopUpDTO appointmentsPopUpDTO;
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
@@ -106,5 +109,11 @@ public class AppointmentsSettingDTO implements Serializable {
         return chargeCancellationFees;
     }
 
+    public AppointmentsPopUpDTO getAppointmentsPopUpDTO() {
+        return appointmentsPopUpDTO;
+    }
 
+    public void setAppointmentsPopUpDTO(AppointmentsPopUpDTO appointmentsPopUpDTO) {
+        this.appointmentsPopUpDTO = appointmentsPopUpDTO;
+    }
 }

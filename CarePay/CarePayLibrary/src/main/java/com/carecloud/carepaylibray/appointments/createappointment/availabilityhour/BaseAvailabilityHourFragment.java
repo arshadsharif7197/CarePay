@@ -301,8 +301,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
                         .getVisitReason().setAmount(availabilityDataDTO.getPayload().get(0)
                         .getVisitReason().getAmount());
-                appointmentModelDto.getPayload().setAppointmentAvailability(getValidateSlots(availabilityDto.getPayload()
-                        .getAppointmentAvailability()));
+                appointmentModelDto.getPayload().setAppointmentAvailability(getValidateSlots(availabilityDto));
                 setUpTimeSlotsList(getView());
             }
 
@@ -315,19 +314,30 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         }, queryMap);
     }
 
-    private AppointmentAvailabilityDataDTO getValidateSlots(AppointmentAvailabilityDataDTO appointmentAvailability) {
+    private AppointmentAvailabilityDataDTO getValidateSlots(AppointmentsResultModel appointmentsResultModel) {
         // Removing Previous slots if any
+        AppointmentAvailabilityDataDTO appointmentAvailability = appointmentsResultModel.getPayload().getAppointmentAvailability();
         List<AppointmentsSlotsDTO> currentSlots = appointmentAvailability.getPayload().get(0).getSlots();
         List<AppointmentsSlotsDTO> validSlots = new ArrayList<>();
 
         for (AppointmentsSlotsDTO appointmentsSlotsDTO : currentSlots) {
-            Date d1 = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime()).getDate();
-            if (d1.after(new Date())) {
+            Date appointmentDate = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime()).getDate();
+            // Adding gap time in slots https://jira.carecloud.com/browse/BREEZ-1648
+            Date currentDate = new Date();
+            currentDate.setTime(currentDate.getTime() + getPracticeAppointmentGapTime(appointmentsResultModel.getPayload().getAppointmentsSettings().get(0)));
+            if (appointmentDate.after(currentDate)) {
                 validSlots.add(appointmentsSlotsDTO);
             }
         }
 
         appointmentAvailability.getPayload().get(0).setSlots(validSlots);
         return appointmentAvailability;
+    }
+
+    private long getPracticeAppointmentGapTime(AppointmentsSettingDTO appointmentsSettingDTO) {
+        if (appointmentsSettingDTO != null) {
+            return (long) (appointmentsSettingDTO.getRequests().getRestrictionPeriod() * 60 * 1000); // Converting to Milli sec, RestrictionPeriod should be in Minutes
+        }
+        return 0;
     }
 }
