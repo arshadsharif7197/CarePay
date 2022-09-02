@@ -8,8 +8,8 @@ android {
         minSdkVersion 17
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 25
-        versionCode 205
-        versionName "1.4.3"
+        versionCode 209
+        versionName "1.4.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
