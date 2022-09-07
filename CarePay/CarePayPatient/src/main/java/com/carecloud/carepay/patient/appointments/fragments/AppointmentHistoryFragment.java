@@ -206,6 +206,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                             }
                         });
                         largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
+                    } else {
+                        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                        callback.addFragment(fragment, true);
                     }
                 } else {
                     CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
@@ -221,7 +224,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     private boolean canScheduleAppointments() {
         for (UserPracticeDTO practiceDTO : appointmentsResultModel.getPayload().getUserPractices()) {
             if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
-                cdrMaguirePractice=practiceDTO.getPracticeId();
+                cdrMaguirePractice = practiceDTO.getPracticeId();
                 return true;
             }
         }

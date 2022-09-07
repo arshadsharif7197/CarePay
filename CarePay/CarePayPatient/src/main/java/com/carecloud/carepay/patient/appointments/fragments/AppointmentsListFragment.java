@@ -61,6 +61,7 @@ public class AppointmentsListFragment extends BaseFragment
     private FloatingActionButton floatingActionButton;
     private boolean canScheduleAppointments;
     private AppointmentViewModel viewModel;
+    private List<UserPracticeDTO> filteredList;
 
     public static AppointmentsListFragment newInstance() {
         Bundle args = new Bundle();
@@ -131,59 +132,42 @@ public class AppointmentsListFragment extends BaseFragment
         Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
         floatingActionButton = view.findViewById(R.id.fab);
         canScheduleAppointments = canScheduleAppointments();
-        List<UserPracticeDTO> filteredList = filterPracticesList(appointmentsResultModel.getPayload().getUserPractices());
+        filteredList = filterPracticesList(appointmentsResultModel.getPayload().getUserPractices());
 
         if (canScheduleAppointments) {
-            floatingActionButton.setOnClickListener(view1 -> {
-                if (filteredList.size() == 1) {
-                    UserPracticeDTO selectedPractice = filteredList.get(0);
-                    AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
-                    if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
-                        LargeConfirmationAlertDialog largeAlertDialogFragment =
-                                LargeConfirmationAlertDialog.newInstance(appointmentsPopUpDTO.getText(),
-                                        Label.getLabel("button_yes"), Label.getLabel("button_no"));
-                        largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                            @Override
-                            public void onActionButton() {
-                                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                                callback.addFragment(fragment, true);
-                            }
-                        });
-                        largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
-                    }
-                } else {
-                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                    callback.addFragment(fragment, true);
-                }
-
-            });
+            floatingActionButton.setOnClickListener(view1 -> checkCreateAppointmentChecks());
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
-            newAppointmentClassicButton.setOnClickListener(v -> {
-                if (filteredList.size() == 1) {
-                    UserPracticeDTO selectedPractice = filteredList.get(0);
-                    AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
-                    if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
-                        LargeConfirmationAlertDialog largeAlertDialogFragment =
-                                LargeConfirmationAlertDialog.newInstance(appointmentsPopUpDTO.getText(),
-                                        Label.getLabel("button_yes"), Label.getLabel("button_no"));
-                        largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                            @Override
-                            public void onActionButton() {
-                                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                                callback.addFragment(fragment, true);
-                            }
-                        });
-                        largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
-                    }
-                } else {
-                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                    callback.addFragment(fragment, true);
-                }
-            });
+            newAppointmentClassicButton.setOnClickListener(v -> checkCreateAppointmentChecks());
         } else {
             floatingActionButton.hide();
             noAppointmentMessage.setVisibility(View.GONE);
             newAppointmentClassicButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void checkCreateAppointmentChecks() {
+        if (filteredList.size() == 1) {
+            UserPracticeDTO selectedPractice = filteredList.get(0);
+            AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
+            if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
+                LargeConfirmationAlertDialog largeAlertDialogFragment =
+                        LargeConfirmationAlertDialog.newInstance(appointmentsPopUpDTO.getText(),
+                                Label.getLabel("button_yes"), Label.getLabel("button_no"));
+                largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                    @Override
+                    public void onActionButton() {
+                        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                        callback.addFragment(fragment, true);
+                    }
+                });
+                largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
+            } else {
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
+            }
+        } else {
+            CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+            callback.addFragment(fragment, true);
         }
     }
 
