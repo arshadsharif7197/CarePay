@@ -83,6 +83,11 @@ public class IntelligentSchedulerActivity extends BasePatientActivity implements
     }
 
     @Override
+    public void onViewAnswerClicked() {
+        fragment.onViewAnswerClicked();
+    }
+
+    @Override
     public void onExit() {
         ConfirmDialogFragment fragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("intelligent_scheduler_cancel_popup_title"),

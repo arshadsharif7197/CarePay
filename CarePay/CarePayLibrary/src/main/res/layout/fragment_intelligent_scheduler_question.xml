@@ -4,7 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/dimen_10dp">
+    android:padding="@dimen/dimen_16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Questions"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="intelligent_scheduler_questions_title" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/view_answer_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_blue_border"
+            android:padding="@dimen/dimen_10dp"
+            android:text="View Answers"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_13"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="view_answer_label" />
+
+    </RelativeLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/intelligent_scheduler_question_title"
