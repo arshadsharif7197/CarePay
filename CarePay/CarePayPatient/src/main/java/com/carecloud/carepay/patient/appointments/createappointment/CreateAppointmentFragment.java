@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppo
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -128,6 +129,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     LinearLayoutManager.HORIZONTAL, false));
             PracticesAdapter adapter = new PracticesAdapter(filteredList);
             adapter.setCallback((userPracticeDTO, position) -> {
+                isSchedulerEnabled = false;
                 if (selectedPractice != null && !selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                     resetForm();
                     if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
@@ -141,9 +143,10 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
                 }
                 selectedPractice = userPracticeDTO;
-                if (selectedPractice.getPracticeId().equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
+                AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsModelDto.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
+                if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
                     ExitAlertDialog selfPayAlertDialog = ExitAlertDialog.
-                            newInstance(Label.getLabel("insurance_cdr_popup"),
+                            newInstance(appointmentsPopUpDTO.getText(),
                                     Label.getLabel("ok"), Label.getLabel("button_no"));
                     // Intelligent Scheduler flow
                     selfPayAlertDialog.setOnDismissListener(dialogInterface -> startIntelligentScheduler());
