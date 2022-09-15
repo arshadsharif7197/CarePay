@@ -33,9 +33,11 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,6 +61,7 @@ public class AppointmentsListFragment extends BaseFragment
     private FloatingActionButton floatingActionButton;
     private boolean canScheduleAppointments;
     private AppointmentViewModel viewModel;
+    private List<UserPracticeDTO> filteredList;
 
     public static AppointmentsListFragment newInstance() {
         Bundle args = new Bundle();
@@ -129,51 +132,12 @@ public class AppointmentsListFragment extends BaseFragment
         Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
         floatingActionButton = view.findViewById(R.id.fab);
         canScheduleAppointments = canScheduleAppointments();
+        filteredList = filterPracticesList(appointmentsResultModel.getPayload().getUserPractices());
+
         if (canScheduleAppointments) {
-            floatingActionButton.setOnClickListener(view1 -> {
-
-                if (cdrMaguirePractice != null && cdrMaguirePractice.
-                                equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
-                    LargeConfirmationAlertDialog largeAlertDialogFragment =
-                            LargeConfirmationAlertDialog.newInstance(Label.getLabel("appointment_cdr_popup"),
-                            Label.getLabel("button_yes"),Label.getLabel("button_no"));
-                    largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                            CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                            callback.addFragment(fragment, true);
-                        }
-                    });
-                    largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
-                }else {
-                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                    callback.addFragment(fragment, true);
-                }
-
-            });
+            floatingActionButton.setOnClickListener(view1 -> checkCreateAppointmentChecks());
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
-            newAppointmentClassicButton.setOnClickListener(v -> {
-                if (appointmentsResultModel.getPayload().getUserPractices() != null && appointmentsResultModel.
-                        getPayload().getUserPractices().get(0) != null &&
-                        appointmentsResultModel.getPayload().getUserPractices().get(0).getPracticeId().
-                                equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
-                    LargeConfirmationAlertDialog largeAlertDialogFragment = LargeConfirmationAlertDialog.
-                            newInstance(Label.getLabel("appointment_cdr_popup"),
-                                    Label.getLabel("button_yes"),Label.getLabel("button_no"));
-                    largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                            CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                            callback.addFragment(fragment, true);
-                        }
-                    });
-                    largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
-                } else {
-                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                    callback.addFragment(fragment, true);
-                }
-
-            });
+            newAppointmentClassicButton.setOnClickListener(v -> checkCreateAppointmentChecks());
         } else {
             floatingActionButton.hide();
             noAppointmentMessage.setVisibility(View.GONE);
@@ -181,14 +145,50 @@ public class AppointmentsListFragment extends BaseFragment
         }
     }
 
+    private void checkCreateAppointmentChecks() {
+        if (filteredList.size() == 1) {
+            UserPracticeDTO selectedPractice = filteredList.get(0);
+            AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
+            if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
+                LargeConfirmationAlertDialog largeAlertDialogFragment =
+                        LargeConfirmationAlertDialog.newInstance(appointmentsPopUpDTO.getText(),
+                                Label.getLabel("button_yes"), Label.getLabel("button_no"));
+                largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                    @Override
+                    public void onActionButton() {
+                        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                        callback.addFragment(fragment, true);
+                    }
+                });
+                largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
+            } else {
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
+            }
+        } else {
+            CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+            callback.addFragment(fragment, true);
+        }
+    }
+
     private boolean canScheduleAppointments() {
         for (UserPracticeDTO practiceDTO : appointmentsResultModel.getPayload().getUserPractices()) {
             if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
-                cdrMaguirePractice=practiceDTO.getPracticeId();
+                cdrMaguirePractice = practiceDTO.getPracticeId();
                 return true;
             }
         }
         return false;
+    }
+
+    private List<UserPracticeDTO> filterPracticesList(List<UserPracticeDTO> userPractices) {
+        List<UserPracticeDTO> filteredList = new ArrayList<>();
+        for (UserPracticeDTO practiceDTO : userPractices) {
+            if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                filteredList.add(practiceDTO);
+            }
+        }
+        return filteredList;
     }
 
     private void loadAppointmentList() {
