@@ -178,10 +178,13 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
-            nextButton.setEnabled(false);
-        } else {
-            callback.onExit();
+            nextButton.setEnabled(true);
+            intelligentSchedulerQuestionFragment.setVisitTypeOption(selectedOption);
         }
+        // Disable back button for https://jira.carecloud.com/browse/BREEZ-1677
+        /* else {
+            callback.onExit();
+        }*/
 
     }
 

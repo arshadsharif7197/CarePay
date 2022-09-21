@@ -189,23 +189,8 @@ public class AppointmentHistoryFragment extends BaseFragment
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
         if (canScheduleAppointments()) {
             floatingActionButton.setOnClickListener(view1 -> {
-                if (cdrMaguirePractice != null && cdrMaguirePractice.
-                        equalsIgnoreCase("f1fe3157-5eae-4796-912f-16f297aac0da")) {
-                    LargeConfirmationAlertDialog largeAlertDialogFragment =
-                            LargeConfirmationAlertDialog.newInstance(Label.getLabel("appointment_cdr_popup"),
-                                    Label.getLabel("button_yes"),Label.getLabel("button_no"));
-                    largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                            CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                            callback.addFragment(fragment, true);
-                        }
-                    });
-                    largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
-                }else {
-                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                    callback.addFragment(fragment, true);
-                }
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
             });
         } else {
             floatingActionButton.hide();

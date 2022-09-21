@@ -92,8 +92,9 @@ public class VisitTypeOptionsListAdapter extends RecyclerView.Adapter<VisitTypeO
         holder.itemCheck.setSelected(selected);
     }
 
-    public void setSelectedCreditCard(VisitTypeQuestions visitTypeQuestion) {
+    public void setSelectedItem(VisitTypeQuestions visitTypeQuestion) {
         selectedItem = visitTypeQuestion;
+        notifyDataSetChanged();
     }
 
     public interface OptionSelectionListener {
