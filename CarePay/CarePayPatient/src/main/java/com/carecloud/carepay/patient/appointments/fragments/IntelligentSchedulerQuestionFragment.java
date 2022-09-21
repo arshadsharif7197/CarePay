@@ -27,6 +27,7 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
     private IntelligentSchedulerCallback callback;
     private VisitTypeQuestions visitTypeQuestion;
     private VisitTypeQuestions selectedVisitTypeOption;
+    private CarePayButton viewAnswerButton;
 
     public static IntelligentSchedulerQuestionFragment newInstance(String intelligentQuestions) {
         Bundle args = new Bundle();
@@ -68,7 +69,7 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
     }
 
     private void initializeViews(View view) {
-        CarePayButton viewAnswerButton = view.findViewById(R.id.view_answer_btn);
+        viewAnswerButton = view.findViewById(R.id.view_answer_btn);
         viewAnswerButton.setOnClickListener(v -> callback.onViewAnswerClicked());
 
         TextView tvQuestionTitle = view.findViewById(R.id.intelligent_scheduler_question_title);
@@ -93,5 +94,11 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
 
     public VisitTypeQuestions getVisitTypeOption() {
         return selectedVisitTypeOption;
+    }
+
+    public void showViewAnswerButton(boolean isViewAnswerButtonNeeded) {
+        if (viewAnswerButton != null) {
+            viewAnswerButton.setVisibility((isViewAnswerButtonNeeded) ? View.VISIBLE : View.GONE);
+        }
     }
 }

@@ -37,7 +37,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private VisitTypeQuestions currentQuestion;
     private VisitTypePagerAdapter questionPagerAdapter;
     private VisitTypeQuestions selectedOption;
-    private List<SchedulerAnswerTally> schedulerAnswerTallyList;
+    private List<SchedulerAnswerTally> schedulerAnswerTallyList = new ArrayList<>();
     private SchedulerAnswerTally schedulerAnswerTally;
 
 
@@ -111,6 +111,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 schedulerAnswerTally.setAnswer(selectedOption.getName());
                 schedulerAnswerTallyList.add(schedulerAnswerTally);
 
+                IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(questionPagerAdapter.getCount() - 1));
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
@@ -122,7 +125,6 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         });
         nextButton.setEnabled(false);
         setupViewPager();
-        schedulerAnswerTallyList = new ArrayList<>();
     }
 
     private void setupViewPager() {
@@ -137,6 +139,11 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 .newInstance(new Gson().toJson(currentQuestion));
         questionPagerAdapter.addFragment(questionsFragment);
         viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
+        if (schedulerAnswerTallyList.size() == 0) {
+            questionsFragment.showViewAnswerButton(false);
+        } else {
+            questionsFragment.showViewAnswerButton(true);
+        }
     }
 
     public void onVisitOptionSelected(VisitTypeQuestions visitTypeQuestions) {
@@ -161,6 +168,13 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             schedulerAnswerTallyList.remove(schedulerAnswerTallyList.size() - 1);
 
             IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(previousIndex));
+            if (schedulerAnswerTallyList.size() == 0) {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(false);
+            } else {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+            }
+
+            currentQuestion = intelligentSchedulerQuestionFragment.getVisitTypeQuestion();
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
@@ -172,7 +186,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     }
 
 
-    public void onViewAnswerClicked() {
-        //
+    public List<SchedulerAnswerTally> getAllQuestionsAnswers() {
+        return schedulerAnswerTallyList;
     }
 }

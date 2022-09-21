@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.appointments.models;
 
-public class SchedulerAnswerTally {
+import java.io.Serializable;
+
+public class SchedulerAnswerTally implements Serializable {
     private String question;
     private String answer;
 
