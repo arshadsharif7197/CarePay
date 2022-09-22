@@ -11,14 +11,17 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.patient.appointments.fragments.IntelligentSchedulerFragment;
+import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
-import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author pjohnson on 2019-06-13.
@@ -80,6 +83,14 @@ public class IntelligentSchedulerActivity extends BasePatientActivity implements
     @Override
     public void onOptionSelected(VisitTypeQuestions visitTypeQuestion) {
         fragment.onVisitOptionSelected(visitTypeQuestion);
+    }
+
+    @Override
+    public void onViewAnswerClicked() {
+        List<SchedulerAnswerTally> answerTallyList = fragment.getAllQuestionsAnswers();
+        Intent intent = new Intent(this, QuestionAnswerTallyActivity.class)
+                .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_ANSWERS_TALLY_KEY, (Serializable) answerTallyList);
+        startActivity(intent);
     }
 
     @Override
