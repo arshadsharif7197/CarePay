@@ -8,6 +8,8 @@ public interface IntelligentSchedulerCallback {
 
     void onOptionSelected(VisitTypeQuestions visitTypeQuestion);
 
+    void onViewAnswerClicked();
+
     void onExit();
 
     void onBack();

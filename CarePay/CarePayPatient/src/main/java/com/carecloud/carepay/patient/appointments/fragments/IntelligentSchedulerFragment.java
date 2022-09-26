@@ -18,11 +18,15 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.createappointment.visittype.VisitTypePagerAdapter;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
+import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
@@ -33,6 +37,8 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private VisitTypeQuestions currentQuestion;
     private VisitTypePagerAdapter questionPagerAdapter;
     private VisitTypeQuestions selectedOption;
+    private List<SchedulerAnswerTally> schedulerAnswerTallyList = new ArrayList<>();
+    private SchedulerAnswerTally schedulerAnswerTally;
 
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
@@ -99,6 +105,15 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // adding question and answer in list for Tally view https://jira.carecloud.com/browse/BREEZ-1682
+                schedulerAnswerTally = new SchedulerAnswerTally();
+                schedulerAnswerTally.setQuestion(currentQuestion.getName());
+                schedulerAnswerTally.setAnswer(selectedOption.getName());
+                schedulerAnswerTallyList.add(schedulerAnswerTally);
+
+                IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(questionPagerAdapter.getCount() - 1));
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
@@ -124,6 +139,11 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 .newInstance(new Gson().toJson(currentQuestion));
         questionPagerAdapter.addFragment(questionsFragment);
         viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
+        if (schedulerAnswerTallyList.size() == 0) {
+            questionsFragment.showViewAnswerButton(false);
+        } else {
+            questionsFragment.showViewAnswerButton(true);
+        }
     }
 
     public void onVisitOptionSelected(VisitTypeQuestions visitTypeQuestions) {
@@ -145,8 +165,16 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         if (questionPagerAdapter.getCount() > 1) {
             int previousIndex = questionPagerAdapter.getCount() - 2;
             questionPagerAdapter.removeFragment();
+            schedulerAnswerTallyList.remove(schedulerAnswerTallyList.size() - 1);
 
             IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(previousIndex));
+            if (schedulerAnswerTallyList.size() == 0) {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(false);
+            } else {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+            }
+
+            currentQuestion = intelligentSchedulerQuestionFragment.getVisitTypeQuestion();
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
@@ -158,5 +186,10 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             callback.onExit();
         }*/
 
+    }
+
+
+    public List<SchedulerAnswerTally> getAllQuestionsAnswers() {
+        return schedulerAnswerTallyList;
     }
 }
