@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -186,11 +187,33 @@ public class AppointmentHistoryFragment extends BaseFragment
             showPracticeToolbar(view);
         }
 
+        List<UserPracticeDTO> filteredList = filterPracticesList(appointmentsResultModel.getPayload().getUserPractices());
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
         if (canScheduleAppointments()) {
             floatingActionButton.setOnClickListener(view1 -> {
-                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-                callback.addFragment(fragment, true);
+                if (filteredList.size() == 1) {
+                    UserPracticeDTO selectedPractice = filteredList.get(0);
+                    AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
+                    if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
+                        LargeConfirmationAlertDialog largeAlertDialogFragment =
+                                LargeConfirmationAlertDialog.newInstance(appointmentsPopUpDTO.getText(),
+                                        Label.getLabel("button_yes"), Label.getLabel("button_no"));
+                        largeAlertDialogFragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                            @Override
+                            public void onActionButton() {
+                                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                                callback.addFragment(fragment, true);
+                            }
+                        });
+                        largeAlertDialogFragment.show(requireActivity().getSupportFragmentManager(), largeAlertDialogFragment.getClass().getName());
+                    } else {
+                        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                        callback.addFragment(fragment, true);
+                    }
+                } else {
+                    CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                    callback.addFragment(fragment, true);
+                }
             });
         } else {
             floatingActionButton.hide();
@@ -201,11 +224,21 @@ public class AppointmentHistoryFragment extends BaseFragment
     private boolean canScheduleAppointments() {
         for (UserPracticeDTO practiceDTO : appointmentsResultModel.getPayload().getUserPractices()) {
             if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
-                cdrMaguirePractice=practiceDTO.getPracticeId();
+                cdrMaguirePractice = practiceDTO.getPracticeId();
                 return true;
             }
         }
         return false;
+    }
+
+    private List<UserPracticeDTO> filterPracticesList(List<UserPracticeDTO> userPractices) {
+        List<UserPracticeDTO> filteredList = new ArrayList<>();
+        for (UserPracticeDTO practiceDTO : userPractices) {
+            if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                filteredList.add(practiceDTO);
+            }
+        }
+        return filteredList;
     }
 
     private void showPracticeToolbar(View view) {
