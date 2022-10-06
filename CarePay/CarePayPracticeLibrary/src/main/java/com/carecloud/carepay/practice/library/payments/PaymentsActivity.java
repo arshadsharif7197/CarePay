@@ -9,7 +9,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -79,19 +81,20 @@ import java.util.Set;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
         PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener,
-        ShamrockPaymentsCallback, PaymentPlanEditInterface, PaymentPlanCreateInterface {
+        ShamrockPaymentsCallback, PaymentPlanEditInterface, PaymentPlanCreateInterface, SwipeRefreshLayout.OnRefreshListener {
 
     private PaymentsModel paymentsModel;
     private FilterModel filterModel;
 
     private Date startDate;
     private Date endDate;
-
+    private boolean isFragmentAdded = false;
     private PaymentHistoryItem recentRefundItem;
     private String patientId;
     private boolean paymentMethodCancelled = false;
     private View filterTextView;
     private View filterTextViewOn;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
 
     @Override
@@ -116,6 +119,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
         findViewById(R.id.goBackTextview).setOnClickListener(view -> onBackPressed());
         findViewById(R.id.change_date_range).setOnClickListener(selectDateRange);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         setUpFilter();
     }
 
@@ -170,11 +175,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         patientListView.setCallback(dto -> {
-            PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
-            PatientModel patient = new PatientModel();
-            patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
-            patientId = patient.getPatientId();
-            getPatientBalanceDetails(patientId);
+            if (!isFragmentAdded && getSupportFragmentManager().getBackStackEntryCount() < 1) {
+
+                PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
+                PatientModel patient = new PatientModel();
+                patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
+                patientId = patient.getPatientId();
+                getPatientBalanceDetails(patientId);
+            }
         });
         applyFilter();
     }
@@ -301,12 +309,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onPreExecute() {
+            isFragmentAdded = true;
             showProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (patientDetails != null) {
@@ -323,7 +336,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onFailure(String exceptionMessage) {
+            isFragmentAdded = false;
             hideProgressDialog();
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
             showErrorNotification(exceptionMessage);
         }
     };
@@ -442,6 +458,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
         PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
         displayDialogFragment(fragment, true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isFragmentAdded = false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -611,21 +633,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onRangeSelected(Date start, Date end) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", getFormattedDate(start));
-        queryMap.put("end_date", getFormattedDate(end));
-
-        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
-        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
-
-        if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
-            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
-        }
-
-        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getPracticePayments();
-        getWorkflowServiceHelper().execute(transitionDTO, getChangeDateCallback(start, end), queryMap);
-        updateDateLabel();
+        updateList(start, end);
     }
 
     @Override
@@ -655,11 +663,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             @Override
             public void onPreExecute() {
                 showProgressDialog();
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 startDate = start;
                 endDate = end;
 
@@ -671,6 +683,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
                 showErrorNotification(exceptionMessage);
             }
         };
@@ -871,5 +885,34 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         //NA
+    }
+
+    @Override
+    public void onRefresh() {
+        updateList(startDate, endDate);
+    }
+
+    private void updateList(Date start, Date end) {
+        Map<String, String> queryMap = new HashMap<>();
+        if (null != start)
+            queryMap.put("start_date", getFormattedDate(start));
+        // else
+        //  queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        if (null != end)
+            queryMap.put("end_date", getFormattedDate(end));
+        //  else
+        //  queryMap.put("end_date",  DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
+        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+        if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
+
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getPracticePayments();
+        getWorkflowServiceHelper().execute(transitionDTO, getChangeDateCallback(start, end), queryMap);
+        updateDateLabel();
     }
 }

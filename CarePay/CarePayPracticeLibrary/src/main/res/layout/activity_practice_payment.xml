@@ -60,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/findPatientButtonRightMargin"
+                android:contentDescription="@string/content_description_find_a_patient"
                 android:drawableStart="@drawable/icn_search_patient"
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
@@ -67,8 +68,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="practice_payments_findPatient_label"
-                android:contentDescription="@string/content_description_find_a_patient"/>
+                breeze:textKey="practice_payments_findPatient_label" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/filterTextView"
@@ -157,14 +157,19 @@
 
     </RelativeLayout>
 
-    <com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView
-        android:id="@+id/list_patients"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/paymentContainerHorizontalMargin"
         android:layout_marginTop="@dimen/listPatientsMarginTop"
         android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
-        android:layout_marginBottom="@dimen/paymentContainerBottomMargin"
-        android:background="@drawable/payments_list_background" />
+        android:layout_marginBottom="@dimen/paymentContainerBottomMargin">
 
+        <com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView
+            android:id="@+id/list_patients"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/payments_list_background" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
