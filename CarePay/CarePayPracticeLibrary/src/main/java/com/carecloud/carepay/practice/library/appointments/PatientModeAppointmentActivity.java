@@ -1,25 +1,14 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -29,8 +18,6 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Pro
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.interfaces.IntelligentSchedulerCallback;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
-import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -42,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.createappointment.availabilityho
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
@@ -50,6 +38,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -59,11 +48,7 @@ import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,8 +84,22 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         selectedPractice = appointmentsResultModel.getPayload().getUserPractices().get(0);
         setUpUI();
-        startIntelligentScheduler();
+        checkPracticeAlert();
+    }
 
+    private void checkPracticeAlert() {
+        AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
+        if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
+            ExitAlertDialog practiceAlert = ExitAlertDialog.
+                    newInstance(appointmentsPopUpDTO.getText(),
+                            Label.getLabel("ok"), Label.getLabel("button_no"));
+            // Intelligent Scheduler flow
+            practiceAlert.setOnDismissListener(dialogInterface -> startIntelligentScheduler());
+            practiceAlert.show(getSupportFragmentManager(), practiceAlert.getClass().getName());
+        } else {
+            // Intelligent Scheduler flow
+            startIntelligentScheduler();
+        }
     }
 
     private void startIntelligentScheduler() {
