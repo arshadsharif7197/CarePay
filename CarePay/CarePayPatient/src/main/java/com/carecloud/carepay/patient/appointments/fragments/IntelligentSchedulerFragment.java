@@ -33,6 +33,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private VisitTypeQuestions currentQuestion;
     private VisitTypePagerAdapter questionPagerAdapter;
     private VisitTypeQuestions selectedOption;
+    private Toolbar toolbar;
 
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
@@ -76,7 +77,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
+        toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
             TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
@@ -87,6 +88,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
                 toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
+                toolbar.setNavigationIcon(null);
             }
             exit.setOnClickListener((view1) -> callback.onExit());
         }
@@ -99,6 +101,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (toolbar != null) {
+                    toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
+                }
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
@@ -152,11 +157,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
             nextButton.setEnabled(true);
             intelligentSchedulerQuestionFragment.setVisitTypeOption(selectedOption);
+            if (questionPagerAdapter.getCount() == 1 && toolbar != null) {
+                toolbar.setNavigationIcon(null);
+            }
         }
-        // Disable back button for https://jira.carecloud.com/browse/BREEZ-1677
-        /* else {
-            callback.onExit();
-        }*/
-
     }
 }

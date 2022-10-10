@@ -81,7 +81,8 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
     private void setupTitleViews(View view) {
         Toolbar toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
-         cancel_img = view.findViewById(R.id.cancel_img);
+        cancel_img = view.findViewById(R.id.cancel_img);
+        cancel_img.setVisibility(View.INVISIBLE);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
             TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
@@ -113,6 +114,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancel_img.setVisibility(View.VISIBLE);
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
@@ -165,8 +167,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
             nextButton.setEnabled(false);
-        } else {
-            callback.onExit();
+            if (questionPagerAdapter.getCount() == 1) {
+                cancel_img.setVisibility(View.INVISIBLE);
+            }
         }
 
     }
