@@ -21,11 +21,15 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.createappointment.visittype.VisitTypePagerAdapter;
+import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
@@ -37,6 +41,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private VisitTypePagerAdapter questionPagerAdapter;
     private VisitTypeQuestions selectedOption;
     private ImageView cancel_img;
+    private List<SchedulerAnswerTally> schedulerAnswerTallyList = new ArrayList<>();
+    private SchedulerAnswerTally schedulerAnswerTally;
+    private IntelligentSchedulerQuestionFragment questionsFragment;
 
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
@@ -90,19 +97,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             exit.setText(Label.getLabel("demographics_exit"));
             toolbar.setTitle("");
 
-            /*if (getDialog() == null) {
-
-
-
-              //  toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-               // toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
-            }*/
-            cancel_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onBack();
-                }
-            });
+            cancel_img.setOnClickListener(v -> callback.onBack());
             exit.setOnClickListener((view1) -> callback.onExit());
         }
     }
@@ -115,6 +110,11 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
                 cancel_img.setVisibility(View.VISIBLE);
+                schedulerAnswerTally = new SchedulerAnswerTally();
+                schedulerAnswerTally.setQuestion(currentQuestion.getName());
+                schedulerAnswerTally.setAnswer(selectedOption.getName());
+                schedulerAnswerTallyList.add(schedulerAnswerTally);
+
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
@@ -122,6 +122,8 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                     callback.onVisitTypeSelected(selectedOption.getVisittype());
                 }
 
+                IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(questionPagerAdapter.getCount() - 1));
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
             }
         });
         nextButton.setEnabled(false);
@@ -136,7 +138,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
     private void startQuestionFragment(VisitTypeQuestions currentVisitTypeQuestion) {
         currentQuestion = currentVisitTypeQuestion;
-        IntelligentSchedulerQuestionFragment questionsFragment = IntelligentSchedulerQuestionFragment
+        questionsFragment = IntelligentSchedulerQuestionFragment
                 .newInstance(new Gson().toJson(currentQuestion));
         questionPagerAdapter.addFragment(questionsFragment);
         viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
@@ -161,16 +163,37 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         if (questionPagerAdapter.getCount() > 1) {
             int previousIndex = questionPagerAdapter.getCount() - 2;
             questionPagerAdapter.removeFragment();
+            schedulerAnswerTallyList.remove(schedulerAnswerTallyList.size() - 1);
 
             IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(previousIndex));
+            if (schedulerAnswerTallyList.size() == 0) {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(false);
+            } else {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+            }
+
+            currentQuestion = intelligentSchedulerQuestionFragment.getVisitTypeQuestion();
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
-            nextButton.setEnabled(false);
             if (questionPagerAdapter.getCount() == 1) {
                 cancel_img.setVisibility(View.INVISIBLE);
             }
+            nextButton.setEnabled(true);
+            intelligentSchedulerQuestionFragment.setVisitTypeOption(selectedOption);
         }
 
+    }
+
+    public List<SchedulerAnswerTally> getAllQuestionsAnswers() {
+        return schedulerAnswerTallyList;
+    }
+
+    public void showQuestions(boolean isQuestionNeeded) {
+        if ((isQuestionNeeded)) {
+            questionsFragment.showDialog();
+        } else {
+            questionsFragment.hideDialog();
+        }
     }
 }

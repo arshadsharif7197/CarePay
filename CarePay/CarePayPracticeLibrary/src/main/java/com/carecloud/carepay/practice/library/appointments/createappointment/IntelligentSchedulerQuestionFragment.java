@@ -18,6 +18,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.createappointment.visittype.VisitTypeOptionsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.google.gson.Gson;
 
@@ -27,6 +28,8 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
     private IntelligentSchedulerCallback callback;
     private VisitTypeQuestions visitTypeQuestion;
     private VisitTypeQuestions selectedVisitTypeOption;
+    private CarePayButton viewAnswerButton;
+    private VisitTypeOptionsListAdapter visitTypeOptionsListAdapterListAdapter;
 
     public static IntelligentSchedulerQuestionFragment newInstance(String intelligentQuestions) {
         Bundle args = new Bundle();
@@ -68,12 +71,15 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
     }
 
     private void initializeViews(View view) {
+        viewAnswerButton = view.findViewById(R.id.view_answer_btn);
+        viewAnswerButton.setOnClickListener(v -> callback.onViewAnswerClicked());
+
         TextView tvQuestionTitle = view.findViewById(R.id.intelligent_scheduler_question_title);
         tvQuestionTitle.setText(visitTypeQuestion.getName());
 
         RecyclerView rvOptions = view.findViewById(R.id.list_items);
         rvOptions.setLayoutManager(new LinearLayoutManager(getContext()));
-        VisitTypeOptionsListAdapter visitTypeOptionsListAdapterListAdapter = new VisitTypeOptionsListAdapter(getContext(),
+        visitTypeOptionsListAdapterListAdapter = new VisitTypeOptionsListAdapter(getContext(),
                 visitTypeQuestion.getChildrens(), this, true);
         rvOptions.setAdapter(visitTypeOptionsListAdapterListAdapter);
     }
@@ -90,5 +96,14 @@ public class IntelligentSchedulerQuestionFragment extends BaseDialogFragment imp
 
     public VisitTypeQuestions getVisitTypeOption() {
         return selectedVisitTypeOption;
+    }
+
+    public void showViewAnswerButton(boolean isViewAnswerButtonNeeded) {
+        if (viewAnswerButton != null) {
+            viewAnswerButton.setVisibility((isViewAnswerButtonNeeded) ? View.VISIBLE : View.GONE);
+        }
+    }
+    public void setVisitTypeOption(VisitTypeQuestions selectedVisitTypeOption) {
+        visitTypeOptionsListAdapterListAdapter.setSelectedItem(selectedVisitTypeOption);
     }
 }
