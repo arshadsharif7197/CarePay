@@ -89,6 +89,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private void setupTitleViews(View view) {
         Toolbar toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
         cancel_img = view.findViewById(R.id.cancel_img);
+        cancel_img.setVisibility(View.INVISIBLE);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
             TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
@@ -96,19 +97,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             exit.setText(Label.getLabel("demographics_exit"));
             toolbar.setTitle("");
 
-            /*if (getDialog() == null) {
-
-
-
-              //  toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-               // toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
-            }*/
-            cancel_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onBack();
-                }
-            });
+            cancel_img.setOnClickListener(v -> callback.onBack());
             exit.setOnClickListener((view1) -> callback.onExit());
         }
     }
@@ -120,6 +109,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancel_img.setVisibility(View.VISIBLE);
                 schedulerAnswerTally = new SchedulerAnswerTally();
                 schedulerAnswerTally.setQuestion(currentQuestion.getName());
                 schedulerAnswerTally.setAnswer(selectedOption.getName());
@@ -186,6 +176,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
+            if (questionPagerAdapter.getCount() == 1) {
+                cancel_img.setVisibility(View.INVISIBLE);
+            }
             nextButton.setEnabled(true);
             intelligentSchedulerQuestionFragment.setVisitTypeOption(selectedOption);
         }

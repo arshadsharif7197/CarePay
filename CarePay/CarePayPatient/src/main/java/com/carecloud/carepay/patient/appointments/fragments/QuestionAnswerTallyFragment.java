@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ public class QuestionAnswerTallyFragment extends BaseDialogFragment {
 
     private QuestionAnswersTallyCallback callback;
     private List<SchedulerAnswerTally> schedulerAnswerTallyList;
+    private ImageView cancel_img;
+    private Toolbar toolbar;
 
     public static QuestionAnswerTallyFragment newInstance(List<SchedulerAnswerTally> allQuestionsAnswers) {
         Bundle args = new Bundle();
@@ -70,16 +73,17 @@ public class QuestionAnswerTallyFragment extends BaseDialogFragment {
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
+        cancel_img = view.findViewById(R.id.cancel_img);
+
         if (toolbar != null) {
-            TextView title = toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
+            TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
+            exit.setVisibility(View.INVISIBLE);
             title.setText(Label.getLabel("answer_label"));
             toolbar.setTitle("");
 
-            if (getDialog() == null) {
-                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
-            }
+            cancel_img.setOnClickListener(v -> callback.onBack());
         }
     }
 
