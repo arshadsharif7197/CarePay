@@ -22,7 +22,6 @@
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".session.PracticeWarningSessionActivity"
-            android:screenOrientation="sensorLandscape"
             android:theme="@style/WarningTimeoutTheme" />
 
         <service
