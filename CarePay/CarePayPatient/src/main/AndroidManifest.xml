@@ -108,6 +108,12 @@
             android:name=".appointments.activities.IntelligentSchedulerActivity"
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".appointments.activities.QuestionAnswerTallyActivity"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait"
@@ -193,7 +199,6 @@
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".session.PatientWarningSessionActivity"
-            android:screenOrientation="sensorPortrait"
             android:theme="@style/WarningTimeoutTheme" />
         <activity
             android:name=".delegate.ProfilesActivity"

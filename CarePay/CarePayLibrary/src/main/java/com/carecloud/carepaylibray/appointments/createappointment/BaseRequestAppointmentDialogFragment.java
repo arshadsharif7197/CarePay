@@ -166,8 +166,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                 appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
                         .getCheckin()
                         .isMove_patient_pre_registration()) {
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-            callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ||
+                    getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                callback.appointmentScheduledSuccessfully();
+            } else {
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+            }
             return true;
         } else {
             return false;
