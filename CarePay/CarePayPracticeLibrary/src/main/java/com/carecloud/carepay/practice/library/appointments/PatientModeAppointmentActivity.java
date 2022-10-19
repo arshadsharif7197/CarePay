@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -96,8 +97,14 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                     newInstance(appointmentsPopUpDTO.getText(),
                             Label.getLabel("ok"), Label.getLabel("button_no"));
             // Intelligent Scheduler flow
-            practiceAlert.setOnDismissListener(dialogInterface -> startIntelligentScheduler());
-            practiceAlert.show(getSupportFragmentManager(), practiceAlert.getClass().getName());
+            practiceAlert.setExitAlertInterface(() -> startIntelligentScheduler());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    SystemClock.sleep(500);
+                    runOnUiThread(() -> practiceAlert.show(getSupportFragmentManager(), practiceAlert.getClass().getName()));
+                }
+            }).start();
         } else {
             // Intelligent Scheduler flow
             startIntelligentScheduler();
