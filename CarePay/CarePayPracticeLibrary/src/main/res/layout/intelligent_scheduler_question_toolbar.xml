@@ -47,7 +47,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="@string/com_mixpanel_android_exit"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
