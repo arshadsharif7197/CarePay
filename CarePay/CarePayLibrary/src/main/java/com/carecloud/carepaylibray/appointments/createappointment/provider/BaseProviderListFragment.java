@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -113,6 +114,7 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                         !resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().isEmpty()) {
                     List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto
                             .getPayload().getResourcesToSchedule().get(0).getResourcesV2());
+                    Collections.shuffle(providers, new Random()); // https://jira.carecloud.com/browse/BREEZ-1748
                     showResources(getUniqueProviders(providers));
                 } else {
                     getView().findViewById(R.id.providers_recycler_view).setVisibility(View.GONE);
