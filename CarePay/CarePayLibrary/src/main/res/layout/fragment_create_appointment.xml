@@ -55,8 +55,8 @@
             <LinearLayout
                 android:id="@+id/auto_visit_type_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_5dp"
+                android:layout_height="@dimen/createAppointmentDataTextViewHeight"
+               android:layout_marginTop="@dimen/dimen_10dp"
                 android:visibility="gone"
                 android:orientation="vertical">
 
@@ -84,6 +84,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:lines="1"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:singleLine="true"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/createAppointmentSectionTextSize"
@@ -93,6 +94,14 @@
             </LinearLayout>
 
             <!--location1-->
+        <LinearLayout
+            android:id="@+id/location_container1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:visibility="gone"
+            android:orientation="vertical">
             <RelativeLayout
                 android:id="@+id/locationHeader1"
                 android:layout_width="match_parent"
@@ -101,7 +110,7 @@
                 android:layout_marginTop="@dimen/createAppointmentHeaderTopMargin"
                 android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginBottom="@dimen/createAppointmentHeaderVerticalMargin"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/locationImageView1"
@@ -157,10 +166,58 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:visibility="gone" />
+        </LinearLayout>
             <!--location1-->
+            <!--auto selected location1-->
+            <LinearLayout
+                android:id="@+id/auto_location_container1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:visibility="gone"
+                android:orientation="vertical">
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/auto_location_title1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="Your auto selected location is"
+                    android:singleLine="true"
+                    android:textColor="@color/myHealthTextColor"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="intelligent_scheduler_auto_selected_label" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/tv_auto_location1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_below="@id/auto_location_title"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="visit_type_heading"
+                    tools:text="California" />
+            </LinearLayout>
+            <!--auto selected location1-->
 
             <!--provider-->
+        <LinearLayout
+            android:id="@+id/card_provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
             <RelativeLayout
                 android:id="@+id/providersHeader"
                 android:layout_width="match_parent"
@@ -223,8 +280,41 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:visibility="gone" />
+        </LinearLayout>
             <!--provider-->
+            <!--auto selected provider-->
+            <LinearLayout
+                android:id="@+id/auto_provider_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                android:visibility="gone"
+                android:orientation="vertical">
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/auto_provider_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="Your auto selected provider is"
+                    android:singleLine="true"
+                    android:textColor="@color/myHealthTextColor"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    />
+                <include
+                    android:id="@+id/autoProviderContainerData"
+                    layout="@layout/layout_create_appointment_step_auto_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/createAppointmentDataTextViewHeight"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <!--auto selected provider-->
 
             <!--visit_type-->
             <LinearLayout
@@ -300,6 +390,12 @@
             <!--visit_type-->
 
             <!--location-->
+        <LinearLayout
+            android:id="@+id/card_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
             <RelativeLayout
                 android:id="@+id/locationHeader"
                 android:layout_width="match_parent"
@@ -363,7 +459,44 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:visibility="gone" />
+        </LinearLayout>
             <!--location-->
+
+
+            <!--auto selected location-->
+            <LinearLayout
+                android:id="@+id/auto_location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/auto_location_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="Your auto selected location is"
+                    android:singleLine="true"
+                    android:textColor="@color/myHealthTextColor"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                   />
+
+                <include
+                    android:id="@+id/autoLocationContainerData"
+                    layout="@layout/layout_create_appointment_step_auto_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/createAppointmentDataTextViewHeight"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <!--auto selected location-->
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

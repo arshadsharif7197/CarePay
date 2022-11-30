@@ -2,11 +2,12 @@
 package com.carecloud.carepaylibray.intake.models;
 
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class ProviderModel {
+public class ProviderModel extends AppointmentResourcesItemDTO {
 
     @SerializedName("id")
     @Expose
@@ -29,9 +30,9 @@ public class ProviderModel {
      * @return
      *     The id
      */
-    public String getId() {
-        return id;
-    }
+   // public String getId() {
+   //     return id;
+   // }
 
     /**
      * 
