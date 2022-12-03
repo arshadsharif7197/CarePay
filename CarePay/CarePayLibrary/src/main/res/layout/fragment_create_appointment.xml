@@ -87,7 +87,7 @@
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:singleLine="true"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/createAppointmentSectionTextSize"
+                    android:textSize="@dimen/textview_default_textsize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="visit_type_heading"
                     tools:text="Visit Type" />
@@ -492,8 +492,8 @@
                     layout="@layout/layout_create_appointment_step_auto_selected"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/createAppointmentDataTextViewHeight"
-                    android:layout_marginStart="@dimen/dimen_10dp"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/dimen_12dp"
                     android:visibility="visible" />
             </LinearLayout>
             <!--auto selected location-->

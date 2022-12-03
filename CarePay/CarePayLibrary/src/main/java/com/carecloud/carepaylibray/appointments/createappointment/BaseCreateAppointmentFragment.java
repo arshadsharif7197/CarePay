@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.GetPatientTypeResponse;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -52,6 +53,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     protected ScheduleAppointmentInterface callback;
     protected AppointmentsResultModel appointmentsModelDto;
     protected GetPatientTypeResponse getPatientTypeResponse;
+    protected VisitTypeQuestions autoVisitType;
     protected String patientId;
 
     protected TextView providersNoDataTextView;
@@ -457,12 +459,17 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         auto_provider_container.setVisibility(View.GONE);
         providerContainer.setVisibility(View.GONE);
         providersNoDataTextView.setVisibility(View.VISIBLE);
-        if (isLocationOnTop) {
+        if (isLocationOnTop&&!isSchedulerEnabled) {
             resetVisitType();
         } else {
-            locationNoDataTextView.setEnabled(false);
-            resetVisitType();
-            resetLocation();
+            if (isSchedulerEnabled&&autoVisitType!=null&&autoVisitType.getCheckbox().getLocationSameAsLast()){
+
+            }else {
+                locationNoDataTextView.setEnabled(false);
+                resetVisitType();
+                resetLocation();
+            }
+
         }
 
     }

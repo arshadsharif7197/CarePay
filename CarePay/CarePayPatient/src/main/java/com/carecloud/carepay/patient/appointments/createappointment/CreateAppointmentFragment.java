@@ -65,7 +65,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                                                         LocationDTO selectedLocation) {
         Bundle args = new Bundle();
         args.putBoolean("isReschedule", true);
-        DtoHelper.bundleDto(args, userPracticeDTO);gi
+        DtoHelper.bundleDto(args, userPracticeDTO);
         DtoHelper.bundleDto(args, selectedResource);
         DtoHelper.bundleDto(args, selectedVisitTypeDTO);
         DtoHelper.bundleDto(args, selectedLocation);
@@ -98,6 +98,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         appointmentViewModel = new ViewModelProvider(requireActivity()).get(AppointmentViewModel.class);
         appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
             if (autoVisitType != null) {
+                this.autoVisitType=autoVisitType;
 
                 // selectedVisitType = autoVisitType;
                 selectedVisitType = autoVisitType.getVisittype();
@@ -118,11 +119,20 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         // auto_location_container.findViewById(titleTextView)
 
                     }else if (autoVisitType.getCheckbox().getLocationPickList()){
-                        locationNoDataTextView.setEnabled(true);
+                        if (!isLocationOnTop&&selectedResource==null){
+                            locationNoDataTextView.setEnabled(false);
+                        }else {
+                            locationNoDataTextView.setEnabled(true);
+                        }
+
+                        locationNoDataTextView.setVisibility(View.VISIBLE);
+                        location_container1.setVisibility(View.GONE);
+                        card_location.setVisibility(View.VISIBLE);
                     }
 
                     if (autoVisitType.getCheckbox().getProviderSameAsLast()&&getPatientTypeResponse!=null&&getPatientTypeResponse.getLastAppointment()!=null) {
                         selectedResource = getPatientTypeResponse.getLastAppointment().getPayload().getProvider();
+                        selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
                         card_provider.setVisibility(View.GONE);
                         auto_provider_container.setVisibility(View.VISIBLE);
                         String providerName = selectedResource.getName();
@@ -132,11 +142,21 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         // titleTextview.setText(providerName);
                         // subTitleTextview.setText(speciality);
                         setCardViewContent(autoProviderContainerData, providerName, speciality, true, selectedResource.getProvider().getPhoto());
+                        if (selectedLocation==null&&autoVisitType.getCheckbox().getLocationPickList()){
+                            locationNoDataTextView.setEnabled(true);
+                            card_location.setVisibility(View.VISIBLE);
+                        }
+
                         //setResourceProvider(selectedResource);
 
 
                     }else if (autoVisitType.getCheckbox().getProviderPickList()){
-                        providersNoDataTextView.setEnabled(true);
+                     if (isLocationOnTop&&selectedLocation==null){
+                         providersNoDataTextView.setEnabled(false);
+                     }else {
+                         providersNoDataTextView.setEnabled(true);
+                     }
+
                     }
                     checkIfButtonEnabled();
                 }
@@ -148,6 +168,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     providersNoDataTextView.setEnabled(true);
                     locationNoDataTextView.setEnabled(false);
                 }
+
+
             } else {
                 autoVisitTypeContainer.setVisibility(View.GONE);
                 visitTypeCard.setVisibility(View.VISIBLE);

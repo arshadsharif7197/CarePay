@@ -1,10 +1,12 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -49,6 +51,7 @@ import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
@@ -160,6 +163,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         presenter = new PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -167,7 +171,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             if (!isFragmentVisible()) {
-                getSupportFragmentManager().popBackStackImmediate();
+                //added try/catch block because if visitType object is null then onBackPressed is called immidiately
+                //this cause "fagmentManager is already executing transactions" exception thats why i have added this block
+                //to make sure existing logic doesn't disturb Thanks/Arshad Sharif
+                try {
+                    getSupportFragmentManager().popBackStackImmediate();
+                }catch (Exception e){
+
+                }
                 if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                     displayToolbar(true, null);
                     getSupportActionBar().setElevation(0);
