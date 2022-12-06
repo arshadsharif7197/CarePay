@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -31,6 +33,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayRadioButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,17 +48,23 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     private AppointmentsResultModel appointmentInfo;
 
     private RadioGroup cancelReasonRadioGroup;
+    private RadioGroup cancelRescheduleRadioGroup;
+    private AppCompatRadioButton cancelRadioButton;
+    private AppCompatRadioButton rescheduleRadioButton;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
     private AppointmentPrepaymentCallback mainCallback;
+    private boolean isReschedulingRequired = true;
 
     public interface CancelReasonAppointmentDialogListener {
         void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
                                                           int cancellationReason,
                                                           String cancellationReasonComment);
+
+        void onRescheduledClicked(AppointmentDTO appointmentDTO);
 
         void onBackClick();
     }
@@ -121,9 +130,16 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         reasonEditText.setHint(Label.getLabel("cancel_appointment_other_reason_hint"));
         reasonEditText.setHintTextColor(getResources().getColor(R.color.gray));
 
+        rescheduleRadioButton = (AppCompatRadioButton) findViewById(R.id.rb_reschedule);
+        cancelRadioButton = (AppCompatRadioButton) findViewById(R.id.rb_cancel);
+
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
+        cancelRescheduleRadioGroup = (RadioGroup) findViewById(R.id.cancel_reschedule_radioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
-        cancelAppointmentButton.setText(Label.getLabel("cancel_appointments_heading"));
+
+        cancelAppointmentButton.setText(Label.getLabel("patient.dashboard.reschedule"));
+        rescheduleRadioButton.setText(Label.getLabel("appointment_reschedule_button"));
+        cancelRadioButton.setText("Just " + Label.getLabel("cancel_appointment_label"));
 
         cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
         if (cancellationReasons != null) {
@@ -168,6 +184,17 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
             onSetColorStateForRadioButton(checkedRadioButton);
             onSelectionRadioCancel(checkedRadioButton.isChecked());
         });
+
+        cancelRescheduleRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_reschedule) {
+                cancelAppointmentButton.setText(Label.getLabel("appointment_reschedule_button"));
+                isReschedulingRequired = true;
+            } else {
+                cancelAppointmentButton.setText(Label.getLabel("common.button.continue"));
+                isReschedulingRequired = false;
+            }
+
+        });
         cancelAppointmentButton.setOnClickListener(this);
     }
 
@@ -204,7 +231,11 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
             hideDialog();
-            onCancelAppointment();
+            if (isReschedulingRequired) {
+                callback.onRescheduledClicked(appointmentDTO);
+            } else {
+                onCancelAppointment();
+            }
         }
     }
 
@@ -235,7 +266,9 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
                         ContextCompat.getColor(getContext(), R.color.colorPrimary),
                 }
         );
-        appCompatRadioButton.setButtonTintList(colorStateList);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appCompatRadioButton.setButtonTintList(colorStateList);
+        }
         appCompatRadioButton.setTextColor(colorStateList);
     }
 
