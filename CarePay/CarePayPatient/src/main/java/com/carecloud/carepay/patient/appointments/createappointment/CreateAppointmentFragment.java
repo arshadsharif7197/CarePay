@@ -100,8 +100,6 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
             } else {
                 autoVisitTypeContainer.setVisibility(View.GONE);
                 visitTypeCard.setVisibility(View.VISIBLE);
-                if (isSchedulerEnabled)
-                    onBackPressed();
             }
         });
         appointmentViewModel.setAutoScheduleVisitTypeObservable(null);
