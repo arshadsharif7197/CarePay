@@ -292,7 +292,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY)) {
-                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+
+                        VisitTypeQuestions visitTypeDTO = (VisitTypeQuestions) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
                         viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
                     } else {
                         createDelayToGoBack();
