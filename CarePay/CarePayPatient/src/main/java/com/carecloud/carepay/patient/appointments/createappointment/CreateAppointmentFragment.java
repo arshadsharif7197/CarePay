@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.appointments.models.GetPatientTypeResponse;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -98,7 +99,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         appointmentViewModel = new ViewModelProvider(requireActivity()).get(AppointmentViewModel.class);
         appointmentViewModel.getAutoScheduleVisitTypeObservable().observe(requireActivity(), autoVisitType -> {
             if (autoVisitType != null) {
-                this.autoVisitType=autoVisitType;
+                this.autoVisitType = autoVisitType;
 
                 // selectedVisitType = autoVisitType;
                 selectedVisitType = autoVisitType.getVisittype();
@@ -108,7 +109,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                 visitTypeCard.setVisibility(View.GONE);
                 //auto location and provider setup
                 if (autoVisitType.getCheckbox() != null) {
-                    if (autoVisitType.getCheckbox().getLocationSameAsLast()&&getPatientTypeResponse!=null&&getPatientTypeResponse.getLastAppointment()!=null) {
+                    if (autoVisitType.getCheckbox().getLocationSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
 
                         selectedLocation = getPatientTypeResponse.getLastAppointment().getPayload().getLocation();
                         auto_location_container.setVisibility(View.VISIBLE);
@@ -118,10 +119,10 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         //  setLocation(selectedLocation,true);
                         // auto_location_container.findViewById(titleTextView)
 
-                    }else if (autoVisitType.getCheckbox().getLocationPickList()){
-                        if (!isLocationOnTop&&selectedResource==null){
+                    } else if (autoVisitType.getCheckbox().getLocationPickList()) {
+                        if (!isLocationOnTop && selectedResource == null) {
                             locationNoDataTextView.setEnabled(false);
-                        }else {
+                        } else {
                             locationNoDataTextView.setEnabled(true);
                         }
 
@@ -130,8 +131,15 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         card_location.setVisibility(View.VISIBLE);
                     }
 
-                    if (autoVisitType.getCheckbox().getProviderSameAsLast()&&getPatientTypeResponse!=null&&getPatientTypeResponse.getLastAppointment()!=null) {
+                    if (autoVisitType.getCheckbox().getProviderSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
                         selectedResource = getPatientTypeResponse.getLastAppointment().getPayload().getProvider();
+
+                        ProviderDTO providerDTO = new ProviderDTO();
+                        providerDTO.setId(getPatientTypeResponse.getLastAppointment().getPayload().getProviderId());
+                        providerDTO.setName(selectedResource.getProvider().getName());
+                        providerDTO.setGuid(selectedResource.getProvider().getGuid());
+
+                        selectedResource.setProvider(providerDTO);
                         selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
                         card_provider.setVisibility(View.GONE);
                         auto_provider_container.setVisibility(View.VISIBLE);
@@ -142,7 +150,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         // titleTextview.setText(providerName);
                         // subTitleTextview.setText(speciality);
                         setCardViewContent(autoProviderContainerData, providerName, speciality, true, selectedResource.getProvider().getPhoto());
-                        if (selectedLocation==null&&autoVisitType.getCheckbox().getLocationPickList()){
+                        if (selectedLocation == null && autoVisitType.getCheckbox().getLocationPickList()) {
                             locationNoDataTextView.setEnabled(true);
                             card_location.setVisibility(View.VISIBLE);
                         }
@@ -150,12 +158,12 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                         //setResourceProvider(selectedResource);
 
 
-                    }else if (autoVisitType.getCheckbox().getProviderPickList()){
-                     if (isLocationOnTop&&selectedLocation==null){
-                         providersNoDataTextView.setEnabled(false);
-                     }else {
-                         providersNoDataTextView.setEnabled(true);
-                     }
+                    } else if (autoVisitType.getCheckbox().getProviderPickList()) {
+                        if (isLocationOnTop && selectedLocation == null) {
+                            providersNoDataTextView.setEnabled(false);
+                        } else {
+                            providersNoDataTextView.setEnabled(true);
+                        }
 
                     }
                     checkIfButtonEnabled();
@@ -164,7 +172,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
                 // if (appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getEstablishedPatientIntelligentSchedulerQuestions().get(0).)
                 // Disable Location selection
-                if (!isLocationOnTop&&!isSchedulerEnabled) {
+                if (!isLocationOnTop && !isSchedulerEnabled) {
                     providersNoDataTextView.setEnabled(true);
                     locationNoDataTextView.setEnabled(false);
                 }
@@ -206,8 +214,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     resetForm();
                     if ((!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isSchedulerEnabled() &&
                             appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getIntelligent_scheduler_questions() == null)
-                            ||(!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isEstablishedPatientSchedulerEnabled() &&
-                            appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getEstablishedPatientIntelligentSchedulerQuestions()==null)){
+                            || (!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isEstablishedPatientSchedulerEnabled() &&
+                            appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getEstablishedPatientIntelligentSchedulerQuestions() == null)) {
 
                         if (appointmentsModelDto.getPayload().getAppointmentsSettings().get(position).getScheduleResourceOrder().getOrder().startsWith("location")) {
 
@@ -219,7 +227,6 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                             setLocationVisibility(isLocationOnTop);
                         }
                     }
-
 
 
                 }
@@ -294,8 +301,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
             if (intelligentSchedulerDTO.isSchedulerEnabled() &&
                     intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null && getPatientTypeResponse.getPatientType().getNewPatient()) {
                 isSchedulerEnabled = true;
-                isLocationOnTop=false;
-               // resetForm();
+                isLocationOnTop = false;
+                // resetForm();
 
 
                 requireActivity().startActivityForResult(new Intent(requireContext(),
@@ -305,8 +312,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     intelligentSchedulerDTO.getEstablishedPatientIntelligentSchedulerQuestions() != null && !getPatientTypeResponse.getPatientType().getNewPatient()) {
 
                 isSchedulerEnabled = true;
-                isLocationOnTop=false;
-               // resetForm();
+                isLocationOnTop = false;
+                // resetForm();
 
 
                 requireActivity().startActivityForResult(new Intent(requireContext(),
