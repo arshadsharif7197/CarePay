@@ -75,6 +75,17 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("video_visit")
     @Expose
     private TransitionDTO videoVisit = new TransitionDTO();
+    @SerializedName("get_patient_type")
+    @Expose
+    private TransitionDTO getPatientType = new TransitionDTO();
+
+    public TransitionDTO getGetPatientType() {
+        return getPatientType;
+    }
+
+    public void setGetPatientType(TransitionDTO getPatientType) {
+        this.getPatientType = getPatientType;
+    }
 
     /**
      * @return The demographics

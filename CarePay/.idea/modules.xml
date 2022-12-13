@@ -10,6 +10,14 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayPracticeTablet/CarePay.CarePayPracticeTablet.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayPracticeTablet/CarePay.CarePayPracticeTablet.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayServiceLibrary/CarePay.CarePayServiceLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayServiceLibrary/CarePay.CarePayServiceLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/test-module/CarePay.test-module.iml" filepath="$PROJECT_DIR$/.idea/modules/test-module/CarePay.test-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayLibrary/CarePayLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayLibrary/CarePayLibrary.iml" group="CarePay/CarePayLibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayPatient/CarePayPatient.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayPatient/CarePayPatient.iml" group="CarePay/CarePayPatient" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayPracticeClover/CarePayPracticeClover.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayPracticeClover/CarePayPracticeClover.iml" group="CarePay/CarePayPracticeClover" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayPracticeLibrary/CarePayPracticeLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayPracticeLibrary/CarePayPracticeLibrary.iml" group="CarePay/CarePayPracticeLibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayPracticeTablet/CarePayPracticeTablet.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayPracticeTablet/CarePayPracticeTablet.iml" group="CarePay/CarePayPracticeTablet" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CarePayServiceLibrary/CarePayServiceLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/CarePayServiceLibrary/CarePayServiceLibrary.iml" group="CarePay/CarePayServiceLibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shamrock_android-CarePay.iml" filepath="$PROJECT_DIR$/.idea/modules/shamrock_android-CarePay.iml" group="CarePay" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test-module/test-module.iml" filepath="$PROJECT_DIR$/.idea/modules/test-module/test-module.iml" group="CarePay/test-module" />
     </modules>
   </component>
 </project>

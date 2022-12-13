@@ -1,10 +1,12 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -32,6 +34,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -42,6 +45,9 @@ import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewM
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
         FragmentActivityInterface {
@@ -286,7 +292,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY)) {
-                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+
+                        VisitTypeQuestions visitTypeDTO = (VisitTypeQuestions) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
                         viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
                     } else {
                         createDelayToGoBack();
