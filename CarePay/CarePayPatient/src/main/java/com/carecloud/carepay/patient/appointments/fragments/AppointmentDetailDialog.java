@@ -35,6 +35,7 @@ import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.models.AppointmentCalendarEvent;
 import com.carecloud.carepay.patient.db.BreezeDataBase;
+import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -248,7 +249,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
         cancelRescheduleAppointmentButton = view.findViewById(R.id.cancel_reschedule_btn);
         cancelRescheduleAppointmentButton.setOnClickListener(cancelAppointmentClick);
-        cancelRescheduleAppointmentButton.setText(Label.getLabel("cancel")+" // "+ Label.getLabel("appointment_reschedule_button"));
+        cancelRescheduleAppointmentButton.setText(Label.getLabel("cancel") + " // " + Label.getLabel("appointment_reschedule_button"));
+
 
         header = view.findViewById(R.id.dialogHeaderLayout);
         appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
@@ -368,7 +370,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     if (!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
                         if (shouldShowCancelButton(enabledLocations)) {
 //                            cancelAppointment.setVisibility(View.VISIBLE);
-                            cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
+                            if (requireActivity() instanceof NotificationActivity) {
+                                cancelRescheduleAppointmentButton.setVisibility(View.GONE);
+                            } else {
+                                cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
+                            }
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
@@ -450,7 +456,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     if (!appointmentDTO.getPayload().isAppointmentOver()) {
                         if (shouldShowCancelButton(enabledLocations)) {
 //                            cancelAppointment.setVisibility(View.VISIBLE);
-                            cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
+                            if (requireActivity() instanceof NotificationActivity) {
+                                cancelRescheduleAppointmentButton.setVisibility(View.GONE);
+                            } else {
+                                cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
+                            }
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
