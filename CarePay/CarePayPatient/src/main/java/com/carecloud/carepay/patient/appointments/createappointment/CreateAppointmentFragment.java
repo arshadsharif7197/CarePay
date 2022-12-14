@@ -132,19 +132,14 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                     }
 
                     if (autoVisitType.getCheckbox().getProviderSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
-                        selectedResource = getPatientTypeResponse.getLastAppointment().getPayload().getProvider();
-
-                        ProviderDTO providerDTO = new ProviderDTO();
-                        providerDTO.setId(getPatientTypeResponse.getLastAppointment().getPayload().getProviderId());
-                        providerDTO.setName(selectedResource.getProvider().getName());
-                        providerDTO.setGuid(selectedResource.getProvider().getGuid());
-
-                        selectedResource.setProvider(providerDTO);
+                        selectedResource = new AppointmentResourcesItemDTO();
+                        selectedResource.setProvider(getPatientTypeResponse.getLastAppointment().getPayload().getProvider());
                         selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
+
                         card_provider.setVisibility(View.GONE);
                         auto_provider_container.setVisibility(View.VISIBLE);
-                        String providerName = selectedResource.getName();
-                        String speciality = selectedResource.getProvider().getSpecialityName();
+                        String providerName = selectedResource.getProvider().getName();
+                        String speciality = selectedResource.getProvider().getSpecialty().getName();
                         //TextView titleTextview= autoProviderContainerData.findViewById(R.id.titleTextView);
                         // TextView subTitleTextview= autoProviderContainerData.findViewById(R.id.subtitleTextView);
                         // titleTextview.setText(providerName);

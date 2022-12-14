@@ -125,7 +125,7 @@ public class PayloadAppointmentModel {
     private String preferredConfirmationMethod;
     @SerializedName("provider")
     @Expose
-    private AppointmentResourcesItemDTO provider ;
+    private ProviderDTO provider ;
 
     /**
      * 
@@ -798,7 +798,7 @@ public class PayloadAppointmentModel {
      * @return
      *     The provider
      */
-    public AppointmentResourcesItemDTO getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -807,7 +807,7 @@ public class PayloadAppointmentModel {
      * @param provider
      *     The provider
      */
-    public void setProvider(AppointmentResourcesItemDTO provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 
