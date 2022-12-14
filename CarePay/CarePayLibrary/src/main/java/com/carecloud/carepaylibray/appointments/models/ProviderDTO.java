@@ -15,6 +15,9 @@ public class ProviderDTO {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("resource_id")
+    @Expose
+    private String resource_id;
     @SerializedName("guid")
     @Expose
     private String guid;
@@ -250,4 +253,6 @@ public class ProviderDTO {
     public void setSpecialty(SpecialtyDTO specialty) {
         this.specialty = specialty;
     }
+
+
 }

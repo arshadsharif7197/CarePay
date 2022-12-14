@@ -102,6 +102,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private View mapButton;
     private View callButton;
     private View scheduleAppointmentButton;
+    private CarePayButton cancelRescheduleAppointmentButton;
     private TextView appointmentStatus;
     private View queueLayout;
     private TextView queueStatus;
@@ -245,6 +246,10 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         cancelAppointment = view.findViewById(R.id.dialogCancelAppointTextView);
         cancelAppointment.setOnClickListener(cancelAppointmentClick);
 
+        cancelRescheduleAppointmentButton = view.findViewById(R.id.cancel_reschedule_btn);
+        cancelRescheduleAppointmentButton.setOnClickListener(cancelAppointmentClick);
+        cancelRescheduleAppointmentButton.setText(Label.getLabel("cancel")+" // "+ Label.getLabel("appointment_reschedule_button"));
+
         header = view.findViewById(R.id.dialogHeaderLayout);
         appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
         appointmentTimeTextView = view.findViewById(R.id.appointTimeTextView);
@@ -362,7 +367,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     actionsLayout.setVisibility(View.VISIBLE);
                     if (!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
                         if (shouldShowCancelButton(enabledLocations)) {
-                            cancelAppointment.setVisibility(View.VISIBLE);
+//                            cancelAppointment.setVisibility(View.VISIBLE);
+                            cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
@@ -428,6 +434,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.optional_gray));
                     appointmentStatus.setText(Label.getLabel("appointments_canceled_heading"));
+                    actionsLayout.setVisibility(View.VISIBLE);
+                    if (isRescheduleEnabled) {
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_reschedule_button"));
+                        leftButton.setOnClickListener(rescheduleClick);
+                    }
                     break;
                 }
                 case PENDING_UPCOMING: {
@@ -437,7 +449,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     if (!appointmentDTO.getPayload().isAppointmentOver()) {
                         if (shouldShowCancelButton(enabledLocations)) {
-                            cancelAppointment.setVisibility(View.VISIBLE);
+//                            cancelAppointment.setVisibility(View.VISIBLE);
+                            cancelRescheduleAppointmentButton.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
@@ -577,6 +590,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         rightButton.setVisibility(View.GONE);
         leftButton.setVisibility(View.GONE);
         cancelAppointment.setVisibility(View.GONE);
+        cancelRescheduleAppointmentButton.setVisibility(View.GONE);
         queueLayout.setVisibility(View.GONE);
         appointmentStatus.setVisibility(View.GONE);
         joinVideoVisitLayout.setVisibility(View.GONE);

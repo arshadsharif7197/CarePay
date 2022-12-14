@@ -15,6 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 
 import java.util.ArrayList;
@@ -78,4 +79,6 @@ public class NextAppointmentFragment extends BaseNextAppointmentFragment {
     protected void showChooseLocationFragment() {
         callback.showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
     }
+
+
 }

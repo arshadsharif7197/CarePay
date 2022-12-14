@@ -2,6 +2,9 @@
 package com.carecloud.carepaylibray.intake.models;
 
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,7 +23,7 @@ public class PayloadAppointmentModel {
     private PatientModel patient;
     @SerializedName("location")
     @Expose
-    private LocationModel location;
+    private LocationDTO location;
     @SerializedName("cancellation_details")
     @Expose
     private CancellationDetailsModel cancellationDetails;
@@ -122,7 +125,7 @@ public class PayloadAppointmentModel {
     private String preferredConfirmationMethod;
     @SerializedName("provider")
     @Expose
-    private ProviderModel provider = new ProviderModel();
+    private ProviderDTO provider ;
 
     /**
      * 
@@ -183,7 +186,7 @@ public class PayloadAppointmentModel {
      * @return
      *     The location
      */
-    public LocationModel getLocation() {
+    public LocationDTO getLocation() {
         return location;
     }
 
@@ -192,7 +195,7 @@ public class PayloadAppointmentModel {
      * @param location
      *     The location
      */
-    public void setLocation(LocationModel location) {
+    public void setLocation(LocationDTO location) {
         this.location = location;
     }
 
@@ -795,7 +798,7 @@ public class PayloadAppointmentModel {
      * @return
      *     The provider
      */
-    public ProviderModel getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -804,7 +807,7 @@ public class PayloadAppointmentModel {
      * @param provider
      *     The provider
      */
-    public void setProvider(ProviderModel provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 

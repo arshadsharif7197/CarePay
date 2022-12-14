@@ -86,9 +86,17 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
         queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         queryMap.put("practice_id", selectedPractice.getPracticeId());
         queryMap.put("request", "locations");
+        //changed because resource_id is needed getId() was no working...
         if (selectedResource != null) {
-            queryMap.put("filter_resource_id", String.valueOf(selectedResource.getId()));
+            if (selectedResource.getResource_id() != null) {
+                queryMap.put("filter_resource_id", String.valueOf(selectedResource.getResource_id()));
+                //selectedResource.setId(selectedResource.getResource_id());
+            } else {
+                queryMap.put("filter_resource_id", String.valueOf(selectedResource.getId()));
+            }
+
         }
+        //.......................................
         if (selectedVisitType != null) {
             queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
         }

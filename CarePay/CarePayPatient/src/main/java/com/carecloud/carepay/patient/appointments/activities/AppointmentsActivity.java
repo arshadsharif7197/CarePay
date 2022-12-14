@@ -1,22 +1,21 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
@@ -28,7 +27,6 @@ import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.rate.RateDialog;
-import com.carecloud.carepay.patient.utils.payments.Constants;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -36,6 +34,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -45,9 +44,9 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
@@ -293,19 +292,38 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY)) {
-                        VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                       // viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+
+                        VisitTypeQuestions visitTypeDTO = (VisitTypeQuestions) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
                         viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
                     } else {
-                        viewModel.setAutoScheduleVisitTypeObservable(null);
+                        createDelayToGoBack();
                     }
                 } else {
-                    viewModel.setAutoScheduleVisitTypeObservable(null);
+                    createDelayToGoBack();
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    private void createDelayToGoBack() {
+        new CountDownTimer(1000, 250) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                onBackPressed();
+               refreshAppointments();
+            }
+        }.start();
     }
 
     public void onAppointmentScheduleFlowFailure() {

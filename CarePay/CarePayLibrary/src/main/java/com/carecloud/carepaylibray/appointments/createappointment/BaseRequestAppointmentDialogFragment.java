@@ -92,7 +92,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         appointment.setProviderId(appointmentDto.getPayload().getProvider().getId());
         appointment.setProviderGuid(appointmentDto.getPayload().getProvider().getGuid());
         appointment.setVisitReasonId(appointmentDto.getPayload().getVisitType().getId());
-        appointment.setResourceId(appointmentDto.getPayload().getResource().getId());
+        //change for intelligent scheduler /when get last appointment by calling getPatientType service
+        //which returns last Appointment data /location/provider and patient type
+        if (appointmentDto.getPayload().getResourceId()!=null){
+            appointment.setResourceId(appointmentDto.getPayload().getResourceId());
+        }else {
+            appointment.setResourceId(appointmentDto.getPayload().getResource().getId());
+        }
         appointment.setComplaint(appointmentDto.getPayload().getReasonForVisit());
         appointment.setComments(appointmentDto.getPayload().getReasonForVisit());
         appointment.getPatient().setId(patientId);
