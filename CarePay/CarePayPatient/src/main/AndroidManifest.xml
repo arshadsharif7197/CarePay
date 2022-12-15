@@ -37,6 +37,7 @@
 
         <activity
             android:name=".patientsplash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
@@ -53,6 +54,7 @@
 
         <activity
             android:name=".patientsplash.SplashInviteActivity"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
@@ -108,6 +110,12 @@
             android:name=".appointments.activities.IntelligentSchedulerActivity"
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".appointments.activities.QuestionAnswerTallyActivity"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait"
@@ -130,6 +138,7 @@
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:exported="true"
             android:name=".notifications.activities.NotificationProxyActivity"
             android:launchMode="singleTask">
             <intent-filter
@@ -151,6 +160,7 @@
             android:screenOrientation="sensorPortrait" />
 
         <service
+            android:exported="false"
             android:name=".fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
@@ -158,6 +168,7 @@
             </intent-filter>
         </service>
         <service
+            android:exported="false"
             android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
@@ -193,7 +204,6 @@
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".session.PatientWarningSessionActivity"
-            android:screenOrientation="sensorPortrait"
             android:theme="@style/WarningTimeoutTheme" />
         <activity
             android:name=".delegate.ProfilesActivity"

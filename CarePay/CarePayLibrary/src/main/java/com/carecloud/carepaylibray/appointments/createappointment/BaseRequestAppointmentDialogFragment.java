@@ -92,7 +92,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         appointment.setProviderId(appointmentDto.getPayload().getProvider().getId());
         appointment.setProviderGuid(appointmentDto.getPayload().getProvider().getGuid());
         appointment.setVisitReasonId(appointmentDto.getPayload().getVisitType().getId());
-        appointment.setResourceId(appointmentDto.getPayload().getResource().getId());
+        //change for intelligent scheduler /when get last appointment by calling getPatientType service
+        //which returns last Appointment data /location/provider and patient type
+        if (appointmentDto.getPayload().getResourceId()!=null){
+            appointment.setResourceId(appointmentDto.getPayload().getResourceId());
+        }else {
+            appointment.setResourceId(appointmentDto.getPayload().getResource().getId());
+        }
         appointment.setComplaint(appointmentDto.getPayload().getReasonForVisit());
         appointment.setComments(appointmentDto.getPayload().getReasonForVisit());
         appointment.getPatient().setId(patientId);
@@ -166,8 +172,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                 appointmentModelDto.getPayload().getAppointmentsSetting(practiceId)
                         .getCheckin()
                         .isMove_patient_pre_registration()) {
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
-            callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ||
+                    getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                callback.appointmentScheduledSuccessfully();
+            } else {
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_complete_pre_registration"));
+                callback.appointmentScheduledSuccessfully(appointmentModelDto.getPayload().getAppointments().get(0));
+            }
             return true;
         } else {
             return false;

@@ -86,9 +86,17 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
         queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         queryMap.put("practice_id", selectedPractice.getPracticeId());
         queryMap.put("request", "locations");
+        //changed because resource_id is needed getId() was no working...
         if (selectedResource != null) {
-            queryMap.put("filter_resource_id", String.valueOf(selectedResource.getId()));
+            if (selectedResource.getResource_id() != null) {
+                queryMap.put("filter_resource_id", String.valueOf(selectedResource.getResource_id()));
+                //selectedResource.setId(selectedResource.getResource_id());
+            } else {
+                queryMap.put("filter_resource_id", String.valueOf(selectedResource.getId()));
+            }
+
         }
+        //.......................................
         if (selectedVisitType != null) {
             queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
         }
@@ -122,21 +130,19 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
     }
 
     private void showLocations(List<LocationDTO> locations) {
-        Collections.sort(locations, new Comparator<LocationDTO>() {
+        // Sorting removed as mentioned in https://jira.carecloud.com/browse/BREEZ-1845
+        /*Collections.sort(locations, new Comparator<LocationDTO>() {
             @Override
             public int compare(final LocationDTO object1, final LocationDTO object2) {
                 return object1.getName().compareTo(object2.getName());
             }
-        });
+        });*/
         RecyclerView locationRecyclerView = getView().findViewById(R.id.locationRecyclerView);
         locationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         locationRecyclerView.setAdapter(new LocationAdapter(filterLocations(locations),
-                new LocationAdapter.OnLocationListItemClickListener() {
-                    @Override
-                    public void onLocationListItemClickListener(LocationDTO locationDTO) {
-                        dismiss();
-                        callback.setLocation(locationDTO);
-                    }
+                locationDTO -> {
+                    dismiss();
+                    callback.setLocation(locationDTO);
                 }));
     }
 

@@ -10,9 +10,19 @@ public class IntelligentSchedulerDTO {
     @SerializedName("isSchedulerEnabled")
     @Expose
     private boolean isSchedulerEnabled;
+
+    @SerializedName("isEstablishedpatientschedulerenabled")
+    @Expose
+    private boolean isEstablishedPatientSchedulerEnabled;
+
     @SerializedName("intelligent_scheduler_questions")
     @Expose
     private List<VisitTypeQuestions> intelligent_scheduler_questions;
+
+    @SerializedName("established_patient_intelligent_scheduler_questions")
+    @Expose
+    private List<VisitTypeQuestions> establishedPatientIntelligentSchedulerQuestions;
+
     @SerializedName("practice_id")
     @Expose
     private String practice_id;
@@ -23,6 +33,22 @@ public class IntelligentSchedulerDTO {
 
     public boolean isSchedulerEnabled() {
         return isSchedulerEnabled;
+    }
+
+    public boolean isEstablishedPatientSchedulerEnabled() {
+        return isEstablishedPatientSchedulerEnabled;
+    }
+
+    public void setEstablishedPatientSchedulerEnabled(boolean establishedPatientSchedulerEnabled) {
+        isEstablishedPatientSchedulerEnabled = establishedPatientSchedulerEnabled;
+    }
+
+    public List<VisitTypeQuestions> getEstablishedPatientIntelligentSchedulerQuestions() {
+        return establishedPatientIntelligentSchedulerQuestions;
+    }
+
+    public void setEstablishedPatientIntelligentSchedulerQuestions(List<VisitTypeQuestions> establishedPatientIntelligentSchedulerQuestions) {
+        this.establishedPatientIntelligentSchedulerQuestions = establishedPatientIntelligentSchedulerQuestions;
     }
 
     public void setSchedulerEnabled(boolean schedulerEnabled) {

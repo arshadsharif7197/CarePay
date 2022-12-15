@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,11 +19,15 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.createappointment.visittype.VisitTypePagerAdapter;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
+import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IntelligentSchedulerFragment extends BaseDialogFragment {
 
@@ -33,6 +38,10 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     private VisitTypeQuestions currentQuestion;
     private VisitTypePagerAdapter questionPagerAdapter;
     private VisitTypeQuestions selectedOption;
+    private List<SchedulerAnswerTally> schedulerAnswerTallyList = new ArrayList<>();
+    private SchedulerAnswerTally schedulerAnswerTally;
+    private Toolbar toolbar;
+    private ImageView cancel_img;
 
 
     public static IntelligentSchedulerFragment newInstance(String intelligentQuestions) {
@@ -76,7 +85,9 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
+        toolbar = view.findViewById(R.id.intelligent_scheduler_toolbar);
+        cancel_img = view.findViewById(R.id.cancel_img);
+        cancel_img.setVisibility(View.INVISIBLE);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.intelligent_scheduler_title);
             TextView exit = toolbar.findViewById(R.id.intelligent_scheduler_exit);
@@ -84,10 +95,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
             exit.setText(Label.getLabel("demographics_exit"));
             toolbar.setTitle("");
 
-            if (getDialog() == null) {
-                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(view12 -> callback.onBack());
-            }
+            cancel_img.setOnClickListener(v -> callback.onBack());
             exit.setOnClickListener((view1) -> callback.onExit());
         }
     }
@@ -99,11 +107,22 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // adding question and answer in list for Tally view https://jira.carecloud.com/browse/BREEZ-1682
+                schedulerAnswerTally = new SchedulerAnswerTally();
+                schedulerAnswerTally.setQuestion(currentQuestion.getName());
+                schedulerAnswerTally.setAnswer(selectedOption.getName());
+                schedulerAnswerTallyList.add(schedulerAnswerTally);
+
+                IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(questionPagerAdapter.getCount() - 1));
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+
+                cancel_img.setVisibility(View.VISIBLE);
                 nextButton.setEnabled(false);
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
                 } else {
-                    callback.onVisitTypeSelected(selectedOption.getVisittype());
+                    callback.onVisitTypeSelected(selectedOption);
+                    //callback.onVisitTypeSelected(selectedOption.getVisittype());
                 }
 
             }
@@ -124,6 +143,11 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 .newInstance(new Gson().toJson(currentQuestion));
         questionPagerAdapter.addFragment(questionsFragment);
         viewPager.setCurrentItem(questionPagerAdapter.getCount() - 1, true);
+        if (schedulerAnswerTallyList.size() == 0) {
+            questionsFragment.showViewAnswerButton(false);
+        } else {
+            questionsFragment.showViewAnswerButton(true);
+        }
     }
 
     public void onVisitOptionSelected(VisitTypeQuestions visitTypeQuestions) {
@@ -145,18 +169,29 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
         if (questionPagerAdapter.getCount() > 1) {
             int previousIndex = questionPagerAdapter.getCount() - 2;
             questionPagerAdapter.removeFragment();
+            schedulerAnswerTallyList.remove(schedulerAnswerTallyList.size() - 1);
 
             IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(previousIndex));
+            if (schedulerAnswerTallyList.size() == 0) {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(false);
+            } else {
+                intelligentSchedulerQuestionFragment.showViewAnswerButton(true);
+            }
+
+            currentQuestion = intelligentSchedulerQuestionFragment.getVisitTypeQuestion();
             selectedOption = intelligentSchedulerQuestionFragment.getVisitTypeOption();
             viewPager.setCurrentItem(previousIndex, true);
             updateNextButton(intelligentSchedulerQuestionFragment.getVisitTypeQuestion());
             nextButton.setEnabled(true);
             intelligentSchedulerQuestionFragment.setVisitTypeOption(selectedOption);
+            if (questionPagerAdapter.getCount() == 1) {
+                cancel_img.setVisibility(View.INVISIBLE);
+            }
         }
-        // Disable back button for https://jira.carecloud.com/browse/BREEZ-1677
-        /* else {
-            callback.onExit();
-        }*/
+    }
 
+
+    public List<SchedulerAnswerTally> getAllQuestionsAnswers() {
+        return schedulerAnswerTallyList;
     }
 }
