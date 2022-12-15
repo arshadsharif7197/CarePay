@@ -427,6 +427,19 @@
 
                 </LinearLayout>
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/cancel_reschedule_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_48dp"
+                    android:layout_margin="@dimen/dimen_16dp"
+                    android:background="@drawable/button_blue_border_selector"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_13"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="cancel_reschedule_btn" />
+
             </LinearLayout>
         </ScrollView>
 

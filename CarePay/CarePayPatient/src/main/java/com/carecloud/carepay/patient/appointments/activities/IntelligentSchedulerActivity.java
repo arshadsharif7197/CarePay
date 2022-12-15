@@ -12,7 +12,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.patient.appointments.fragments.IntelligentSchedulerFragment;
 import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
-import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -74,7 +73,9 @@ public class IntelligentSchedulerActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO) {
+    public void onVisitTypeSelected(VisitTypeQuestions visitTypeDTO) {
+        /*setResult(RESULT_OK, getIntent()
+                .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY, visitTypeDTO));*/
         setResult(RESULT_OK, getIntent()
                 .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY, visitTypeDTO));
         finish();

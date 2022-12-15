@@ -15,6 +15,9 @@ public class AppointmentResourcesItemDTO {
     @SerializedName("appointment_confirmation")
     @Expose
     private String appointmentConfirmation;
+    @SerializedName("resource_id")
+    @Expose
+    private Integer resource_id;
     @SerializedName("business_entity_id")
     @Expose
     private String businessEntityId;
@@ -277,5 +280,13 @@ public class AppointmentResourcesItemDTO {
 
     public void setDefaultProvider(ProvidersDefaultDTO defaultProvider) {
         this.defaultProvider = defaultProvider;
+    }
+
+    public void setResource_id(Integer resource_id) {
+        this.resource_id = resource_id;
+    }
+
+    public Integer getResource_id() {
+        return resource_id;
     }
 }

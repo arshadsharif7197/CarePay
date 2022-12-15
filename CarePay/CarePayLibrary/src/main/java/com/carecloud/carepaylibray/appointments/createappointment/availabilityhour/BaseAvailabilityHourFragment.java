@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -54,6 +55,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     public static final int SCHEDULE_MODE = 101;
 
     protected ScheduleAppointmentInterface callback;
+
     private AppointmentsResultModel appointmentModelDto;
     private VisitTypeDTO selectedVisitReason;
     private AppointmentResourcesItemDTO selectedResource;
@@ -169,7 +171,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         payloadDTO.setProvider(selectedResource.getProvider());
         payloadDTO.setProviderId(String.valueOf(selectedResource.getProvider().getId()));
         payloadDTO.setResource(selectedResource);
-        payloadDTO.setResourceId(selectedResource.getId());
+        payloadDTO.setResourceId(selectedResource.getResource_id());
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
         callback.showAppointmentConfirmationFragment(appointmentDTO, this);
@@ -266,7 +268,11 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         queryMap.put("practice_mgmt", availabilityDataDTO.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", availabilityDataDTO.getMetadata().getPracticeId());
         queryMap.put("visit_reason_id", String.valueOf(availabilityDataDTO.getPayload().get(0).getVisitReason().getId()));
-        queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
+        if(selectedResource.getResource_id()!=null){
+            queryMap.put("resource_ids", String.valueOf(selectedResource.getResource_id()));
+        }else {
+            queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
+        }
         queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
         if (startDate != null) {
             DateUtil.getInstance().setDate(startDate);

@@ -2,11 +2,12 @@
 package com.carecloud.carepaylibray.intake.models;
 
 
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class LocationModel {
+public class LocationModel  {
 
     @SerializedName("id")
     @Expose

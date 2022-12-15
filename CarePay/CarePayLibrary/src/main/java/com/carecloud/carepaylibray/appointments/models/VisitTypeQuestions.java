@@ -3,9 +3,10 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class VisitTypeQuestions {
+public class VisitTypeQuestions implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;
@@ -17,7 +18,9 @@ public class VisitTypeQuestions {
     @SerializedName("visittype")
     @Expose
     private VisitTypeDTO visittype;
-
+    @SerializedName("checkbox")
+    @Expose
+    private CheckBoxDto checkbox;
     @SerializedName("childrens")
     @Expose
     private List<VisitTypeQuestions> childrens;
@@ -52,5 +55,13 @@ public class VisitTypeQuestions {
 
     public void setChildrens(List<VisitTypeQuestions> childrens) {
         this.childrens = childrens;
+    }
+
+    public CheckBoxDto getCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(CheckBoxDto checkbox) {
+        this.checkbox = checkbox;
     }
 }

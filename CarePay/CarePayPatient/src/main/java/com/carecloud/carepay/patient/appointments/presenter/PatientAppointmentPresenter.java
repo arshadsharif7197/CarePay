@@ -214,6 +214,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
 
             @Override
+            public void onRescheduledClicked(AppointmentDTO appointmentDTO) {
+                rescheduleAppointment(appointmentDTO);
+            }
+
+            @Override
             public void onBackClick() {
                 if (cancellationFee != null) {
                     CancelAppointmentFeeDialog.getInstance().showDialog();
@@ -790,6 +795,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         availabilityHourFragment.setOnBackPressedListener(new BaseDialogFragment.OnBackPressedInterface() {
             @Override
             public void onBackPressed() {
+                if (CancelReasonAppointmentDialog.getInstance() != null) {
+                    CancelReasonAppointmentDialog.getInstance().cancel();
+                }
                 if (AppointmentDetailDialog.getInstance() != null) {
                     AppointmentDetailDialog.getInstance().showDialog();
                 }
