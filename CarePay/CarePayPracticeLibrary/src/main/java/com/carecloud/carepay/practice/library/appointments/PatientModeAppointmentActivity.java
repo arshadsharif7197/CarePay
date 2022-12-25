@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.GetPatientTypeResponse;
 import com.carecloud.carepaylibray.appointments.models.IntelligentSchedulerDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.SchedulerAnswerTally;
@@ -97,7 +98,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                     newInstance(appointmentsPopUpDTO.getText(),
                             Label.getLabel("ok"), Label.getLabel("button_no"));
             // Intelligent Scheduler flow
-            practiceAlert.setExitAlertInterface(() -> startIntelligentScheduler());
+            practiceAlert.setExitAlertInterface(() -> getPatientType());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -107,29 +108,38 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }).start();
         } else {
             // Intelligent Scheduler flow
-            startIntelligentScheduler();
+            getPatientType();
         }
     }
 
     private void startIntelligentScheduler() {
         IntelligentSchedulerDTO intelligentSchedulerDTO = getIntelligentScheduler(selectedPractice);
-        if (selectedPractice != null &&
-                intelligentSchedulerDTO != null &&
-                intelligentSchedulerDTO.isSchedulerEnabled() &&
-                intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
-                isNewUser(appointmentsResultModel.getPayload().getAppointments())) {
-            visitTypeContainer.setVisibility(View.GONE);
-            String allQuestions = new Gson().toJson(appointmentsResultModel.getPayload().getIntelligent_scheduler().get(0).getIntelligent_scheduler_questions().get(0));
-            fragment = IntelligentSchedulerFragment.newInstance(allQuestions);
-            new Handler().postDelayed(() -> {
-                showFragment(fragment);
-            }, 500);
-            // showFragment(fragment);
-            //  fragment.setCancelable(false);
-            // isSchedulerStarted = true;
-            // requireActivity().startActivityForResult(new Intent(requireContext(), IntelligentSchedulerActivity.class)
-            //              .putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY, new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))),
-            //      CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
+
+        if (selectedPractice != null && intelligentSchedulerDTO != null && getPatientTypeResponse != null) {
+
+            if (intelligentSchedulerDTO.isSchedulerEnabled() &&
+                    intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
+                    getPatientTypeResponse.getPatientType().getNewPatient()) {
+
+                visitTypeContainer.setVisibility(View.GONE);
+                String allQuestions = new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0));
+                fragment = IntelligentSchedulerFragment.newInstance(allQuestions);
+                new Handler().postDelayed(() -> {
+                    showFragment(fragment);
+                }, 500);
+
+            } else if (intelligentSchedulerDTO.isEstablishedPatientSchedulerEnabled() &&
+                    intelligentSchedulerDTO.getEstablishedPatientIntelligentSchedulerQuestions() != null &&
+                    !getPatientTypeResponse.getPatientType().getNewPatient()) {
+
+                visitTypeContainer.setVisibility(View.GONE);
+                String allQuestions = new Gson().toJson(intelligentSchedulerDTO.getEstablishedPatientIntelligentSchedulerQuestions().get(0));
+                fragment = IntelligentSchedulerFragment.newInstance(allQuestions);
+                new Handler().postDelayed(() -> {
+                    showFragment(fragment);
+                }, 500);
+            }
+
         } else {
             visitTypeContainer.setVisibility(View.VISIBLE);
             provider_screen_header.setText(Label.getLabel("patientMode.appointmentCreation.title.label.create"));
@@ -158,8 +168,6 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         provider_screen_header = findViewById(R.id.provider_screen_header);
         provider_screen_sub_header = findViewById(R.id.provider_screen_sub_header);
         availabilityButton.setOnClickListener(v -> callAvailabilityService());
-
-
     }
 
    /* @Override
@@ -281,6 +289,39 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                 return;
             showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
         });
+    }
+
+    private void getPatientType() {
+        WorkflowServiceCallback getPatientTypeCallback =
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        getPatientTypeResponse = DtoHelper.getConvertedDTO(GetPatientTypeResponse.class, workflowDTO.getPayload());
+                        startIntelligentScheduler();
+
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        showErrorNotification(exceptionMessage);
+                        hideProgressDialog();
+                        Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                    }
+                };
+
+        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        query.put("practice_id", selectedPractice.getPracticeId());
+        query.put("patient_id", ApplicationPreferences.getInstance().getPatientId());
+        getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getGetPatientType(),
+                getPatientTypeCallback, null, query, header);
     }
 
     @Override
