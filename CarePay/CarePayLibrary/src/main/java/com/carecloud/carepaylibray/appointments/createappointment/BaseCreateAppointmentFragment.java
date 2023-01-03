@@ -438,8 +438,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         if (showImage) {
             shortNameTextView.setText(StringUtil.getShortName(title));
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
-                PicassoHelper.get().loadImage(getContext(), picImageView,
-                        shortNameTextView, imageUrl);
+                try {
+                    PicassoHelper.get().loadImage(getActivity(), picImageView,
+                            shortNameTextView, imageUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 shortNameTextView.setVisibility(View.VISIBLE);
                 picImageView.setVisibility(View.INVISIBLE);
@@ -469,7 +473,6 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
                 resetVisitType();
                 resetLocation();
             }
-
         }
 
     }

@@ -37,6 +37,7 @@
 
         <activity
             android:name=".patientsplash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
@@ -53,6 +54,7 @@
 
         <activity
             android:name=".patientsplash.SplashInviteActivity"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
@@ -136,6 +138,7 @@
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:exported="true"
             android:name=".notifications.activities.NotificationProxyActivity"
             android:launchMode="singleTask">
             <intent-filter
@@ -157,6 +160,7 @@
             android:screenOrientation="sensorPortrait" />
 
         <service
+            android:exported="false"
             android:name=".fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
@@ -164,6 +168,7 @@
             </intent-filter>
         </service>
         <service
+            android:exported="false"
             android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
@@ -211,7 +216,6 @@
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.carecloud.carepay.patient.provider"
-            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"

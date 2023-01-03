@@ -26,90 +26,63 @@ public class ProviderModel extends AppointmentResourcesItemDTO {
     private Specialty specialty = new Specialty();
 
     /**
-     * 
-     * @return
-     *     The id
+     * @param id The id
      */
-   // public String getId() {
-   //     return id;
-   // }
-
-    /**
-     * 
-     * @param id
-     *     The id
-     */
-    public void setId(String  id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The npi
+     * @return The npi
      */
     public String getNpi() {
         return npi;
     }
 
     /**
-     * 
-     * @param npi
-     *     The npi
+     * @param npi The npi
      */
     public void setNpi(String npi) {
         this.npi = npi;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The phoneNumber
+     * @return The phoneNumber
      */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
     /**
-     * 
-     * @param phoneNumber
-     *     The phone_number
+     * @param phoneNumber The phone_number
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
     /**
-     * 
-     * @return
-     *     The specialty
+     * @return The specialty
      */
     public Specialty getSpecialty() {
         return specialty;
     }
 
     /**
-     * 
-     * @param specialty
-     *     The specialty
+     * @param specialty The specialty
      */
     public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;

@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
-        targetSdkVersion 30
-        versionCode 204
-        versionName "1.4.5"
+        targetSdkVersion 31
+        versionCode 206
+        versionName "1.4.6"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22

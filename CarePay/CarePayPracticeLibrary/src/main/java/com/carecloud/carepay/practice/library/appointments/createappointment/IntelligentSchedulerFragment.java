@@ -119,7 +119,7 @@ public class IntelligentSchedulerFragment extends BaseDialogFragment {
                 if (nextButton.getText().toString().equalsIgnoreCase(Label.getLabel("next_question_button_text"))) {
                     startQuestionFragment(selectedOption.getChildrens().get(0));
                 } else {
-                    callback.onVisitTypeSelected(selectedOption.getVisittype());
+                    callback.onVisitTypeSelected(selectedOption);
                 }
 
                 IntelligentSchedulerQuestionFragment intelligentSchedulerQuestionFragment = ((IntelligentSchedulerQuestionFragment) questionPagerAdapter.getItem(questionPagerAdapter.getCount() - 1));
