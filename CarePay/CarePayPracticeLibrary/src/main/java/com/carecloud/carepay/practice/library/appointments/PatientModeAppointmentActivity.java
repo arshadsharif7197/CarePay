@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -42,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -76,7 +78,19 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     private TextView availabilityButton;
     private TextView provider_screen_header;
     private IntelligentSchedulerFragment fragment;
-
+    private View locationContainer;
+    private View providerContainer;
+    private LinearLayout lastProviderContainer;
+    private LinearLayout lastLocationContainer;
+    private CarePayTextView lastLocationMessage;
+    private CarePayTextView lastProviderMessage;
+    private CarePayTextView lastLocationTitle;
+    private CarePayTextView lastLocationSubTitle;
+    private CarePayTextView lastProviderTitle;
+    private CarePayTextView lastProviderSubTitle;
+    private LinearLayout autoVisitTypeContainer;
+    private CarePayTextView autoVisitTypeTitle;
+    private CarePayTextView autoVisitTypeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,20 +181,23 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         availabilityButton = findViewById(R.id.availabilityButton);
         provider_screen_header = findViewById(R.id.provider_screen_header);
         provider_screen_sub_header = findViewById(R.id.provider_screen_sub_header);
+
+        lastProviderContainer = findViewById(R.id.last_provider_container);
+        lastProviderMessage = findViewById(R.id.last_provider_msg);
+        lastProviderTitle = findViewById(R.id.last_provider_title);
+        lastProviderSubTitle = findViewById(R.id.last_provider_subTitle);
+
+        lastLocationContainer = findViewById(R.id.last_location_container);
+        lastLocationMessage = findViewById(R.id.last_location_msg);
+        lastLocationTitle = findViewById(R.id.last_location_title);
+        lastLocationSubTitle = findViewById(R.id.last_location_subTitle);
+
+        autoVisitTypeContainer = findViewById(R.id.auto_visit_type_container);
+        autoVisitTypeMessage = findViewById(R.id.auto_visit_type_msg);
+        autoVisitTypeTitle = findViewById(R.id.auto_visit_type_title);
+
         availabilityButton.setOnClickListener(v -> callAvailabilityService());
     }
-
-   /* @Override
-    public void showFragment(DialogFragment fragment) {
-        String tag = fragment.getClass().getName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(tag);
-        fragment.show(ft, tag);
-    }*/
 
     protected void callAvailabilityService() {
         Map<String, String> queryMap = new HashMap<>();
@@ -233,7 +250,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     private void setUpLocationStep() {
-        View locationContainer = findViewById(R.id.locationStepContainer);
+        locationContainer = findViewById(R.id.locationStepContainer);
         locationContainer.setContentDescription(getString(R.string.content_description_choose_location));
         TextView locationStepTitleTextView = locationContainer.findViewById(R.id.stepTitleTextView);
         locationStepTitleTextView.setText(Label.getLabel("add_appointment_location"));
@@ -253,9 +270,6 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpVisitTypeStep() {
         visitTypeContainer = findViewById(R.id.visitTypeStepContainer);
-        if (appointmentsResultModel.getPayload().getAppointments() != null && appointmentsResultModel.getPayload().getAppointments().size() != 0) {
-            visitTypeContainer.setVisibility(View.GONE);
-        }
         visitTypeContainer.setContentDescription(getString(R.string.content_description_choose_visit_type));
         TextView visitTypeStepTitleTextView = visitTypeContainer.findViewById(R.id.stepTitleTextView);
         visitTypeStepTitleTextView.setText(Label.getLabel("add_appointment_visit_type"));
@@ -270,7 +284,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     private void setUpProviderStep() {
-        View providerContainer = findViewById(R.id.providerStepContainer);
+        providerContainer = findViewById(R.id.providerStepContainer);
         providerContainer.setContentDescription(getString(R.string.content_description_choose_provider));
         TextView providerStepTitleTextView = providerContainer.findViewById(R.id.stepTitleTextView);
         providerStepTitleTextView.setText(Label.getLabel("add_appointment_provider"));
@@ -500,9 +514,71 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO) {
-        selectedVisitType = visitTypeDTO;
-        provider_screen_sub_header.setText(Label.getLabel("intelligent_scheduler_auto_selected_label") + " " + visitTypeDTO.getName());
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onVisitTypeSelected(VisitTypeQuestions autoVisitType) {
+        selectedVisitType = autoVisitType.getVisittype();
+        provider_screen_sub_header.setVisibility(View.GONE);
+        autoVisitTypeTitle.setText(selectedVisitType.getName());
+        autoVisitTypeContainer.setVisibility(View.VISIBLE);
+
+        if (autoVisitType.getCheckbox() != null && getPatientTypeResponse != null) {
+            if (autoVisitType.getCheckbox().getLocationSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
+
+                selectedLocation = getPatientTypeResponse.getLastAppointment().getPayload().getLocation();
+                lastLocationContainer.setVisibility(View.VISIBLE);
+
+                locationContainer.setVisibility(View.GONE);
+                lastLocationMessage.setText("Your auto selected location is ");
+                lastLocationTitle.setText(selectedLocation.getName());
+                lastLocationSubTitle.setText(selectedLocation.getAddress().toString());
+
+            } else if (autoVisitType.getCheckbox().getLocationPickList()) {
+              /*  if (!isLocationOnTop && selectedResource == null) {
+                    locationNoDataTextView.setEnabled(false);
+                } else {
+                    locationNoDataTextView.setEnabled(true);
+                }*/
+
+                lastLocationContainer.setVisibility(View.GONE);
+                locationContainer.setVisibility(View.VISIBLE);
+            }
+
+            if (autoVisitType.getCheckbox().getProviderSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
+                selectedResource = new AppointmentResourcesItemDTO();
+                selectedResource.setProvider(getPatientTypeResponse.getLastAppointment().getPayload().getProvider());
+                selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
+
+                providerContainer.setVisibility(View.GONE);
+                lastProviderContainer.setVisibility(View.VISIBLE);
+
+                String providerName = selectedResource.getProvider().getName();
+                String speciality = selectedResource.getProvider().getSpecialty().getName();
+                lastProviderMessage.setText("Your auto selected provider is ");
+                lastProviderTitle.setText(providerName);
+                lastProviderSubTitle.setText(speciality);
+
+                /*if (selectedLocation == null && autoVisitType.getCheckbox().getLocationPickList()) {
+                    locationNoDataTextView.setEnabled(true);
+                    card_location.setVisibility(View.VISIBLE);
+                }*/
+
+            } else if (autoVisitType.getCheckbox().getProviderPickList()) {
+               /* if (isLocationOnTop && selectedLocation == null) {
+                    providersNoDataTextView.setEnabled(false);
+                } else {
+                    providersNoDataTextView.setEnabled(true);
+                }*/
+
+                lastProviderContainer.setVisibility(View.GONE);
+                providerContainer.setVisibility(View.VISIBLE);
+            }
+            enableAvailableButton();
+        }
+
         fragment.dismiss();
     }
 
@@ -566,6 +642,4 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     public void onConfirm() {
         finish();
     }
-
-
 }
