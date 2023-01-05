@@ -13,6 +13,10 @@ public class UnifiedSignInUser {
     @Expose
     private String password;
 
+    @SerializedName("otp")
+    @Expose
+    private String otp;
+
     @SerializedName("alias")
     @Expose
     private String email;
@@ -25,6 +29,13 @@ public class UnifiedSignInUser {
     @Expose
     private String deviceType = "android";
 
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
 
     public String getPassword() {
         return password;

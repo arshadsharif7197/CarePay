@@ -4,6 +4,8 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedCognitoInfo;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.Payload;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.TwoFactorAuth;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,6 +21,19 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("qrcode")
     @Expose
     private String qrCode;
+
+    @SerializedName("otp_sent")
+    @Expose
+    private Boolean otp_sent;
+
+    @SerializedName("otp_verified")
+    @Expose
+    private Boolean otp_verified;
+
+    @SerializedName("two_factor_authentication")
+    @Expose
+    private TwoFactorAuth twoFactorAuth = new TwoFactorAuth();
+
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();
@@ -87,5 +102,29 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     public void setCognito(UnifiedCognitoInfo cognito) {
         this.cognito = cognito;
+    }
+
+    public Boolean getOtp_sent() {
+        return otp_sent;
+    }
+
+    public void setOtp_sent(Boolean otp_sent) {
+        this.otp_sent = otp_sent;
+    }
+
+    public Boolean getOtp_verified() {
+        return otp_verified;
+    }
+
+    public void setOtp_verified(Boolean otp_verified) {
+        this.otp_verified = otp_verified;
+    }
+
+    public TwoFactorAuth getTwoFactorAuth() {
+        return twoFactorAuth;
+    }
+
+    public void setTwoFactorAuth(TwoFactorAuth twoFactorAuth) {
+        this.twoFactorAuth = twoFactorAuth;
     }
 }

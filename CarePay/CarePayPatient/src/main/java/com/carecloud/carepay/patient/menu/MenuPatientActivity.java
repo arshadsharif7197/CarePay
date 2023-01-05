@@ -35,6 +35,7 @@ import com.carecloud.carepay.patient.notifications.activities.NotificationActivi
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
+import com.carecloud.carepay.patient.signinsignuppatient.DialogConfirmation2Fsettings;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -47,6 +48,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
@@ -132,7 +134,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             }
             populateProfilesList(profileData);
         }
+
+
     }
+
 
     private String getProfileName(DemographicPayloadInfoDTO demographics) {
         return StringUtil

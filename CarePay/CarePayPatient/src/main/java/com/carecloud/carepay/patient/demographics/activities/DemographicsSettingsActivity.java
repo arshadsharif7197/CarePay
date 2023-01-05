@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfile
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.TwoFactorAuthFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
@@ -163,6 +164,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void displayUpdateNameFragment() {
         UpdateNameFragment updateNameFragment = UpdateNameFragment.newInstance();
         replaceFragment(updateNameFragment, true);
+    }
+
+    @Override
+    public void displayTwoFactorAuthFragment(TwoFactorAuthFragment twoFactorAuthFragment, boolean addToBackStack) {
+        replaceFragment(twoFactorAuthFragment,addToBackStack);
     }
 
     @Override

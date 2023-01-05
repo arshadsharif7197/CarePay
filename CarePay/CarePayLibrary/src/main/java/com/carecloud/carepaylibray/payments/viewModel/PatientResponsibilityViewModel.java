@@ -5,15 +5,18 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
 
 public class PatientResponsibilityViewModel extends ViewModel {
     private MutableLiveData<PaymentsModel> paymentsModel = new MutableLiveData<>();
     private PaymentsModel paymentsModelData;
 
+
     public void setPaymentsModel(PaymentsModel paymentsModel) {
         paymentsModelData = paymentsModel;
         this.paymentsModel.setValue(paymentsModel);
     }
+
 
     public LiveData<PaymentsModel> getPaymentsModel() {
         return paymentsModel;

@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.unifiedauth;
 
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedCognitoInfo;
 import com.carecloud.carepaylibray.profile.UserLinks;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.TwoFactorAuth;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,17 @@ public class UnifiedAuthorizationModel {
     @SerializedName("user_links")
     @Expose
     private UserLinks userLinks = new UserLinks();
+    @SerializedName("two_factor_authentication")
+    @Expose
+    private TwoFactorAuth twoFactorAuth = new TwoFactorAuth();
+
+    public TwoFactorAuth getTwoFactorAuth() {
+        return twoFactorAuth;
+    }
+
+    public void setTwoFactorAuth(TwoFactorAuth twoFactorAuth) {
+        this.twoFactorAuth = twoFactorAuth;
+    }
 
     public UnifiedCognitoInfo getCognito() {
         return cognito;

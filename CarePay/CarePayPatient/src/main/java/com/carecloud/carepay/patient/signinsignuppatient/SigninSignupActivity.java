@@ -128,7 +128,7 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     public void authenticate(String user, String pwd) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layoutSigninSignup);
         if (fragment instanceof SigninFragment) {
-            ((SigninFragment) fragment).signIn(user, pwd);
+            ((SigninFragment) fragment).signIn(user, pwd,null);
         }
     }
 

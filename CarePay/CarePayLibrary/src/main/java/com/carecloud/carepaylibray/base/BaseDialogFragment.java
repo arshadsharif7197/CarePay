@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -44,6 +45,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     public PatientResponsibilityViewModel patientResponsibilityViewModel;
     public PaymentsModel paymentsModel;
 
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -55,6 +57,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
         patientResponsibilityViewModel = new ViewModelProvider(requireActivity()).get(PatientResponsibilityViewModel.class);
         paymentsModel = patientResponsibilityViewModel.getPaymentsModelData();
         patientResponsibilityViewModel.getPaymentsModel().observe(requireActivity(), paymentsModel -> this.paymentsModel = paymentsModel);
+
     }
 
     @Override

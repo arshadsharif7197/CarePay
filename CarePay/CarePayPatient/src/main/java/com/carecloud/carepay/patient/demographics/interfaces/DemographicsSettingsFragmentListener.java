@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.interfaces;
 
+import com.carecloud.carepay.patient.demographics.fragments.settings.TwoFactorAuthFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -15,6 +16,8 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
     void displayUpdatePasswordFragment();
 
     void displayUpdateNameFragment();
+
+    void displayTwoFactorAuthFragment(TwoFactorAuthFragment twoFactorAuthFragment, boolean b);
 
     void editInsurance(DemographicDTO demographicDTO, int position);
 

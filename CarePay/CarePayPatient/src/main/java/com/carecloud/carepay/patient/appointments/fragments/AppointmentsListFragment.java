@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
+import com.carecloud.carepay.patient.menu.PatientHelpActivity;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
+import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
+import com.carecloud.carepay.patient.retail.activities.RetailActivity;
+import com.carecloud.carepay.patient.signinsignuppatient.DialogConfirmation2Fsettings;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -37,10 +56,14 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +73,7 @@ import java.util.Set;
 
 public class AppointmentsListFragment extends BaseFragment
         implements AppointmentListAdapter.SelectAppointmentCallback {
-
+    private static TransitionDTO transitionProfile;
     private AppointmentsResultModel appointmentsResultModel;
     private SwipeRefreshLayout refreshLayout;
     private View noAppointmentView;
@@ -114,6 +137,80 @@ public class AppointmentsListFragment extends BaseFragment
         setUpViews(view);
         loadAppointmentList();
         refreshLayout.setRefreshing(false);
+        //2Fa authentication Popup check
+        if (shouldShow2FaPopup()) {
+            DialogConfirmation2Fsettings dialogConfirmation2Fsettings = DialogConfirmation2Fsettings.newInstance("Two Factor Authentication",
+                    "Two_Factor authentication improves the security of your account.In addition to your normal credentials you'll " +
+                            "also need to provide an authentication code when logging in.", "Enable", "Skip for now");
+            dialogConfirmation2Fsettings.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
+                @Override
+                public void onActionButton() {
+                    gotoSettings();
+                }
+            });
+            dialogConfirmation2Fsettings.show(getActivity().getSupportFragmentManager(), dialogConfirmation2Fsettings.getClass().getName());
+        }
+    }
+
+    private void gotoSettings() {
+
+        WorkflowServiceCallback callback = null;
+        TransitionDTO transition = null;
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> queryMap = new HashMap<>();
+        String payload = null;
+        callback = demographicsSettingsCallBack;
+
+        final Gson gson = new Gson();
+        final MyHealthDto myHealthDto = gson.fromJson(ApplicationPreferences.getInstance().getMyHealthDto(), MyHealthDto.class);
+         transition = myHealthDto.getMetadata().getLinks().getProfileUpdate();
+
+       // transition = transitionProfile;
+        if (transition == null || transition.getUrl() == null) {
+            return;
+        }
+        if (payload != null) {
+            //do transition with payload
+            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
+        } else if (headersMap.isEmpty()) {
+            //do regular transition
+            getWorkflowServiceHelper().execute(transition, callback, queryMap);
+        } else {
+            //do transition with headers since no query params are required we can ignore them
+            getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
+        }
+
+
+    }
+
+    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
+            Bundle info = new Bundle();
+            info.putBoolean(NavigationStateConstants.PROFILE_UPDATE, false);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            showErrorNotification(exceptionMessage);
+            hideProgressDialog();
+            Log.e(getString(com.carecloud.carepay.patient.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private boolean shouldShow2FaPopup() {
+        if (ApplicationPreferences.getInstance().get2FaPopupEnabled() && !ApplicationPreferences.getInstance().get2FaVerified()) {
+            return true;
+        } else return false;
     }
 
     private void setUpViews(View view) {
