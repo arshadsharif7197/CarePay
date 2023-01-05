@@ -26,12 +26,10 @@
 
         <service
             android:name=".payments.IntegratedPaymentsQueueUploadService"
-            android:enabled="true"
-            android:exported="false" />
+            android:enabled="true" />
         <service
             android:name=".homescreen.AppointmentCountUpdateService"
-            android:enabled="true"
-            android:exported="false" />
+            android:enabled="true" />
 
     </application>
 

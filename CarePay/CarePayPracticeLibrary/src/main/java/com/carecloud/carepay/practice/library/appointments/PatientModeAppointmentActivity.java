@@ -382,7 +382,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         providerStepNoDataTextView.setVisibility(View.GONE);
         providerCard.setVisibility(View.VISIBLE);
         TextView title = providerCard.findViewById(R.id.title);
-        title.setText(StringUtil.capitalize(resource.getName()));
+        title.setText(StringUtil.capitalize(resource.getProvider().getName()));
         TextView subtitle = providerCard.findViewById(R.id.subTitle);
         subtitle.setText(StringUtil.capitalize(resource.getProvider().getSpecialty().getName()));
         ImageView resetImageView = providerCard.findViewById(R.id.resetImageView);
@@ -526,55 +526,65 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         autoVisitTypeContainer.setVisibility(View.VISIBLE);
 
         if (autoVisitType.getCheckbox() != null && getPatientTypeResponse != null) {
-            if (autoVisitType.getCheckbox().getLocationSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
+            if (autoVisitType.getCheckbox().getProviderSameAsLast() &&
+                    autoVisitType.getCheckbox().getLocationSameAsLast() &&
+                    getPatientTypeResponse != null &&
+                    getPatientTypeResponse.getLastAppointment() != null) {
 
-                selectedLocation = getPatientTypeResponse.getLastAppointment().getPayload().getLocation();
-                lastLocationContainer.setVisibility(View.VISIBLE);
+                setLocation(getPatientTypeResponse.getLastAppointment().getPayload().getLocation());
+                locationCard.setEnabled(false);
+                locationCard.findViewById(R.id.resetImageView).setVisibility(View.GONE);
 
-                locationContainer.setVisibility(View.GONE);
-                lastLocationMessage.setText("Your auto selected location is ");
-                lastLocationTitle.setText(selectedLocation.getName());
-                lastLocationSubTitle.setText(selectedLocation.getAddress().toString());
-
-            } else if (autoVisitType.getCheckbox().getLocationPickList()) {
-              /*  if (!isLocationOnTop && selectedResource == null) {
-                    locationNoDataTextView.setEnabled(false);
-                } else {
-                    locationNoDataTextView.setEnabled(true);
-                }*/
-
-                lastLocationContainer.setVisibility(View.GONE);
-                locationContainer.setVisibility(View.VISIBLE);
-            }
-
-            if (autoVisitType.getCheckbox().getProviderSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
                 selectedResource = new AppointmentResourcesItemDTO();
                 selectedResource.setProvider(getPatientTypeResponse.getLastAppointment().getPayload().getProvider());
                 selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
+                setResourceProvider(selectedResource);
+                providerCard.setEnabled(false);
+                providerCard.findViewById(R.id.resetImageView).setVisibility(View.GONE);
 
-                providerContainer.setVisibility(View.GONE);
-                lastProviderContainer.setVisibility(View.VISIBLE);
+            } else {
+                if (autoVisitType.getCheckbox().getLocationSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
 
-                String providerName = selectedResource.getProvider().getName();
-                String speciality = selectedResource.getProvider().getSpecialty().getName();
-                lastProviderMessage.setText("Your auto selected provider is ");
-                lastProviderTitle.setText(providerName);
-                lastProviderSubTitle.setText(speciality);
+                    selectedLocation = getPatientTypeResponse.getLastAppointment().getPayload().getLocation();
+                    setLocation(selectedLocation);
+                    locationCard.setEnabled(false);
+                    locationCard.findViewById(R.id.resetImageView).setVisibility(View.GONE);
 
-                /*if (selectedLocation == null && autoVisitType.getCheckbox().getLocationPickList()) {
-                    locationNoDataTextView.setEnabled(true);
-                    card_location.setVisibility(View.VISIBLE);
-                }*/
+                } else if (autoVisitType.getCheckbox().getLocationPickList()) {
+                  /*  if (!isLocationOnTop && selectedResource == null) {
+                        locationNoDataTextView.setEnabled(false);
+                    } else {
+                        locationNoDataTextView.setEnabled(true);
+                    }*/
 
-            } else if (autoVisitType.getCheckbox().getProviderPickList()) {
-               /* if (isLocationOnTop && selectedLocation == null) {
-                    providersNoDataTextView.setEnabled(false);
-                } else {
-                    providersNoDataTextView.setEnabled(true);
-                }*/
+                    lastLocationContainer.setVisibility(View.GONE);
+                    locationContainer.setVisibility(View.VISIBLE);
+                }
 
-                lastProviderContainer.setVisibility(View.GONE);
-                providerContainer.setVisibility(View.VISIBLE);
+                if (autoVisitType.getCheckbox().getProviderSameAsLast() && getPatientTypeResponse != null && getPatientTypeResponse.getLastAppointment() != null) {
+                    selectedResource = new AppointmentResourcesItemDTO();
+                    selectedResource.setProvider(getPatientTypeResponse.getLastAppointment().getPayload().getProvider());
+                    selectedResource.setResource_id(getPatientTypeResponse.getLastAppointment().getPayload().getResourceId());
+
+                    setResourceProvider(selectedResource);
+                    providerCard.setEnabled(false);
+                    providerCard.findViewById(R.id.resetImageView).setVisibility(View.GONE);
+
+                    /*if (selectedLocation == null && autoVisitType.getCheckbox().getLocationPickList()) {
+                        locationNoDataTextView.setEnabled(true);
+                        card_location.setVisibility(View.VISIBLE);
+                    }*/
+
+                } else if (autoVisitType.getCheckbox().getProviderPickList()) {
+                   /* if (isLocationOnTop && selectedLocation == null) {
+                        providersNoDataTextView.setEnabled(false);
+                    } else {
+                        providersNoDataTextView.setEnabled(true);
+                    }*/
+
+                    lastProviderContainer.setVisibility(View.GONE);
+                    providerContainer.setVisibility(View.VISIBLE);
+                }
             }
             enableAvailableButton();
         }
