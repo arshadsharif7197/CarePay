@@ -33,6 +33,7 @@
         android:theme="@style/AppThemePractice"
         tools:replace="android:theme, android:icon">
         <activity
+            android:exported="true"
             android:name=".PracticeTabletSplashActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:screenOrientation="sensorLandscape">
@@ -50,6 +51,7 @@
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
+            android:exported="true"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

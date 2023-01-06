@@ -104,7 +104,7 @@ public class AppointmentCountUpdateService extends IntentService {
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, params.practiceId);
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, params.practiceMgmt);
         }
-        return PendingIntent.getService(context, 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(context, 0x222, scheduledService, PendingIntent.FLAG_IMMUTABLE);
     }
 
     private void scheduleAppointmentCountUpdate() {

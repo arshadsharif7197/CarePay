@@ -59,8 +59,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/createAppointmentTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Create Appointment"
-                breeze:textKey="intelligent_scheduler_title" />
+                breeze:textKey="intelligent_scheduler_title"
+                tools:text="Create Appointment" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_screen_sub_header"
@@ -69,46 +69,210 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/soft_sky"
                 android:textSize="@dimen/createAppointmentSubTitleTextSize"
-                tools:text="Create Appointment subheader"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters" />
+                breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters"
+                tools:text="Create Appointment subheader" />
+
+            <LinearLayout
+                android:id="@+id/auto_visit_type_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/auto_visit_type_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/soft_sky"
+                    android:textSize="@dimen/createAppointmentSubTitleTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="intelligent_scheduler_auto_selected_label"
+                    tools:text="Create Appointment subheader" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/round_white_background"
+                    android:orientation="vertical">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/auto_visit_type_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/appointmentCreationStepTitleTextSize"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="Dr. Michael Engleman" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/auto_visit_type_subTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title"
+                        android:layout_centerHorizontal="true"
+                        android:paddingStart="@dimen/dimen_5dp"
+                        android:paddingEnd="@dimen/dimen_5dp"
+                        android:textColor="@color/lightSlateGray"
+                        android:textSize="@dimen/appointmentCreationStepSubtitleTextSize"
+                        android:visibility="gone"
+                        app:customAssetFont="proxima_nova_regular"
+                        tools:text="Cardiology" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/last_provider_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/last_provider_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/soft_sky"
+                    android:textSize="@dimen/createAppointmentSubTitleTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters"
+                    tools:text="Create Appointment subheader" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/round_white_background"
+                    android:orientation="vertical">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/last_provider_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profilePicImageView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/appointmentCreationStepSubtitleBottomMargin"
+                        android:paddingStart="@dimen/dimen_5dp"
+                        android:paddingEnd="@dimen/dimen_5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/appointmentCreationStepTitleTextSize"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="Dr. Michael Engleman" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/last_provider_subTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title"
+                        android:layout_centerHorizontal="true"
+                        android:paddingStart="@dimen/dimen_5dp"
+                        android:paddingEnd="@dimen/dimen_5dp"
+                        android:textColor="@color/lightSlateGray"
+                        android:textSize="@dimen/appointmentCreationStepSubtitleTextSize"
+                        app:customAssetFont="proxima_nova_regular"
+                        tools:text="Cardiology" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/last_location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/last_location_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/soft_sky"
+                    android:textSize="@dimen/createAppointmentSubTitleTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters"
+                    tools:text="Create Appointment subheader" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/round_white_background"
+                    android:orientation="vertical">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/last_location_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profilePicImageView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/appointmentCreationStepSubtitleBottomMargin"
+                        android:paddingStart="@dimen/dimen_5dp"
+                        android:paddingEnd="@dimen/dimen_5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/appointmentCreationStepTitleTextSize"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="Dr. Michael Engleman" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/last_location_subTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title"
+                        android:layout_centerHorizontal="true"
+                        android:paddingStart="@dimen/dimen_5dp"
+                        android:paddingEnd="@dimen/dimen_5dp"
+                        android:textColor="@color/lightSlateGray"
+                        android:textSize="@dimen/appointmentCreationStepSubtitleTextSize"
+                        app:customAssetFont="proxima_nova_regular"
+                        tools:text="Cardiology" />
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/stepsContainer"
-                android:weightSum="3"
-                android:gravity="center"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/appointmentCreationstepsContainerTopMargin">
+                android:layout_marginTop="@dimen/appointmentCreationstepsContainerTopMargin"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <include
-                    android:layout_weight="1"
                     android:id="@+id/visitTypeStepContainer"
                     layout="@layout/layout_appointment_creation_step"
-                    android:visibility="visible"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_weight="1"
+                    android:visibility="visible" />
 
                 <include
                     android:id="@+id/providerStepContainer"
-                    android:layout_weight="1"
                     layout="@layout/layout_appointment_creation_step"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
-                    />
+                    android:layout_weight="1" />
 
                 <include
                     android:id="@+id/locationStepContainer"
-                    android:layout_weight="1"
                     layout="@layout/layout_appointment_creation_step"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    />
-<!--                    android:layout_toEndOf="@id/visitTypeStepContainer" -->
-
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -119,14 +283,13 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/appointmentCreationAvailabilityButtonTopMargin"
                 android:background="@drawable/bg_blue_overlay"
+                android:contentDescription="@string/content_description_check_available_times_button"
                 android:enabled="false"
                 android:gravity="center"
                 android:textColor="@color/white_text_selector"
                 android:textSize="@dimen/appointmentCreationAvailabilityButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
-                android:contentDescription="@string/content_description_check_available_times_button"/>
-
+                breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available" />
         </LinearLayout>
 
     </FrameLayout>
