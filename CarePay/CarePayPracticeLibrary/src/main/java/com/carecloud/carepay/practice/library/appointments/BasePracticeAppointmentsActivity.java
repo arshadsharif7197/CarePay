@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentIn
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.GetPatientTypeResponse;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -57,7 +58,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     protected AppointmentsResultModel appointmentsResultModel;
     private PatientModel patientModel;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
-
+    protected GetPatientTypeResponse getPatientTypeResponse;
 
     @Override
     protected void onCreate(Bundle icicle) {
