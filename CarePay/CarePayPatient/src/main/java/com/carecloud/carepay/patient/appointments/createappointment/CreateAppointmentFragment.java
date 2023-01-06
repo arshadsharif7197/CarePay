@@ -278,38 +278,28 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     private void startIntelligentScheduler() {
         IntelligentSchedulerDTO intelligentSchedulerDTO = getIntelligentScheduler(selectedPractice);
-        //old logic
-       /* if (selectedPractice != null &&
-                intelligentSchedulerDTO != null &&
-                intelligentSchedulerDTO.isSchedulerEnabled() &&
-                intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
-                isNewUser(appointmentsModelDto.getPayload().getAppointments())) {
 
-            isSchedulerEnabled = true;
-            requireActivity().startActivityForResult(new Intent(requireContext(),
-                    IntelligentSchedulerActivity.class).putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY,
-                    new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))), CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
-        }*/
-        //new logic
+        if (selectedPractice != null && intelligentSchedulerDTO != null && getPatientTypeResponse != null) {
 
-        if (selectedPractice != null && intelligentSchedulerDTO != null) {
             if (intelligentSchedulerDTO.isSchedulerEnabled() &&
-                    intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null && getPatientTypeResponse.getPatientType().getNewPatient()) {
+                    intelligentSchedulerDTO.getIntelligent_scheduler_questions() != null &&
+                    getPatientTypeResponse.getPatientType().getNewPatient()) {
+
                 isSchedulerEnabled = true;
                 isLocationOnTop = false;
                 // resetForm();
-
 
                 requireActivity().startActivityForResult(new Intent(requireContext(),
                         IntelligentSchedulerActivity.class).putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY,
                         new Gson().toJson(intelligentSchedulerDTO.getIntelligent_scheduler_questions().get(0))), CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST);
+
             } else if (intelligentSchedulerDTO.isEstablishedPatientSchedulerEnabled() &&
-                    intelligentSchedulerDTO.getEstablishedPatientIntelligentSchedulerQuestions() != null && !getPatientTypeResponse.getPatientType().getNewPatient()) {
+                    intelligentSchedulerDTO.getEstablishedPatientIntelligentSchedulerQuestions() != null &&
+                    !getPatientTypeResponse.getPatientType().getNewPatient()) {
 
                 isSchedulerEnabled = true;
                 isLocationOnTop = false;
                 // resetForm();
-
 
                 requireActivity().startActivityForResult(new Intent(requireContext(),
                         IntelligentSchedulerActivity.class).putExtra(CarePayConstants.INTELLIGENT_SCHEDULER_QUESTIONS_KEY,
