@@ -86,6 +86,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (showSurvey || forceRefresh) {
             showRateDialogFragment();
         }
+
+
     }
 
     protected void setUpViewModel() {

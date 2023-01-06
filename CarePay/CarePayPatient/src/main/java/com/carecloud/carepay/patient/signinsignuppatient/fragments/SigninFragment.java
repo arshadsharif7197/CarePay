@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.fragments.settings.ChangeEmailDialogFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepay.patient.signinsignuppatient.SignInViewModel;
@@ -64,7 +66,7 @@ import java.security.spec.ECGenParameterSpec;
  * The fragment corresponding to SignUp screen.
  */
 public class SigninFragment extends BaseFragment {
-
+    private ChangeEmailDialogFragment changeEmailDialogFragment;
     private static final String KEY_NAME = "carePayKey";
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
@@ -129,7 +131,7 @@ public class SigninFragment extends BaseFragment {
                 intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, getActivity().getIntent().getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-            }else{
+            } else {
                 PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO, getActivity()
                         .getIntent().getExtras());
             }
@@ -141,6 +143,9 @@ public class SigninFragment extends BaseFragment {
                         passwordEditText.getText().toString()), true);
             } else if (response.equals(SignInViewModel.SIGN_IN_ERROR)) {
                 setSignInButtonClickable(true);
+            } else if (response.equals(SignInViewModel.SHOW_ENTER_OTP_SCREEN)) {
+                setSignInButtonClickable(true);
+                loginWithOtp("login");
             }
         });
     }
@@ -164,7 +169,7 @@ public class SigninFragment extends BaseFragment {
 
         signInButton = view.findViewById(R.id.signin_button);
         signInButton.setOnClickListener(view1 -> signIn(emailEditText.getText().toString(),
-                passwordEditText.getText().toString()));
+                passwordEditText.getText().toString(), null));
 
         view.findViewById(R.id.changeLanguageText).setOnClickListener(view13
                 -> callback.replaceFragment(SelectLanguageFragment.newInstance(), true));
@@ -185,7 +190,7 @@ public class SigninFragment extends BaseFragment {
 
         view.findViewById(R.id.get_started).setOnClickListener(view12 -> {
             PlainWebViewFragment fragment = PlainWebViewFragment
-                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL+ ApplicationPreferences.getInstance().getUserLanguage());
+                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL + ApplicationPreferences.getInstance().getUserLanguage());
             callback.replaceFragment(fragment, true);
         });
     }
@@ -211,16 +216,16 @@ public class SigninFragment extends BaseFragment {
         }
     }
 
-    public void signIn(String email, String pwd) {
+    public void signIn(String email, String pwd, String otp) {
         if (areAllFieldsValid(email, pwd) && signInButton.isClickable()) {
-            setSignInButtonClickable(false);
+           // setSignInButtonClickable(false);
             String inviteId = null;
             if (getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO) != null) {
                 inviteId = getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
                         .getString("inviteId");
             }
             boolean openNotificationScreen = getArguments().getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
-            viewModel.signInStep1(email, pwd, inviteId, openNotificationScreen);
+            viewModel.signInStep1(email, pwd, inviteId, openNotificationScreen, otp);
         }
     }
 
@@ -346,7 +351,7 @@ public class SigninFragment extends BaseFragment {
         });
         passwordEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             SystemUtil.hideSoftKeyboard(getActivity());
-            signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            signIn(emailEditText.getText().toString(), passwordEditText.getText().toString(), null);
             return true;
         });
     }
@@ -440,4 +445,28 @@ public class SigninFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
     }
+
+
+    private void loginWithOtp(String type) {
+        changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, emailEditText.getText().toString());
+        changeEmailDialogFragment.setLargeAlertInterface(new UpdateEmailFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton(String code) {
+                setSignInButtonEnabled(true);
+                signInButton.setClickable(true);
+                verifyOtp(code);
+
+            }
+
+
+        });
+
+        changeEmailDialogFragment.show(getActivity().getSupportFragmentManager(), changeEmailDialogFragment.getClass().getName());
+    }
+
+    private void verifyOtp(String code) {
+        signIn(emailEditText.getText().toString(),
+                passwordEditText.getText().toString(), code);
+    }
+
 }

@@ -64,8 +64,11 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_MESSAGE_ID = "message_id";
     private static final String PREFERENCE_NOTIFICATION_ID = "notification_id";
     private static final String PREFERENCE_DOB_REQUIRED = "dob_required";
+    private static final String PREFERENCE_2FA_VERIFIED = "2fa_verified";
+    private static final String PREFERENCE_ENABLED_2FA_POPUP = "enable_2fa_popup";
     private static final String PREFERENCE_PM_SESSION_TIME = "patient_mode_session_time";
     private static final String PREFERENCE_PR_SESSION_TIME = "practice_mode_session_time";
+    private static final String MY_HEALTH_DTO = "my_health_dto";
 
     private String patientId;
     private String practiceId;
@@ -593,11 +596,34 @@ public class ApplicationPreferences {
     public boolean isDobRequired() {
         return readBooleanFromSharedPref(PREFERENCE_DOB_REQUIRED, true);
     }
-
     public void setDobRequired(boolean isLatestVersion) {
         writeBooleanToSharedPref(PREFERENCE_DOB_REQUIRED, isLatestVersion);
     }
+    //2F verification auth sett
+    //...........................
+    public boolean get2FaVerified() {
+        return readBooleanFromSharedPref(PREFERENCE_2FA_VERIFIED, true);
+    }
 
+    public void set2FaVerified(boolean isVerified) {
+        writeBooleanToSharedPref(PREFERENCE_2FA_VERIFIED, isVerified);
+    }
+    public boolean get2FaPopupEnabled() {
+        return readBooleanFromSharedPref(PREFERENCE_ENABLED_2FA_POPUP, true);
+    }
+
+    public void set2FaPopupEnabled(boolean isEnabled) {
+        writeBooleanToSharedPref(PREFERENCE_ENABLED_2FA_POPUP, isEnabled);
+    }
+    //...................
+    public void setMyHealthDto(String newValue) {
+        writeStringToSharedPref(MY_HEALTH_DTO, newValue);
+    }
+
+    public String getMyHealthDto() {
+        return readStringFromSharedPref(MY_HEALTH_DTO, "2");
+    }
+    //................
     public void setPracticeSessionTime(String newValue) {
         writeStringToSharedPref(PREFERENCE_PR_SESSION_TIME, newValue);
     }

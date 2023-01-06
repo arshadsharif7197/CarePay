@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.signinsignuppatient;
 
 import android.app.Application;
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,13 +17,12 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.TwoFactorAuth;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
@@ -43,6 +41,7 @@ import java.util.Map;
 public class SignInViewModel extends BaseViewModel {
 
     public static final Integer SHOW_CHOOSE_PROFILE_SCREEN = 100;
+    public static final Integer SHOW_ENTER_OTP_SCREEN = 103;
     public static final Integer SIGN_IN_ERROR = 101;
 
     private MutableLiveData<Integer> signInResultObservable = new MutableLiveData<>();
@@ -82,22 +81,32 @@ public class SignInViewModel extends BaseViewModel {
     public MutableLiveData<Integer> signInStep1(String userName,
                                                 String password,
                                                 String inviteId,
-                                                boolean shouldShowNotificationScreen) {
+                                                boolean shouldShowNotificationScreen, String otp) {
         ApplicationPreferences.getInstance().setProfileId(null);
         UnifiedSignInUser user = new UnifiedSignInUser();
         user.setEmail(userName);
         user.setPassword(password);
-        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                .getString(CarePayConstants.FCM_TOKEN, null));
+        if (otp!=null&&!otp.equals("resend")){
+            user.setOtp(otp);
+        }
+        /*user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));*/
 
         UnifiedSignInDTO bodyDto = new UnifiedSignInDTO();
         bodyDto.setUser(user);
         Map<String, String> queryParams = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         Gson gson = new Gson();
-        getWorkflowServiceHelper().execute(signInDto.getMetadata().getTransitions().getSignIn(),
-                getUnifiedLoginCallback(userName, password, inviteId, shouldShowNotificationScreen),
-                gson.toJson(bodyDto), queryParams, headers);
+        if (otp!=null&&otp.equals("resend")){
+            getWorkflowServiceHelper().execute(signInDto.getMetadata().getTransitions().getSend_otp(),
+                    getUnifiedLoginCallback(userName, password, inviteId, shouldShowNotificationScreen,otp),
+                    gson.toJson(bodyDto), queryParams, headers);
+        }else {
+            getWorkflowServiceHelper().execute(signInDto.getMetadata().getTransitions().getSignIn(),
+                    getUnifiedLoginCallback(userName, password, inviteId, shouldShowNotificationScreen, otp),
+                    gson.toJson(bodyDto), queryParams, headers);
+        }
+
         ((CarePayApplication) getApplication()).getAppAuthorizationHelper().setUser(userName);
         ApplicationPreferences.getInstance().setUserId(userName);
         NewRelic.setUserId(userName);
@@ -107,7 +116,7 @@ public class SignInViewModel extends BaseViewModel {
     private WorkflowServiceCallback getUnifiedLoginCallback(final String user,
                                                             final String password,
                                                             final String inviteId,
-                                                            boolean shouldShowNotificationScreen) {
+                                                            boolean shouldShowNotificationScreen, String otp) {
         return new WorkflowServiceCallback() {
 
             @Override
@@ -117,7 +126,29 @@ public class SignInViewModel extends BaseViewModel {
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
+
                 UnifiedSignInResponse signInResponse = DtoHelper.getConvertedDTO(UnifiedSignInResponse.class, workflowDTO);
+
+
+                if (otp!=null&&otp.equals("resend")){
+                    setLoading(false);
+                    setSuccessMessage("Send Successfully");
+                    return;
+                }
+                //check if otp is sent
+                TwoFactorAuth twoFactorAuth =signInResponse.getPayload().getAuthorizationModel().getTwoFactorAuth();
+                if (!twoFactorAuth.getVerified()&&twoFactorAuth.getEnable2faPopup()&&twoFactorAuth.getOtpSent()){
+                    signInResultObservable.setValue(SignInViewModel.SHOW_ENTER_OTP_SCREEN);
+                    setLoading(false);
+                    return;
+                }
+
+
+                //2FA authentication check bits.....
+                ApplicationPreferences.getInstance().set2FaPopupEnabled(signInResponse.getPayload().getAuthorizationModel().getTwoFactorAuth().getEnable2faPopup());
+                ApplicationPreferences.getInstance().set2FaVerified(signInResponse.getPayload().getAuthorizationModel().getTwoFactorAuth().getVerified());
+
+                //.............
                 ApplicationPreferences.getInstance().setBadgeCounterTransition(signInResponse
                         .getMetadata().getTransitions().getBadgeCounter());
                 ApplicationPreferences.getInstance()
@@ -188,6 +219,8 @@ public class SignInViewModel extends BaseViewModel {
                 ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
                 ApplicationPreferences.getInstance().setLandingScreen(true);
+
+                ApplicationPreferences.getInstance().setMyHealthDto(workflowDTO.toString());
 
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
