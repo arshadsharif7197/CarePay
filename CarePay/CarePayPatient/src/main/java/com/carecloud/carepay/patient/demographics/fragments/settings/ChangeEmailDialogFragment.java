@@ -2,7 +2,9 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +13,11 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -25,11 +29,12 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
     private UpdateEmailFragment.LargeAlertInterface largeAlertInterface;
 
     String email;
-    String type="";
+    String type = "";
     CarePayTextView dialogMessageTextView;
     CarePayTextView dialogTitleTextView;
     CarePayTextView emailResendTextView;
-    CarePayEditText editTextVerificationCodeEmail;
+    public CarePayEditText editTextVerificationCodeEmail;
+    CarePayButton verifyButton;
     CountDownTimer timer;
 
     public static ChangeEmailDialogFragment newInstance(String type, String email) {
@@ -79,7 +84,9 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        findViewById(R.id.verifyButton).setOnClickListener(this);
+        verifyButton = (CarePayButton) findViewById(R.id.verifyButton);
+        verifyButton.setOnClickListener(this);
+        verifyButton.setEnabled(false);
         findViewById(R.id.emailResendTextView).setOnClickListener(this);
         findViewById(R.id.closeViewLayout).setOnClickListener(this);
         dialogMessageTextView = (CarePayTextView) findViewById(R.id.dialogMessageTextView);
@@ -89,15 +96,41 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
         dialogTitleTextView.setText("Two-Factor Authentication");
         if (type.equals("login")) {
             countDownMethod();
-           // emailResendTextView.setVisibility(View.GONE);
+            // emailResendTextView.setVisibility(View.GONE);
             dialogMessageTextView.setText("Two-Factor authentication is enabled ,We have sent you 5 digit code to" + " " + email + ". " + "Please verify that its you trying to access your account");
-        }else if (type.equals("emailEnable")){
-            emailResendTextView.setVisibility(View.GONE);
-            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + type + ". " + "Enter verification code");
-        } else{
-            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + type + ". " + "Please verify that its you trying to update your account");
+        } else if (type.equals("emailEnable") || type.equals("smsVerification")) {
+            //emailResendTextView.setVisibility(View.GONE);
+            countDownMethod();
+            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + email + ". " + "Enter verification code");
+        } else {
+            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + email + ". " + "Please verify that its you trying to update your account");
             countDownMethod();
         }
+        setTextChangeListener();
+    }
+
+    private void setTextChangeListener() {
+        editTextVerificationCodeEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableVerifyReady();
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+
+        });
+    }
+
+    private void enableVerifyReady() {
+        boolean isReady = editTextVerificationCodeEmail.getText().toString().length() == 5;
+        verifyButton.setEnabled(isReady);
     }
 
     private void countDownMethod() {

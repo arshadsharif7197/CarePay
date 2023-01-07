@@ -44,6 +44,7 @@ import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -146,6 +147,10 @@ public class SigninFragment extends BaseFragment {
             } else if (response.equals(SignInViewModel.SHOW_ENTER_OTP_SCREEN)) {
                 setSignInButtonClickable(true);
                 loginWithOtp("login");
+            }else if (response.equals(SignInViewModel.RESEND_OTP)){
+                if (changeEmailDialogFragment!=null){
+                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError("Invalid OTP");
+                }
             }
         });
     }

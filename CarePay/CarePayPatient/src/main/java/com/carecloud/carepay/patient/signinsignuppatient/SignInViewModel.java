@@ -42,6 +42,7 @@ public class SignInViewModel extends BaseViewModel {
 
     public static final Integer SHOW_CHOOSE_PROFILE_SCREEN = 100;
     public static final Integer SHOW_ENTER_OTP_SCREEN = 103;
+    public static final Integer RESEND_OTP = 104;
     public static final Integer SIGN_IN_ERROR = 101;
 
     private MutableLiveData<Integer> signInResultObservable = new MutableLiveData<>();
@@ -132,7 +133,7 @@ public class SignInViewModel extends BaseViewModel {
 
                 if (otp!=null&&otp.equals("resend")){
                     setLoading(false);
-                    setSuccessMessage("Send Successfully");
+                    setSuccessMessage("OTP has been send successfully");
                     return;
                 }
                 //check if otp is sent
@@ -181,8 +182,12 @@ public class SignInViewModel extends BaseViewModel {
             @Override
             public void onFailure(String exceptionMessage) {
                 setLoading(false);
+                if (otp!=null&&otp.length()==5){
+                    signInResultObservable.setValue(SignInViewModel.RESEND_OTP);
+                }else {
+                    setErrorMessage(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+                }
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-                setErrorMessage(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
                 Log.e("Server Error", exceptionMessage);
                 signInResultObservable.setValue(SIGN_IN_ERROR);
             }

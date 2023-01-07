@@ -181,6 +181,7 @@
                 style="@style/EditTextStyle"
                 android:contentDescription="@string/content_description_signin_user"
                 android:textSize="@dimen/dimen_14dp"
+                android:maxLength="10"
                 android:hint="Enter your phone number*"
                 android:inputType="phone"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -222,7 +223,7 @@
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/enableDisableButton"
-        style="@style/BreezeButtonStyleLight"
+        style="@style/SigninSignupButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
