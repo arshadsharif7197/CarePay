@@ -343,7 +343,15 @@ private void getOtpForEmailUpdate(){
 
     private String getCurrentEmail() {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        return demographicsSettingsPayloadDTO.getCurrentEmail();
+        if (StringUtil.isNullOrEmpty(emailEditText.getText().toString())){
+            return demographicsSettingsPayloadDTO.getCurrentEmail();
+        }else if (demographicsSettingsPayloadDTO.getCurrentEmail().equals(emailEditText.getText().toString())){
+            return demographicsSettingsPayloadDTO.getCurrentEmail();
+
+        }else {
+            return emailEditText.getText().toString();
+        }
+
     }
 
 
