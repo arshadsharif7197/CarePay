@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.SettingsList;
 import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.TwoFactorAuth;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
@@ -35,6 +36,8 @@ import com.newrelic.agent.android.NewRelic;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.http.PUT;
+
 /**
  * @author pjohnson on 2019-10-28.
  */
@@ -42,12 +45,14 @@ public class SignInViewModel extends BaseViewModel {
 
     public static final Integer SHOW_CHOOSE_PROFILE_SCREEN = 100;
     public static final Integer SHOW_ENTER_OTP_SCREEN = 103;
+    public static final Integer SHOW_ENTER_OTP_SCREEN_FOR_SMS = 105;
     public static final Integer RESEND_OTP = 104;
     public static final Integer SIGN_IN_ERROR = 101;
 
     private MutableLiveData<Integer> signInResultObservable = new MutableLiveData<>();
     private MutableLiveData<WorkflowDTO> signInResultNavigatorObservable = new MutableLiveData<>();
     private MutableLiveData<UserLinks> userLinksObservable = new MutableLiveData<>();
+    private MutableLiveData<TwoFactorAuth> twoFactorAuthMutableLiveData = new MutableLiveData<>();
     private SignInDTO signInDto;
 
     public SignInViewModel(@NonNull Application application) {
@@ -63,6 +68,13 @@ public class SignInViewModel extends BaseViewModel {
             signInResultNavigatorObservable = new MutableLiveData<>();
         }
         return signInResultNavigatorObservable;
+    }
+
+    public MutableLiveData<TwoFactorAuth>getTwoFactorAuthMutableLiveData(){
+        if (twoFactorAuthMutableLiveData==null){
+            twoFactorAuthMutableLiveData=new MutableLiveData<>();
+        }
+        return twoFactorAuthMutableLiveData;
     }
 
     public MutableLiveData<Integer> getSignInResultObservable() {
@@ -138,8 +150,13 @@ public class SignInViewModel extends BaseViewModel {
                 }
                 //check if otp is sent
                 TwoFactorAuth twoFactorAuth =signInResponse.getPayload().getAuthorizationModel().getTwoFactorAuth();
-                if (!twoFactorAuth.getVerified()&&twoFactorAuth.getEnable2faPopup()&&twoFactorAuth.getOtpSent()){
+                SettingsList settingsList=twoFactorAuth.getSettings().getPayload().getSettingsList().get(0);
+                if (!twoFactorAuth.getVerified()&&twoFactorAuth.getEnable2faPopup()&&twoFactorAuth.getOtpSent()&&settingsList.getVerificationType().equals("email")){
                     signInResultObservable.setValue(SignInViewModel.SHOW_ENTER_OTP_SCREEN);
+                    setLoading(false);
+                    return;
+                }else if (!twoFactorAuth.getVerified()&&twoFactorAuth.getEnable2faPopup()&&twoFactorAuth.getOtpSent()&&settingsList.getVerificationType().equals("sms")){
+                    twoFactorAuthMutableLiveData.setValue(twoFactorAuth);
                     setLoading(false);
                     return;
                 }

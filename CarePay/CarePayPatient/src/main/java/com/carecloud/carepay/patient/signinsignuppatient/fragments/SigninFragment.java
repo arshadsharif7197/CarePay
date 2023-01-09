@@ -41,10 +41,10 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
+import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.SettingsList;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -142,16 +142,28 @@ public class SigninFragment extends BaseFragment {
                 setSignInButtonClickable(true);
                 callback.addFragment(ChooseProfileFragment.newInstance(emailEditText.getText().toString(),
                         passwordEditText.getText().toString()), true);
-            } else if (response.equals(SignInViewModel.SIGN_IN_ERROR)) {
+            }
+            else if (response.equals(SignInViewModel.SIGN_IN_ERROR)) {
                 setSignInButtonClickable(true);
-            } else if (response.equals(SignInViewModel.SHOW_ENTER_OTP_SCREEN)) {
+            }
+            else if (response.equals(SignInViewModel.SHOW_ENTER_OTP_SCREEN)) {
                 setSignInButtonClickable(true);
-                loginWithOtp("login");
-            }else if (response.equals(SignInViewModel.RESEND_OTP)){
+                loginWithOtp("login", null);
+            }
+            else if (response.equals(SignInViewModel.RESEND_OTP)){
                 if (changeEmailDialogFragment!=null){
                     changeEmailDialogFragment.editTextVerificationCodeEmail.setError("Invalid OTP");
                 }
             }
+        });
+
+        viewModel.getTwoFactorAuthMutableLiveData().observe(this,response->{
+         SettingsList settingsList= response.getSettings().getPayload().getSettingsList().get(0);
+                setSignInButtonClickable(true);
+                if (settingsList.getPhone_number()!=null){
+                    loginWithOtp("login",settingsList.getPhone_number());
+                }
+
         });
     }
 
@@ -452,8 +464,13 @@ public class SigninFragment extends BaseFragment {
     }
 
 
-    private void loginWithOtp(String type) {
-        changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, emailEditText.getText().toString());
+    private void loginWithOtp(String type, String phone_number) {
+        if (phone_number!=null&&!StringUtil.isEmpty(phone_number)){
+            changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, phone_number);
+        }else {
+            changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, emailEditText.getText().toString());
+        }
+
         changeEmailDialogFragment.setLargeAlertInterface(new UpdateEmailFragment.LargeAlertInterface() {
             @Override
             public void onActionButton(String code) {
