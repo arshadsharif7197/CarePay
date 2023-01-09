@@ -146,14 +146,16 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                         .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
                 smsTextInputLayout.setVisibility(View.GONE);
                 emailTextInputLayout.setVisibility(View.VISIBLE);
-            } else {
+            }
+            if (settingsList.getVerificationType().equals("sms")) {
+                smsSetRadioButton.setChecked(true);
                 smsSetRadioButton.setTextColor(ContextCompat
                         .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.black));
                 emailSetRadioButton.setTextColor(ContextCompat
                         .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
-                emailTextInputLayout.setVisibility(View.GONE);
                 smsTextInputLayout.setVisibility(View.VISIBLE);
-
+                emailTextInputLayout.setVisibility(View.GONE);
+                editTextSms.setText(settingsList.getPhone_number());
             }
             enableDisableButton.setText("Disable");
 
@@ -544,29 +546,6 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
             }
         }
         enableDisableButton.setEnabled(isReady);
-       /* if (whichOne.equals("email")) {
-            boolean isReady = checkEmail(editTextEmail.getText().toString());
-            enableDisableButton.setEnabled(isReady);
-            if (enableDisableButton.isEnabled()) {
-                enableDisableButton.setBackgroundColor(ContextCompat
-                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.lightSlateGray));
-            } else {
-                enableDisableButton.setBackgroundColor(ContextCompat
-                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
-            }
-        } else {
-            boolean isReady = editTextSms.getText().toString().length() == 10;
-            enableDisableButton.setEnabled(isReady);
-            if (enableDisableButton.isEnabled()) {
-                enableDisableButton.setBackgroundColor(ContextCompat
-                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.lightSlateGray));
-            } else {
-                enableDisableButton.setBackgroundColor(ContextCompat
-                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
-            }
-        }*/
-
-
     }
 
     //For callback
