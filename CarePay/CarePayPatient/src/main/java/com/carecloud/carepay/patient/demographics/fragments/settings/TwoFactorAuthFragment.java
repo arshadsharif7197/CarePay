@@ -24,12 +24,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.CarePayRadioButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.Payload;
 import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.SendOtp;
@@ -38,6 +40,7 @@ import com.carecloud.carepaylibray.unifiedauth.TwoFAuth.TwoFactorAuth;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickListener {
+public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickListener, ConfirmationCallback {
     private DemographicDTO demographicsSettingsDTO;
     private ChangeEmailDialogFragment changeEmailDialogFragment;
     private DemographicsSettingsFragmentListener callback;
@@ -64,7 +67,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
     private CarePayTextInputLayout smsTextInputLayout;
     private CarePayTextInputLayout emailTextInputLayout;
     private CarePayButton enableDisableButton;
-    private boolean isResend=false;
+    private boolean isResend = false;
 
     /**
      * @return an instance of DemographicsSettingsFragment
@@ -125,6 +128,41 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
         smsSetRadioButton.setOnClickListener(this);
         enableDisableButton.setOnClickListener(this);
         setTextListeners();
+        checkIfEnable();
+    }
+
+    TwoFactorAuth twoFactorAuth;
+    SettingsList settingsList;
+
+    private void checkIfEnable() {
+        twoFactorAuth = demographicsSettingsDTO.getPayload().getTwoFactorAuth();
+        settingsList = twoFactorAuth.getSettings().getPayload().getSettingsList().get(0);
+        if (settingsList.getEnabled()) {
+            if (settingsList.getVerificationType().equals("email")) {
+                emailSetRadioButton.setChecked(true);
+                emailSetRadioButton.setTextColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.black));
+                smsSetRadioButton.setTextColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
+                smsTextInputLayout.setVisibility(View.GONE);
+                emailTextInputLayout.setVisibility(View.VISIBLE);
+            } else {
+                smsSetRadioButton.setTextColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.black));
+                emailSetRadioButton.setTextColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
+                emailTextInputLayout.setVisibility(View.GONE);
+                smsTextInputLayout.setVisibility(View.VISIBLE);
+
+            }
+            enableDisableButton.setText("Disable");
+
+
+        } else {
+            if (settingsList.getEnabled() && settingsList.getVerificationType().equals("email"))
+                enableDisableButton.setEnabled(true);
+            else enableDisableButton.setEnabled(false);
+        }
     }
 
     private void setUpViews(View view) {
@@ -142,9 +180,11 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
         smsTextInputLayout.setVisibility(View.GONE);
         emailTextInputLayout.setVisibility(View.GONE);
 
-       String email= getCurrentEmail();
-       editTextEmail.setText(email);
-       editTextEmail.setEnabled(false);
+        String email = getCurrentEmail();
+        String phoneNumber = getCurrentPhone();
+        editTextEmail.setText(email);
+        editTextEmail.setEnabled(false);
+        editTextSms.setText(phoneNumber);
 
 //set under line text
         setTextUnderlined(emailResendTextView);
@@ -172,13 +212,47 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                 whenClicked();
                 break;
             case R.id.enableDisableButton:
+                if (settingsList != null && settingsList.getEnabled()) {
+                    String message="Are you sure to disable two-factor authentication settings?";
+                    if ((emailSetRadioButton.isChecked()&&settingsList.getVerificationType().equals("sms"))||(smsSetRadioButton.isChecked()&&settingsList.getVerificationType().equals("email"))){
+                         message="Are you sure to update two-factor authentication settings?";
+                    }
+                    ConfirmDialogFragment fragment = ConfirmDialogFragment
+                            .newInstance("Two-Factor authentication",
+                                    message,
+                                    Label.getLabel("button_no"),
+                                    Label.getLabel("button_yes"));
+                    fragment.setNegativeAction(true);
+                    fragment.setCallback(this);
+                    callback.displayDialogFragment(fragment, false);
+                    return;
+                }
                 enableTwoFactorAuth();
-                isResend=false;
+                isResend = false;
                 break;
 
         }
 
 
+    }
+
+    @Override
+    public void onConfirm() {
+        if (settingsList != null && settingsList.getVerificationType().equals("email")) {
+            if (smsSetRadioButton.isChecked()) {
+                makeEnableTwoFactorAuth("sms", "");
+            } else {
+                makeEnableTwoFactorAuth("emailDisable", "");
+            }
+
+        } else {
+            if (emailSetRadioButton.isChecked()) {
+                makeEnableTwoFactorAuth("email", "");
+            } else {
+                makeEnableTwoFactorAuth("smsDisable", "");
+            }
+
+        }
     }
 
     private void enableTwoFactorAuth() {
@@ -191,8 +265,8 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
     }
 
     private void goForEnableSettings(String type) {
-        makeEnableTwoFactorAuth(type);
-        if (type.equals("sms")){
+        makeEnableTwoFactorAuth(type, "");
+        /*if (type.equals("sms")) {
             changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, editTextEmail.getText().toString());
             changeEmailDialogFragment.setLargeAlertInterface(new UpdateEmailFragment.LargeAlertInterface() {
                 @Override
@@ -202,95 +276,174 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                         //makeEnableTwoFactorAuth(type);
                     } else {
                         //verifyOtp(code);
-                        makeEnableTwoFactorAuth(type);
+                        makeEnableTwoFactorAuth(type, code);
                     }
                 }
             });
-           // changeEmailDialogFragment.show(getActivity().getSupportFragmentManager(), changeEmailDialogFragment.getClass().getName());
-        }
+            // changeEmailDialogFragment.show(getActivity().getSupportFragmentManager(), changeEmailDialogFragment.getClass().getName());
+            return;
+        }*/
     }
 
     private void getOtpForEmailUpdate(String type) {
-        SendOtp sendOtp=new SendOtp();
+        SendOtp sendOtp = new SendOtp();
         if (type.equals("email")) {
             sendOtp.setEmail(editTextEmail.getText().toString());
             sendOtp.setOtpType("change_email");
-        } else if (type.equals("sms")){
+        } else if (type.equals("sms")) {
             sendOtp.setPhone_number(editTextSms.getText().toString());
             sendOtp.setOtpType("change_verification_phone");
-        }else {
+        } else if (type.equals("smsVerification")) {
+            sendOtp.setPhone_number(editTextSms.getText().toString());
+            sendOtp.setOtpType("change_verification_phone");
+        } else {
             changeEmailDialogFragment.timer.cancel();
             changeEmailDialogFragment.cancel();
             showErrorNotification("Missing type");
-            return;
         }
         Map<String, String> queryParams = new HashMap<>();
         Gson gson = new Gson();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        isResend=true;
+        isResend = true;
         getWorkflowServiceHelper().execute(demographicsSettingsDTO.getMetadata().getTransitions().getSend_otp(),
-                updateEmailCallback,
-                gson.toJson(sendOtp), queryParams,headers);
+                getUpdateEmailCallback(type),
+                gson.toJson(sendOtp), queryParams, headers);
 
 
     }
 
-    private void makeEnableTwoFactorAuth(String type) {
+    private void makeEnableTwoFactorAuth(String type, String code) {
 
         SettingsList settingsList = new SettingsList();
-        settingsList.setEnabled(true);
-        settingsList.setVerificationType(type);
-        if (type.equals("sms")&&!StringUtil.isNullOrEmpty(editTextSms.getText().toString())){
-            settingsList.setPhone_number(editTextSms.getText().toString());
-        }
-        List<SettingsList> list = new ArrayList<>();
-        list.add(settingsList);
-
         Payload bodyDto = new Payload();
-        bodyDto.setEnabled(true);
+        List<SettingsList> list = new ArrayList<>();
+        if (type.equals("emailDisable")) {
+            settingsList.setEnabled(false);
+            settingsList.setVerificationType("email");
+            list.add(settingsList);
+            bodyDto.setEnabled(false);
+        } else if (type.equals("smsDisable")) {
+            settingsList.setEnabled(false);
+            settingsList.setVerificationType("sms");
+            list.add(settingsList);
+            bodyDto.setEnabled(false);
+        } else if (type.equals("smsVerification")) {
+            settingsList.setEnabled(true);
+            settingsList.setVerificationType("sms");
+            settingsList.setPhone_number(editTextSms.getText().toString());
+            list.add(settingsList);
+            bodyDto.setEnabled(true);
+            bodyDto.setOtp(code);
+        } else {
+            settingsList.setEnabled(true);
+            settingsList.setVerificationType(type);
+            if (type.equals("sms") && !StringUtil.isNullOrEmpty(editTextSms.getText().toString())) {
+                settingsList.setPhone_number(editTextSms.getText().toString());
+            }
+            list.add(settingsList);
+            bodyDto.setEnabled(true);
+        }
+
+
         bodyDto.setSettingsList(list);
         Map<String, String> queryParams = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         Gson gson = new Gson();
         getWorkflowServiceHelper().execute(demographicsSettingsDTO.getMetadata().getTransitions().getUpdate_two_factor_authentication_settings(),
-                updateEmailCallback,
+                getUpdateEmailCallback(type),
                 gson.toJson(bodyDto), queryParams, headers);
 
     }
 
-    WorkflowServiceCallback updateEmailCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-
-            hideProgressDialog();
-            if (isResend){
-                SystemUtil.showSuccessToast(getContext(), "Send Successfully");
-                changeEmailDialogFragment.timer.cancel();
-                changeEmailDialogFragment.timer.start();
-                isResend=false;
-                return;
-            }
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
-            if (changeEmailDialogFragment!=null&&changeEmailDialogFragment.timer!=null){
-                changeEmailDialogFragment.timer.cancel();
-                changeEmailDialogFragment.cancel();
+    private WorkflowServiceCallback getUpdateEmailCallback(String type) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
 
-        }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                if (isResend && (type.equals("smsVerification") || type.equals("emailVerification"))) {
+                    if (changeEmailDialogFragment != null) {
+                        changeEmailDialogFragment.editTextVerificationCodeEmail.setError("A new OTP has been sent,Please enter new OTP.");
+                        hideProgressDialog();
+                        isResend = false;
+                        return;
+                    }
+                }
+                if (isResend) {
+                    SystemUtil.showSuccessToast(getContext(), "Send Successfully");
+                    changeEmailDialogFragment.timer.cancel();
+                    changeEmailDialogFragment.timer.start();
+                    isResend = false;
+                    hideProgressDialog();
+                    return;
+                }
+                DemographicDTO demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
+                twoFactorAuth = demographicsSettingsDTO.getPayload().getTwoFactorAuth();
+                settingsList = twoFactorAuth.getSettings().getPayload().getSettingsList().get(0);
+                hideProgressDialog();
+                if (type.equals("smsDisable") || type.equals("emailDisable")) {
+                    enableDisableButton.setText("Enable");
+                } else if (enableDisableButton.getText().toString().equals("Enable")) {
+                    enableDisableButton.setText("Disable");
+                }
+                if ((settingsList.getVerificationType().equals("sms") || settingsList.getVerificationType().equals("email")) &&
+                        demographicsSettingsDTO.getPayload().getTwoFactorAuth().getOtpSent() != null && demographicsSettingsDTO.getPayload().getTwoFactorAuth().getOtpSent()) {
+                    askForOtpForPhone("smsVerification");
+                    return;
+                }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            isResend=false;
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+                if (changeEmailDialogFragment != null && changeEmailDialogFragment.timer != null) {
+                    changeEmailDialogFragment.timer.cancel();
+                    changeEmailDialogFragment.cancel();
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                isResend = false;
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                enableVerifyReady("sms");
+                if (type.equals("smsVerification") || type.equals("emailVerification")) {
+                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError(exceptionMessage);
+                }
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
+
+
+    private void askForOtpForPhone(String type) {
+
+        changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance(type, editTextSms.getText().toString());
+        changeEmailDialogFragment.setLargeAlertInterface(new UpdateEmailFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton(String code) {
+                if (code.equals("resend")) {
+                    getOtpForEmailUpdate(type);
+                    //makeEnableTwoFactorAuth(type);
+                } else {
+                    verifyOtp(code, type);
+
+                }
+            }
+
+
+        });
+        changeEmailDialogFragment.show(getActivity().getSupportFragmentManager(), changeEmailDialogFragment.getClass().getName());
+    }
+
+    private void verifyOtp(String code, String type) {
+
+        makeEnableTwoFactorAuth(type, code);
+    }
+
 
     private void whenClicked() {
         if (emailSetRadioButton.isChecked()) {
@@ -300,6 +453,8 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                     .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
             smsTextInputLayout.setVisibility(View.GONE);
             emailTextInputLayout.setVisibility(View.VISIBLE);
+            enableDisableButton.setEnabled(true);
+            enableVerifyReady("email");
 
 
         }
@@ -310,6 +465,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                     .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
             emailTextInputLayout.setVisibility(View.GONE);
             smsTextInputLayout.setVisibility(View.VISIBLE);
+            enableVerifyReady("sms");
         }
 
     }
@@ -333,31 +489,10 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
         enableDisableButton.setEnabled(b);
     }
 
+    int numCount = 0;
 
     private void setTextListeners() {
-        editTextEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                boolean isEmptyEmail = StringUtil.isNullOrEmpty(editTextEmail.getText().toString());
-                if (!isEmptyEmail) { // clear the error
-                    emailTextInputLayout.setError(null);
-                    emailTextInputLayout.setErrorEnabled(false);
-                    enableDisableButton.setBackgroundColor(ContextCompat
-                            .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
-                }
-                enableVerifyButton(editable.toString());
-            }
-        });
+//for phone number text...........
         editTextSms.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -366,23 +501,73 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                boolean isEmptyPassword = StringUtil.isNullOrEmpty(editTextSms.getText().toString());
-                if (isEmptyPassword) {
-                    smsTextInputLayout.setError(null);
-                    smsTextInputLayout.setErrorEnabled(false);
-                }
-                enableVerifyButton(editTextSms.getText().toString());
+                enableVerifyReady("sms");
+
+            }
+        });
+//for email validation listener
+       /* editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableVerifyReady("email");
+            }
+        });*/
+    }
+
+    private void enableVerifyReady(String whichOne) {
+        boolean isReady = false;
+        if (whichOne.equals("sms")) {
+            isReady = editTextSms.getText().toString().length() == 10;
+
+            if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("email")) {
+                enableDisableButton.setText("Enable");
+            } else if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("sms")) {
+                enableDisableButton.setText("Disable");
+            }
+        } else if (whichOne.equals("email")) {
+            isReady = checkEmail(editTextEmail.getText().toString());
+
+            if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("sms")) {
+                enableDisableButton.setText("Enable");
+            } else if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("email")) {
+                enableDisableButton.setText("Disable");
+            }
+        }
+        enableDisableButton.setEnabled(isReady);
+       /* if (whichOne.equals("email")) {
+            boolean isReady = checkEmail(editTextEmail.getText().toString());
+            enableDisableButton.setEnabled(isReady);
+            if (enableDisableButton.isEnabled()) {
+                enableDisableButton.setBackgroundColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.lightSlateGray));
+            } else {
                 enableDisableButton.setBackgroundColor(ContextCompat
                         .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
             }
-        });
-    }
+        } else {
+            boolean isReady = editTextSms.getText().toString().length() == 10;
+            enableDisableButton.setEnabled(isReady);
+            if (enableDisableButton.isEnabled()) {
+                enableDisableButton.setBackgroundColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.lightSlateGray));
+            } else {
+                enableDisableButton.setBackgroundColor(ContextCompat
+                        .getColor(getActivity(), com.carecloud.carepaylibrary.R.color.slateGray));
+            }
+        }*/
 
+
+    }
 
     //For callback
     public interface LargeAlertInterface {
@@ -392,6 +577,22 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
     private String getCurrentEmail() {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         return demographicsSettingsPayloadDTO.getCurrentEmail();
+    }
+
+    private String getCurrentPhone() {
+        TwoFactorAuth twoFactorAuth = demographicsSettingsDTO.getPayload().getTwoFactorAuth();
+        if (twoFactorAuth.getSettings().getPayload().getSettingsList().get(0).getPhone_number() != null) {
+            return "";
+        } else {
+            return twoFactorAuth.getSettings().getPayload().getSettingsList().get(0).getPhone_number();
+        }
+
+    }
+
+    private boolean checkEmail(String email) {
+        boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
+        boolean isEmailValid = ValidationHelper.isValidEmail(email);
+        return !isEmptyEmail && isEmailValid;
     }
 }
 
