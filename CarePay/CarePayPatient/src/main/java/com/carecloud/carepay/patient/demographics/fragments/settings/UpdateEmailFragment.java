@@ -265,7 +265,7 @@ private void getOtpForEmailUpdate(){
             //getActivity().onBackPressed();
 
             if (updatedSettings.getPayload().getOtp_sent() && !updatedSettings.getPayload().getOtp_verified()) {
-                showChangeEmailDialog(getCurrentEmail());
+                showChangeEmailDialog(emailEditText.getText().toString());
             } else if (!updatedSettings.getPayload().getOtp_sent() && updatedSettings.getPayload().getOtp_verified()) {
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
                 String newEmail = updatedSettings.getPayload().getCurrentEmail();
@@ -343,15 +343,7 @@ private void getOtpForEmailUpdate(){
 
     private String getCurrentEmail() {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        if (StringUtil.isNullOrEmpty(emailEditText.getText().toString())){
-            return demographicsSettingsPayloadDTO.getCurrentEmail();
-        }else if (demographicsSettingsPayloadDTO.getCurrentEmail().equals(emailEditText.getText().toString())){
-            return demographicsSettingsPayloadDTO.getCurrentEmail();
-
-        }else {
-            return emailEditText.getText().toString();
-        }
-
+        return demographicsSettingsPayloadDTO.getCurrentEmail();
     }
 
 
