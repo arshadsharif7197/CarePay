@@ -265,7 +265,7 @@ private void getOtpForEmailUpdate(){
             //getActivity().onBackPressed();
 
             if (updatedSettings.getPayload().getOtp_sent() && !updatedSettings.getPayload().getOtp_verified()) {
-                showChangeEmailDialog(getCurrentEmail());
+                showChangeEmailDialog(emailEditText.getText().toString());
             } else if (!updatedSettings.getPayload().getOtp_sent() && updatedSettings.getPayload().getOtp_verified()) {
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
                 String newEmail = updatedSettings.getPayload().getCurrentEmail();
