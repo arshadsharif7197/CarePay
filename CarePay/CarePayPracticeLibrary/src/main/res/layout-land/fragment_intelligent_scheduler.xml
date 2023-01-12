@@ -1,40 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:contentDescription="@string/content_description_credit_cards_screen"
-    android:orientation="vertical">
+    android:elevation="@dimen/dimen_5dp"
+    android:fadingEdgeLength="@dimen/dimen_5dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="@dimen/dimen_5dp"
+    app:cardMaxElevation="@dimen/dimen_5dp"
+    app:cardUseCompatPadding="true">
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/intelligent_scheduler_toolbar" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:padding="@dimen/payment_method_parent_layout_padding">
+        android:contentDescription="@string/content_description_credit_cards_screen"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayViewPager
-            android:id="@+id/visit_type_question_pager"
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/intelligent_scheduler_toolbar" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/nextButton" />
+            android:background="@color/white"
+            android:padding="@dimen/payment_method_parent_layout_padding">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/nextButton"
-            style="@style/BreezeButtonStyleDark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-            android:background="@drawable/button_selector_green"
-            android:contentDescription="@string/content_description_pay_button"
-            android:textAllCaps="true"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="next_question_button_text" />
-    </RelativeLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayViewPager
+                android:id="@+id/visit_type_question_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/nextButton" />
 
-</LinearLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/nextButton"
+                style="@style/BreezeButtonStyleDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+                android:background="@drawable/green_rounded_button_selector"
+                android:contentDescription="@string/content_description_pay_button"
+                android:textAllCaps="true"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="next_question_button_text" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
