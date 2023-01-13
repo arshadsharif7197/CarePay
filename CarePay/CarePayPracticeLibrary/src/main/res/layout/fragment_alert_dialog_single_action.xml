@@ -45,8 +45,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_36sp"
             app:customAssetFont="gotham_rounded_bold"
-            breeze:textKey="home_alert_dialog_title"
-            tools:text="Go back home?" />
+            tools:text=" " />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/dialogMessageTextView"
