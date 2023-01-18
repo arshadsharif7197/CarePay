@@ -521,6 +521,8 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     @Override
     public void onVisitTypeSelected(VisitTypeQuestions autoVisitType) {
         selectedVisitType = autoVisitType.getVisittype();
+        selectedVisitType.setFromIntelligentScheduler(true);
+
         provider_screen_sub_header.setVisibility(View.GONE);
         autoVisitTypeTitle.setText(selectedVisitType.getName());
         autoVisitTypeContainer.setVisibility(View.VISIBLE);
