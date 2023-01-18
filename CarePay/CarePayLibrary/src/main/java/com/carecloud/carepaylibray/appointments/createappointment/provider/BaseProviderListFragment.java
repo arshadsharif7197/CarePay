@@ -95,6 +95,9 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
         queryMap.put("request", "resources");
         if (selectedVisitType != null) {
             queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
+            // added 2 params for https://jira.carecloud.com/browse/BREEZ-2081
+            queryMap.put("video_option", String.valueOf(selectedVisitType.hasVideoOption()));
+            queryMap.put("from_intelligent_scheduler", String.valueOf(selectedVisitType.isFromIntelligentScheduler()));
         }
         if (selectedLocation != null) {
             queryMap.put("filter_location_id", String.valueOf(selectedLocation.getId()));
