@@ -103,6 +103,8 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
                 // selectedVisitType = autoVisitType;
                 selectedVisitType = autoVisitType.getVisittype();
+                selectedVisitType.setFromIntelligentScheduler(true);
+
                 // tvAutoVisitType.setText(autoVisitType.getName());
                 tvAutoVisitType.setText(autoVisitType.getVisittype().getName());
                 autoVisitTypeContainer.setVisibility(View.VISIBLE);
