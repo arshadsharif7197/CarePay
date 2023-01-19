@@ -36,6 +36,7 @@ import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
@@ -152,7 +153,7 @@ public class SigninFragment extends BaseFragment {
             }
             else if (response.equals(SignInViewModel.RESEND_OTP)){
                 if (changeEmailDialogFragment!=null){
-                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError("Invalid OTP");
+                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError(Label.getLabel("2fa.incorrect_code"));
                 }
             }
         });

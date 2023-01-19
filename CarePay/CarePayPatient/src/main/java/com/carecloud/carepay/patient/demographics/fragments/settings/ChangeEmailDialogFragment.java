@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
@@ -93,17 +94,17 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
         dialogTitleTextView = (CarePayTextView) findViewById(R.id.dialogTitleTextView);
         editTextVerificationCodeEmail = (CarePayEditText) findViewById(R.id.editTextVerificationCodeEmail);
         emailResendTextView = (CarePayTextView) findViewById(R.id.emailResendTextView);
-        dialogTitleTextView.setText("Two-Factor Authentication");
+        dialogTitleTextView.setText(Label.getLabel("2fa.header"));
         if (type.equals("login")) {
             countDownMethod();
             // emailResendTextView.setVisibility(View.GONE);
-            dialogMessageTextView.setText("Two-Factor authentication is enabled ,We have sent you 5 digit code to" + " " + email + ". " + "Please verify that its you trying to access your account");
+            dialogMessageTextView.setText(Label.getLabel("2fa.verification_code_sent") + " " + email + ". " + Label.getLabel("2fa.please_verify_yourself"));
         } else if (type.equals("emailEnable") || type.equals("smsVerification")) {
             //emailResendTextView.setVisibility(View.GONE);
             countDownMethod();
-            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + email + ". " + "Enter verification code");
+            dialogMessageTextView.setText(Label.getLabel("2fa.security_code_sent") + " " + email + ". " + Label.getLabel("2fa.enter_code"));
         } else {
-            dialogMessageTextView.setText("A 5 digit security code has been sent to your" + " " + email + ". " + "Please verify that its you trying to update your account");
+            dialogMessageTextView.setText(Label.getLabel("2fa.security_code_sent")  + email + ". " + Label.getLabel("2fa.please_verify_yourself"));
             countDownMethod();
         }
         setTextChangeListener();
@@ -143,7 +144,7 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
                 long min = (millisUntilFinished / 60000) % 60;
                 long sec = (millisUntilFinished / 1000) % 60;
                 setTextUnderlined(emailResendTextView);
-                emailResendTextView.setText("Resend in " + f.format(min) + " : " + f.format(sec));
+                emailResendTextView.setText(Label.getLabel("2.fa.resend.in") + f.format(min) + " : " + f.format(sec));
             }
 
             // When the task is over it will print 00:00:00 there
@@ -166,7 +167,7 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
     }
 
     private void setTextUnderlined(CarePayTextView textView) {
-        SpannableString content = new SpannableString("Resend code");
+        SpannableString content = new SpannableString(Label.getLabel("2fa.resend_code"));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         textView.setText(content);
 

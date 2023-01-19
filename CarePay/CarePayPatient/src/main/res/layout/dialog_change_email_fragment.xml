@@ -111,7 +111,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_vertical"
             android:foreground="?android:selectableItemBackground"
-            android:text="Verify"
+            breeze:textKey="2fa.verify"
             android:padding="@dimen/dimen_5dp"
             android:textAllCaps="true"
             android:textSize="@dimen/dimen_12dp"

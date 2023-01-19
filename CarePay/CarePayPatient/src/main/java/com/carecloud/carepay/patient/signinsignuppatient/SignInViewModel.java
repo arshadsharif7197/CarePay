@@ -145,7 +145,7 @@ public class SignInViewModel extends BaseViewModel {
 
                 if (otp!=null&&otp.equals("resend")){
                     setLoading(false);
-                    setSuccessMessage("OTP has been send successfully");
+                    setSuccessMessage(Label.getLabel("2.fa.code_success"));
                     return;
                 }
                 //check if otp is sent

@@ -139,9 +139,8 @@ public class AppointmentsListFragment extends BaseFragment
         refreshLayout.setRefreshing(false);
         //2Fa authentication Popup check
         if (shouldShow2FaPopup()) {
-            DialogConfirmation2Fsettings dialogConfirmation2Fsettings = DialogConfirmation2Fsettings.newInstance("Two-Factor Authentication",
-                    "Two-Factor authentication improves the security of your account.In addition to your normal credentials you'll " +
-                            "also need to provide an authentication code when logging in.", "Enable", "Skip for now");
+            DialogConfirmation2Fsettings dialogConfirmation2Fsettings = DialogConfirmation2Fsettings.newInstance("2fa.header",
+                    "2fa.description_message", "2fa.enable", "2fa.skip_for_now");
             dialogConfirmation2Fsettings.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
                 @Override
                 public void onActionButton() {

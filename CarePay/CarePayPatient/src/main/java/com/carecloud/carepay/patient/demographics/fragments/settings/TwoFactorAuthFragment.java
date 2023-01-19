@@ -113,7 +113,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
         TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
-        title.setText("Two-Factor authentication");
+        title.setText(Label.getLabel("2fa.header"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +157,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                 emailTextInputLayout.setVisibility(View.GONE);
                 editTextSms.setText(settingsList.getPhone_number());
             }
-            enableDisableButton.setText("Disable");
+            enableDisableButton.setText(Label.getLabel("disable"));
 
 
         } else {
@@ -215,12 +215,12 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                 break;
             case R.id.enableDisableButton:
                 if (settingsList != null && settingsList.getEnabled()) {
-                    String message="Are you sure to disable two-factor authentication settings?";
+                    String message=Label.getLabel("2.fa.disable_alert");
                     if ((emailSetRadioButton.isChecked()&&settingsList.getVerificationType().equals("sms"))||(smsSetRadioButton.isChecked()&&settingsList.getVerificationType().equals("email"))){
-                         message="Are you sure to update two-factor authentication settings?";
+                         message=Label.getLabel("2.fa.update.settings");
                     }
                     ConfirmDialogFragment fragment = ConfirmDialogFragment
-                            .newInstance("Two-Factor authentication",
+                            .newInstance(Label.getLabel("2fa.header"),
                                     message,
                                     Label.getLabel("button_no"),
                                     Label.getLabel("button_yes"));
@@ -368,14 +368,14 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 if (isResend && (type.equals("smsVerification") || type.equals("emailVerification"))) {
                     if (changeEmailDialogFragment != null) {
-                        changeEmailDialogFragment.editTextVerificationCodeEmail.setError("A new OTP has been sent,Please enter new OTP.");
+                        changeEmailDialogFragment.editTextVerificationCodeEmail.setError(Label.getLabel("2.fa.code_success")+","+Label.getLabel("2fa.enter_code"));
                         hideProgressDialog();
                         isResend = false;
                         return;
                     }
                 }
                 if (isResend) {
-                    SystemUtil.showSuccessToast(getContext(), "Send Successfully");
+                    SystemUtil.showSuccessToast(getContext(), Label.getLabel("2.fa.code_success"));
                     changeEmailDialogFragment.timer.cancel();
                     changeEmailDialogFragment.timer.start();
                     isResend = false;
@@ -387,9 +387,9 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                 settingsList = twoFactorAuth.getSettings().getPayload().getSettingsList().get(0);
                 hideProgressDialog();
                 if (type.equals("smsDisable") || type.equals("emailDisable")) {
-                    enableDisableButton.setText("Enable");
+                    enableDisableButton.setText(Label.getLabel("2fa.enable"));
                 } else if (enableDisableButton.getText().toString().equals("Enable")) {
-                    enableDisableButton.setText("Disable");
+                    enableDisableButton.setText(Label.getLabel("disable"));
                 }
                 if ((settingsList.getVerificationType().equals("sms") || settingsList.getVerificationType().equals("email")) &&
                         demographicsSettingsDTO.getPayload().getTwoFactorAuth().getOtpSent() != null && demographicsSettingsDTO.getPayload().getTwoFactorAuth().getOtpSent()) {
@@ -473,7 +473,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
     }
 
     private void setTextUnderlined(CarePayTextView textView) {
-        SpannableString content = new SpannableString("Resend code");
+        SpannableString content = new SpannableString(Label.getLabel("2fa.resend_code"));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         textView.setText(content);
 
@@ -532,17 +532,17 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
             isReady = editTextSms.getText().toString().length() == 10;
 
             if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("email")) {
-                enableDisableButton.setText("Enable");
+                enableDisableButton.setText(Label.getLabel("2fa.enable"));
             } else if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("sms")) {
-                enableDisableButton.setText("Disable");
+                enableDisableButton.setText(Label.getLabel("disable"));
             }
         } else if (whichOne.equals("email")) {
             isReady = checkEmail(editTextEmail.getText().toString());
 
             if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("sms")) {
-                enableDisableButton.setText("Enable");
+                enableDisableButton.setText(Label.getLabel("2fa.enable"));
             } else if (settingsList != null && settingsList.getEnabled() && settingsList.getVerificationType().equals("email")) {
-                enableDisableButton.setText("Disable");
+                enableDisableButton.setText(Label.getLabel("disable"));
             }
         }
         enableDisableButton.setEnabled(isReady);

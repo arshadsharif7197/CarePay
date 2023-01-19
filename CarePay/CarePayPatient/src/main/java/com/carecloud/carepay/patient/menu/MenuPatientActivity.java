@@ -35,7 +35,6 @@ import com.carecloud.carepay.patient.notifications.activities.NotificationActivi
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
-import com.carecloud.carepay.patient.signinsignuppatient.DialogConfirmation2Fsettings;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;

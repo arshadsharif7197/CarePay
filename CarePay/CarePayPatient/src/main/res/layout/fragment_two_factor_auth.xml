@@ -20,7 +20,7 @@
         android:layout_marginTop="@dimen/dimen_20dp"
         android:paddingStart="@dimen/language_text_left_margin"
         android:paddingRight="@dimen/dimen_10dp"
-        android:text="Two-Factor authentication"
+        breeze:textKey="2fa.header"
         android:textAlignment="viewStart"
         android:textColor="@color/black"
         android:textSize="@dimen/dimen_20dp"
@@ -48,7 +48,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:paddingStart="@dimen/language_text_left_margin"
             android:paddingEnd="@dimen/language_radio_image_rightmargin"
-            android:text="Receive Verification Code Via Email"
+            breeze:textKey="2fa.receive_code_via_email"
             android:textColor="@color/slateGray"
             android:textSize="@dimen/dimen_16dp"
             android:textStyle="bold"
@@ -98,7 +98,7 @@
                 android:id="@+id/editTextVerificationCodeEmail"
                 style="@style/EditTextStyle"
                 android:contentDescription="@string/content_description_signin_user"
-                android:hint="Enter 5 digits code"
+                breeze:hintKey="2fa.enter_code"
                 android:textSize="@dimen/dimen_12dp"
                 android:inputType="textEmailAddress"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:paddingStart="@dimen/language_text_left_margin"
-            android:text="Resend code"
+            breeze:textKey="2fa.resend_code"
             android:visibility="gone"
             android:textAlignment="viewEnd"
             android:textColor="@color/redAlert"
@@ -149,7 +149,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:paddingStart="@dimen/language_text_left_margin"
             android:paddingEnd="@dimen/language_radio_image_rightmargin"
-            android:text="Receive Verification Code Via Sms"
+            breeze:textKey="2fa.receive_code_via_sms"
             android:textColor="@color/slateGray"
             android:textSize="@dimen/dimen_16dp"
             android:textStyle="bold"
@@ -182,7 +182,7 @@
                 android:contentDescription="@string/content_description_signin_user"
                 android:textSize="@dimen/dimen_14dp"
                 android:maxLength="10"
-                android:hint="Enter your phone number*"
+                breeze:hintKey="2.fa.enter_phone_no"
                 android:inputType="phone"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -199,7 +199,7 @@
                 android:id="@+id/editTextVerificationCodeSms"
                 style="@style/EditTextStyle"
                 android:contentDescription="@string/content_description_signin_user"
-                android:hint="Enter 5 digits code"
+                breeze:hintKey="2fa.enter_code"
                 android:inputType="textEmailAddress"
                 android:textSize="@dimen/dimen_12dp"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:paddingStart="@dimen/language_text_left_margin"
-            android:text="Resend code"
+            breeze:textKey="2fa.resend_code"
             android:visibility="gone"
             android:textAlignment="viewEnd"
             android:textColor="@color/redAlert"
@@ -230,10 +230,10 @@
         android:layout_gravity="fill_vertical"
         android:layout_marginTop="@dimen/dimen_40dp"
         android:foreground="?android:selectableItemBackground"
-        android:text="Enable"
+        breeze:textKey="2fa.enable"
         android:textAllCaps="true"
         app:customAssetFont="proxima_nova_regular"
-        tools:text="Enable" />
+        />
 
 
 </RelativeLayout>
