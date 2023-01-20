@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
@@ -78,10 +79,10 @@ public class DialogConfirmation2Fsettings extends BaseDialogFragment implements 
         skipButton = (CarePayButton) findViewById(R.id.skipButton);
         titleTextView = (CarePayTextView) findViewById(R.id.titleText);
         detailTextView = (CarePayTextView) findViewById(R.id.detailsText);
-        titleTextView.setText(title);
-        detailTextView.setText(message);
-        enableButton.setText(enable);
-        skipButton.setText(skip);
+        titleTextView.setText(Label.getLabel(title));
+        detailTextView.setText(Label.getLabel(message));
+        enableButton.setText(Label.getLabel(enable));
+        skipButton.setText(Label.getLabel(skip));
 
 
 

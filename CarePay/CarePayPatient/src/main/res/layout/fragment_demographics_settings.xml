@@ -134,7 +134,7 @@
                     android:textSize="@dimen/textview_default_textsize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_regular"
-                    breeze:textKey="Two Factor Authentication" />
+                    breeze:textKey="2fa.header" />
 
             </LinearLayout>
             <LinearLayout

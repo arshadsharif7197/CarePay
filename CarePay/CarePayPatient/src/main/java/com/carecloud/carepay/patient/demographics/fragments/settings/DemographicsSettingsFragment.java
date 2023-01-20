@@ -175,7 +175,7 @@ public class DemographicsSettingsFragment extends BaseFragment{
 
 //two factor authentication
         CarePayTextView twoFactorAuthTextView = view.findViewById(R.id.twoFactorAuthTextView);
-        twoFactorAuthTextView.setText("Two Factor Authentication");
+        //twoFactorAuthTextView.setText("Two Factor Authentication");
         twoFactorAuthTextView.setOnClickListener(view19 -> {
             TwoFactorAuthFragment twoFactorAuthFragment = TwoFactorAuthFragment.newInstance();
             callback.displayTwoFactorAuthFragment(twoFactorAuthFragment, true);
