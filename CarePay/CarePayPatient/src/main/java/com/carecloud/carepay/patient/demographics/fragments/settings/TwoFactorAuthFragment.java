@@ -413,7 +413,7 @@ public class TwoFactorAuthFragment extends BaseFragment implements View.OnClickL
                 showErrorNotification(exceptionMessage);
                 enableVerifyReady("sms");
                 if (type.equals("smsVerification") || type.equals("emailVerification")) {
-                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError(exceptionMessage);
+                    changeEmailDialogFragment.editTextVerificationCodeEmail.setError(Label.getLabel("2fa.incorrect_code"));
                 }
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }

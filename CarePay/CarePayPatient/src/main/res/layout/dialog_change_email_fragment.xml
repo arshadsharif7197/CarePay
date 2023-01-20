@@ -67,7 +67,7 @@
             android:id="@+id/editTextVerificationCodeEmail"
             style="@style/EditTextStyle"
             android:contentDescription="@string/content_description_signin_user"
-            android:hint="Enter 5 digits code"
+            breeze:hintKey="2fa.enter_code"
             android:inputType="textEmailAddress"
             android:textSize="@dimen/dimen_12dp"
             android:maxLength="5"

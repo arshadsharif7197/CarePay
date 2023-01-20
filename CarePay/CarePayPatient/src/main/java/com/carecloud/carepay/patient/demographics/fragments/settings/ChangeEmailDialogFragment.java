@@ -144,7 +144,7 @@ public class ChangeEmailDialogFragment extends BaseDialogFragment implements Vie
                 long min = (millisUntilFinished / 60000) % 60;
                 long sec = (millisUntilFinished / 1000) % 60;
                 setTextUnderlined(emailResendTextView);
-                emailResendTextView.setText(Label.getLabel("2.fa.resend.in") + f.format(min) + " : " + f.format(sec));
+                emailResendTextView.setText(Label.getLabel("2.fa.resend.in") +" "+ f.format(min) + " : " + f.format(sec));
             }
 
             // When the task is over it will print 00:00:00 there
