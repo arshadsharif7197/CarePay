@@ -32,16 +32,12 @@ public class AddressModel {
     @SerializedName("longitude")
     @Expose
     private Double longitude;
-   /* @SerializedName("state_name")
-    @Expose
-    private String stateName;*/
-
-   @SerializedName("state")
+    @SerializedName("state_name")
     @Expose
     private String stateName;
 
     /**
-     *
+     * 
      * @return
      *     The line1
      */
@@ -50,7 +46,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param line1
      *     The line1
      */
@@ -59,7 +55,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The line2
      */
@@ -68,7 +64,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param line2
      *     The line2
      */
@@ -77,7 +73,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The line3
      */
@@ -86,7 +82,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param line3
      *     The line3
      */
@@ -95,7 +91,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The city
      */
@@ -104,7 +100,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param city
      *     The city
      */
@@ -113,7 +109,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The zipCode
      */
@@ -122,7 +118,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param zipCode
      *     The zip_code
      */
@@ -131,7 +127,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The countyName
      */
@@ -140,7 +136,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param countyName
      *     The county_name
      */
@@ -149,7 +145,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The latitude
      */
@@ -158,7 +154,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param latitude
      *     The latitude
      */
@@ -167,7 +163,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The longitude
      */
@@ -176,7 +172,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param longitude
      *     The longitude
      */
@@ -185,7 +181,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @return
      *     The stateName
      */
@@ -194,7 +190,7 @@ public class AddressModel {
     }
 
     /**
-     *
+     * 
      * @param stateName
      *     The state_name
      */
