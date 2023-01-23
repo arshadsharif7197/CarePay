@@ -79,7 +79,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         setContentView(R.layout.activity_demographics_settings);
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        boolean editProfile = extra.getBoolean(NavigationStateConstants.PROFILE_UPDATE);
+        boolean editProfile = false;
+        if (extra != null) {
+            extra.getBoolean(NavigationStateConstants.PROFILE_UPDATE);
+        }
+
         demographicsSettingsDTO = getConvertedDTO(DemographicDTO.class);
         rootView = findViewById(R.id.activity_demographics_settings);
 
