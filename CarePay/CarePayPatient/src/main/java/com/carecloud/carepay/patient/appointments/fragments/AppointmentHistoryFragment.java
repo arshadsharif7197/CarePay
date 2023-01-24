@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterf
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -375,8 +376,15 @@ public class AppointmentHistoryFragment extends BaseFragment
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", filteredList.get(0).getPracticeMgmt());
         query.put("practice_id", filteredList.get(0).getPracticeId());
-        getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getRegistrationStatus(),
-                callback, null, query, header);
+
+        // Checking full registration is enable in PR Settings
+        AppointmentsSettingDTO appointmentsSettingDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(filteredList.get(0).getPracticeId());
+        if(appointmentsSettingDTO.getCheckin().isMove_patient_to_registrations_before_scheduling_an_appointment()){
+            getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getRegistrationStatus(),
+                    callback, null, query, header);
+        }else{
+            checkCreateAppointmentChecks();
+        }
     }
 
     private void startDemographicActivity(WorkflowDTO workflowDTO) {
