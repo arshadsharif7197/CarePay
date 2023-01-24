@@ -50,6 +50,9 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("cognito")
     private UnifiedCognitoInfo cognito = new UnifiedCognitoInfo();
 
+    @SerializedName("missingFields")
+    private List<DemographicsInfoDto> missingFieldsList = new ArrayList<>();
+
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
     }
@@ -126,5 +129,13 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     public void setTwoFactorAuth(TwoFactorAuth twoFactorAuth) {
         this.twoFactorAuth = twoFactorAuth;
+    }
+
+    public List<DemographicsInfoDto> getMissingFieldsList() {
+        return missingFieldsList;
+    }
+
+    public void setMissingFieldsList(List<DemographicsInfoDto> missingFieldsList) {
+        this.missingFieldsList = missingFieldsList;
     }
 }

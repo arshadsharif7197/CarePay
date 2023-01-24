@@ -1,25 +1,21 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -39,12 +35,16 @@ import com.carecloud.carepay.patient.notifications.activities.NotificationActivi
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.DialogConfirmation2Fsettings;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -56,10 +56,17 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPopUpDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeConfirmationAlertDialog;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -231,9 +238,9 @@ public class AppointmentsListFragment extends BaseFragment
         filteredList = filterPracticesList(appointmentsResultModel.getPayload().getUserPractices());
 
         if (canScheduleAppointments) {
-            floatingActionButton.setOnClickListener(view1 -> checkCreateAppointmentChecks());
+            floatingActionButton.setOnClickListener(view1 -> checkRegistrationComplete());
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
-            newAppointmentClassicButton.setOnClickListener(v -> checkCreateAppointmentChecks());
+            newAppointmentClassicButton.setOnClickListener(v -> checkRegistrationComplete());
         } else {
             floatingActionButton.hide();
             noAppointmentMessage.setVisibility(View.GONE);
@@ -265,6 +272,65 @@ public class AppointmentsListFragment extends BaseFragment
             CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
             callback.addFragment(fragment, true);
         }
+    }
+
+    private void checkRegistrationComplete() {
+        WorkflowServiceCallback callback =
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        DemographicDTO demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
+                        if (demographicDTO != null && demographicDTO.getPayload().getMissingFieldsList().size() > 0) {
+                            startDemographicActivity(workflowDTO);
+                        } else {
+                            checkCreateAppointmentChecks();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        showErrorNotification(exceptionMessage);
+                        hideProgressDialog();
+                        Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                    }
+                };
+
+        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", filteredList.get(0).getPracticeMgmt());
+        query.put("practice_id", filteredList.get(0).getPracticeId());
+        getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getRegistrationStatus(),
+                callback, null, query, header);
+    }
+
+    private void startDemographicActivity(WorkflowDTO workflowDTO) {
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                Label.getLabel(" "),
+                Label.getLabel("must_complete_registeration"),
+                Label.getLabel("go_to_registration"),
+                false,
+                com.carecloud.carepay.patient.R.layout.fragment_alert_dialog_single_action);
+        confirmDialogFragment.setCallback(() -> {
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(requireActivity()));
+
+            Intent intent = new Intent(requireActivity(), DemographicsSettingsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(requireActivity()));
+            intent.putExtras(bundle);
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        confirmDialogFragment.setNegativeAction(false);
+        confirmDialogFragment.setTitleRequired(false);
+        confirmDialogFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), null);
     }
 
     private boolean canScheduleAppointments() {
