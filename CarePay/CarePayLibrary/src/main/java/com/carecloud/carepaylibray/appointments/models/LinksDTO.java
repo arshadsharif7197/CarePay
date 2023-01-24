@@ -87,6 +87,18 @@ public class LinksDTO extends BaseLinks {
         this.getPatientType = getPatientType;
     }
 
+    @SerializedName("is_registration_complete")
+    @Expose
+    private TransitionDTO registrationStatus = new TransitionDTO();
+
+    public TransitionDTO getRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public void setRegistrationStatus(TransitionDTO registrationStatus) {
+        this.registrationStatus = registrationStatus;
+    }
+
     /**
      * @return The demographics
      */

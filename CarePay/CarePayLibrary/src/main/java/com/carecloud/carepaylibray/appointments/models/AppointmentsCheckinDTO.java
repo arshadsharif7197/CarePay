@@ -27,6 +27,10 @@ public class AppointmentsCheckinDTO implements Serializable {
     @Expose
     private boolean move_patient_pre_registration;
 
+    @SerializedName("move_patient_to_registrations_before_scheduling_an_apointment")
+    @Expose
+    private boolean move_patient_to_registrations_before_scheduling_an_appointment;
+
     public Boolean getAllowEarlyCheckin() {
         return allowEarlyCheckin;
     }
@@ -65,5 +69,13 @@ public class AppointmentsCheckinDTO implements Serializable {
 
     public void setMove_patient_pre_registration(boolean move_patient_pre_registration) {
         this.move_patient_pre_registration = move_patient_pre_registration;
+    }
+
+    public boolean isMove_patient_to_registrations_before_scheduling_an_appointment() {
+        return move_patient_to_registrations_before_scheduling_an_appointment;
+    }
+
+    public void setMove_patient_to_registrations_before_scheduling_an_appointment(boolean move_patient_to_registrations_before_scheduling_an_appointment) {
+        this.move_patient_to_registrations_before_scheduling_an_appointment = move_patient_to_registrations_before_scheduling_an_appointment;
     }
 }

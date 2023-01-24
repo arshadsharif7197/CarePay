@@ -2,8 +2,10 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 
     private ConfirmationCallback callback;
     private boolean isNegativeAction;
+    private boolean isTitleRequired;
 
     public ConfirmDialogFragment() {
         // Required empty public constructor
@@ -86,6 +89,10 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         if (!StringUtil.isNullOrEmpty(title)) {
             ((TextView) view.findViewById(R.id.dialogTitleTextView)).setText(title);
         }
+        if (!isTitleRequired) {
+            view.findViewById(R.id.dialogTitleTextView).setVisibility(View.GONE);
+        }
+
         String message = getArguments().getString("message");
         if (!StringUtil.isNullOrEmpty(message)) {
             ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
@@ -142,5 +149,13 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 
     public void setNegativeAction(boolean negativeAction) {
         isNegativeAction = negativeAction;
+    }
+
+    public boolean isTitleRequired() {
+        return isTitleRequired;
+    }
+
+    public void setTitleRequired(boolean titleRequired) {
+        isTitleRequired = titleRequired;
     }
 }
