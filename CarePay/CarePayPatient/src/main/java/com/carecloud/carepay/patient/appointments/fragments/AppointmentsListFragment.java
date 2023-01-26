@@ -160,59 +160,8 @@ public class AppointmentsListFragment extends BaseFragment
     }
 
     private void gotoSettings() {
-
-        WorkflowServiceCallback callback = null;
-        TransitionDTO transition = null;
-        Map<String, String> headersMap = new HashMap<>();
-        Map<String, String> queryMap = new HashMap<>();
-        String payload = null;
-        callback = demographicsSettingsCallBack;
-
-        final Gson gson = new Gson();
-        final MyHealthDto myHealthDto = gson.fromJson(ApplicationPreferences.getInstance().getMyHealthDto(), MyHealthDto.class);
-        transition = myHealthDto.getMetadata().getLinks().getProfileUpdate();
-
-        // transition = transitionProfile;
-        if (transition == null || transition.getUrl() == null) {
-            return;
-        }
-        if (payload != null) {
-            //do transition with payload
-            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
-        } else if (headersMap.isEmpty()) {
-            //do regular transition
-            getWorkflowServiceHelper().execute(transition, callback, queryMap);
-        } else {
-            //do transition with headers since no query params are required we can ignore them
-            getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
-        }
-
-
+        ((AppointmentsActivity) getActivity()).gotoAccountSettings();
     }
-
-    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.setAccessPaymentsBalances(false);
-            Bundle info = new Bundle();
-            info.putBoolean(NavigationStateConstants.PROFILE_UPDATE, false);
-            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
-
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
-            hideProgressDialog();
-            Log.e(getString(com.carecloud.carepay.patient.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private boolean shouldShow2FaPopup() {
         if (ApplicationPreferences.getInstance().get2FaPopupEnabled() && !ApplicationPreferences.getInstance().get2FaVerified()) {
@@ -309,10 +258,10 @@ public class AppointmentsListFragment extends BaseFragment
 
         // Checking full registration is enable in PR Settings
         AppointmentsSettingDTO appointmentsSettingDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(filteredList.get(0).getPracticeId());
-        if(appointmentsSettingDTO.getCheckin().isMove_patient_to_registrations_before_scheduling_an_appointment()){
+        if (appointmentsSettingDTO.getCheckin().isMove_patient_to_registrations_before_scheduling_an_appointment()) {
             getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getRegistrationStatus(),
                     callback, null, query, header);
-        }else{
+        } else {
             checkCreateAppointmentChecks();
         }
 
@@ -326,16 +275,7 @@ public class AppointmentsListFragment extends BaseFragment
                 false,
                 com.carecloud.carepay.patient.R.layout.fragment_alert_dialog_single_action);
         confirmDialogFragment.setCallback(() -> {
-            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(requireActivity()));
-
-            Intent intent = new Intent(requireActivity(), DemographicsSettingsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(requireActivity()));
-            intent.putExtras(bundle);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            gotoSettings();
         });
         confirmDialogFragment.setNegativeAction(false);
         confirmDialogFragment.setTitleRequired(false);
