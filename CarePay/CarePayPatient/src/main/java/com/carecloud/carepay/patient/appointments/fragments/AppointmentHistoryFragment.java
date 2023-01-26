@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
@@ -204,7 +205,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
         if (canScheduleAppointments()) {
             floatingActionButton.setOnClickListener(view1 -> {
-               checkRegistrationComplete();
+                checkRegistrationComplete();
             });
         } else {
             floatingActionButton.hide();
@@ -379,10 +380,10 @@ public class AppointmentHistoryFragment extends BaseFragment
 
         // Checking full registration is enable in PR Settings
         AppointmentsSettingDTO appointmentsSettingDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(filteredList.get(0).getPracticeId());
-        if(appointmentsSettingDTO.getCheckin().isMove_patient_to_registrations_before_scheduling_an_appointment()){
+        if (appointmentsSettingDTO.getCheckin().isMove_patient_to_registrations_before_scheduling_an_appointment()) {
             getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata().getLinks().getRegistrationStatus(),
                     callback, null, query, header);
-        }else{
+        } else {
             checkCreateAppointmentChecks();
         }
     }
@@ -395,16 +396,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                 false,
                 com.carecloud.carepay.patient.R.layout.fragment_alert_dialog_single_action);
         confirmDialogFragment.setCallback(() -> {
-            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(requireActivity()));
-
-            Intent intent = new Intent(requireActivity(), DemographicsSettingsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(requireActivity()));
-            intent.putExtras(bundle);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            ((AppointmentsActivity) getActivity()).gotoAccountSettings();
         });
         confirmDialogFragment.setNegativeAction(false);
         confirmDialogFragment.setTitleRequired(false);

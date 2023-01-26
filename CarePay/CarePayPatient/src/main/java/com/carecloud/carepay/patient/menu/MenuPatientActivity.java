@@ -95,7 +95,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     protected static String profileName;
     private static final int MANAGE_PROFILES_REQUEST_CODE = 101;
     private ImageView profileListTriggerIcon;
-    private boolean editProfile = false;
+    public boolean editProfile = false;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -494,7 +494,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         startActivity(intent);
     }
 
-    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
+    public WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
