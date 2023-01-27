@@ -58,7 +58,6 @@
             android:layout_marginTop="-8dp"
             android:indeterminate="true"
             android:visibility="gone" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/separatorHeight"
@@ -85,6 +84,39 @@
                 android:visibility="visible"
                 android:contentDescription="@string/content_description_payment_types_list"/>
 
+            <LinearLayout
+                android:id="@+id/no_data_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/noDataMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_17sp"
+                    app:customAssetFont="proxima_nova_extra_bold"
+                    />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/noDataMessage1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:gravity="center"
+                    android:textColor="@color/cadet_gray"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:customAssetFont="proxima_nova_regular"
+                    />
+            </LinearLayout>
         </FrameLayout>
 
 
