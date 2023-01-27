@@ -74,7 +74,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_17sp"
+            android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_extra_bold"
             />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -85,7 +85,7 @@
             android:layout_marginTop="@dimen/dimen_8dp"
             android:gravity="center"
             android:textColor="@color/cadet_gray"
-            android:textSize="@dimen/text_size_14sp"
+            android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_regular"
             />
     </LinearLayout>
