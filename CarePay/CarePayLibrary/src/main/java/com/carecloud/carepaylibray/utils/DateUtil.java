@@ -1106,9 +1106,11 @@ public class DateUtil {
         if (dateString != null) {
             int resultCode = validateDateOfBirth(dateString);
             if (resultCode == DateUtil.IS_A_BAD_FORMAT_DATE) {
-                return Label.getLabel("demographics_date_bad_format_msg");
+               // return Label.getLabel("demographics_date_bad_format_msg");
+                return Label.getLabel("demographics_date_old_msg");
             } else if (resultCode == DateUtil.IS_A_FUTURE_DATE) {
-                return Label.getLabel("demographics_date_validation_msg");
+               // return Label.getLabel("demographics_date_validation_msg");
+                return Label.getLabel("demographics_date_old_msg");
             } else if (resultCode == DateUtil.IS_A_TOO_OLD_DATE) {
                 return Label.getLabel("demographics_date_old_msg");
             }

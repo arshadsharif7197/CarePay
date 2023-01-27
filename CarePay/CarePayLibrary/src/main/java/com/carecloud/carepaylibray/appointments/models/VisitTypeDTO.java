@@ -30,6 +30,9 @@ public class VisitTypeDTO implements Serializable {
     @SerializedName("video_option")
     @Expose
     private boolean videoOption = false;
+    @SerializedName("from_intelligent_scheduler")
+    @Expose
+    private boolean fromIntelligentScheduler = false;
 
     /**
      * Visit type getter id
@@ -38,6 +41,10 @@ public class VisitTypeDTO implements Serializable {
      */
     public String getId() {
         return id;
+    }
+
+    public boolean isVideoOption() {
+        return videoOption;
     }
 
     /**
@@ -107,5 +114,13 @@ public class VisitTypeDTO implements Serializable {
 
     public void setVideoOption(boolean videoOption) {
         this.videoOption = videoOption;
+    }
+
+    public boolean isFromIntelligentScheduler() {
+        return fromIntelligentScheduler;
+    }
+
+    public void setFromIntelligentScheduler(boolean fromIntelligentScheduler) {
+        this.fromIntelligentScheduler = fromIntelligentScheduler;
     }
 }

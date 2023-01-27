@@ -42,7 +42,7 @@ import retrofit2.http.HEAD;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingsFragment extends BaseFragment {
+public class DemographicsSettingsFragment extends BaseFragment{
 
 
     private DemographicDTO demographicsSettingsDTO;
@@ -172,6 +172,14 @@ public class DemographicsSettingsFragment extends BaseFragment {
         if (demographicsSettingsDTO.getPayload().getDelegate() != null) {
             view.findViewById(R.id.creditCardLayout).setVisibility(View.GONE);
         }
+
+//two factor authentication
+        CarePayTextView twoFactorAuthTextView = view.findViewById(R.id.twoFactorAuthTextView);
+        //twoFactorAuthTextView.setText("Two Factor Authentication");
+        twoFactorAuthTextView.setOnClickListener(view19 -> {
+            TwoFactorAuthFragment twoFactorAuthFragment = TwoFactorAuthFragment.newInstance();
+            callback.displayTwoFactorAuthFragment(twoFactorAuthFragment, true);
+        });
     }
 
     private void updateNotificationPreferences() {
@@ -231,6 +239,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         }
     };
+
 
 }
 

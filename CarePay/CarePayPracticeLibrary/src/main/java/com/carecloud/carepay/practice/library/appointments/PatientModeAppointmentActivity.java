@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,7 +43,6 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.ExitAlertDialog;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -108,18 +106,15 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     private void checkPracticeAlert() {
         AppointmentsPopUpDTO appointmentsPopUpDTO = appointmentsResultModel.getPayload().getAppointmentsSetting(selectedPractice.getPracticeId()).getAppointmentsPopUpDTO();
         if (appointmentsPopUpDTO != null && appointmentsPopUpDTO.isEnabled()) {
-            ExitAlertDialog practiceAlert = ExitAlertDialog.
-                    newInstance(appointmentsPopUpDTO.getText(),
-                            Label.getLabel("ok"), Label.getLabel("button_no"));
-            // Intelligent Scheduler flow
-            practiceAlert.setExitAlertInterface(() -> getPatientType());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    SystemClock.sleep(500);
-                    runOnUiThread(() -> practiceAlert.show(getSupportFragmentManager(), practiceAlert.getClass().getName()));
-                }
-            }).start();
+            ConfirmDialogFragment fragment = ConfirmDialogFragment
+                    .newInstance("",
+                            appointmentsPopUpDTO.getText(),
+                            Label.getLabel("ok"),
+                            false,
+                            R.layout.fragment_alert_dialog_single_action);
+            fragment.setCallback(() -> getPatientType());
+
+            displayDialogFragment(fragment, false);
         } else {
             // Intelligent Scheduler flow
             getPatientType();
@@ -521,6 +516,8 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     @Override
     public void onVisitTypeSelected(VisitTypeQuestions autoVisitType) {
         selectedVisitType = autoVisitType.getVisittype();
+        selectedVisitType.setFromIntelligentScheduler(true);
+
         provider_screen_sub_header.setVisibility(View.GONE);
         autoVisitTypeTitle.setText(selectedVisitType.getName());
         autoVisitTypeContainer.setVisibility(View.VISIBLE);

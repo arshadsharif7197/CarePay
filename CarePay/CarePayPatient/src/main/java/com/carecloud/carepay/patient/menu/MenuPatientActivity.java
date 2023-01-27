@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
@@ -94,7 +95,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     protected static String profileName;
     private static final int MANAGE_PROFILES_REQUEST_CODE = 101;
     private ImageView profileListTriggerIcon;
-    private boolean editProfile = false;
+    public boolean editProfile = false;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -132,7 +133,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             }
             populateProfilesList(profileData);
         }
+
+
     }
+
 
     private String getProfileName(DemographicPayloadInfoDTO demographics) {
         return StringUtil
@@ -490,7 +494,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         startActivity(intent);
     }
 
-    private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
+    public WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

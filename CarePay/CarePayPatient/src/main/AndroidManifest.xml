@@ -92,6 +92,7 @@
             android:name=".payment.activities.PaymentActivity"
             android:parentActivityName=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -119,7 +120,8 @@
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
             android:label=""
@@ -136,7 +138,8 @@
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".notifications.activities.NotificationActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"/>
         <activity
             android:exported="true"
             android:name=".notifications.activities.NotificationProxyActivity"
@@ -157,7 +160,8 @@
         </activity>
         <activity
             android:name=".retail.activities.RetailActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"/>
 
         <service
             android:exported="false"
@@ -192,13 +196,16 @@
         <activity
             android:name=".messages.activities.MessagesActivity"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".myhealth.MyHealthActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".consentforms.ConsentFormsActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".survey.SurveyActivity"
             android:screenOrientation="sensorPortrait" />

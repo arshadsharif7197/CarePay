@@ -32,10 +32,13 @@ public class AddressModel {
     @SerializedName("longitude")
     @Expose
     private Double longitude;
-    @SerializedName("state_name")
+    /*@SerializedName("state_name")
+    @Expose
+    private String stateName;*/
+
+    @SerializedName("state")
     @Expose
     private String stateName;
-
     /**
      * 
      * @return

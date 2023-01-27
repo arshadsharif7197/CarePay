@@ -1,0 +1,29 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.carecloud.shamrocksdk">
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="clover.permission.ACTION_PAY"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="clover.permission.ACTION_SECURE_PAY"/>
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".payment.activities.CloverPaymentActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity
+            android:name=".payment.activities.CloverRefundActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity
+
+            android:name=".payment.activities.CloverPaymentConnectorActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+    </application>
+
+</manifest>

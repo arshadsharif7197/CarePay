@@ -24,11 +24,14 @@ import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPr
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -45,9 +48,12 @@ import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewM
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
         FragmentActivityInterface {
@@ -86,6 +92,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (showSurvey || forceRefresh) {
             showRateDialogFragment();
         }
+
+
     }
 
     protected void setUpViewModel() {
@@ -142,6 +150,35 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private void showRateDialogFragment() {
         if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
             displayDialogFragment(RateDialog.newInstance(), true);
+        }
+    }
+
+    public void gotoAccountSettings() {
+        WorkflowServiceCallback callback = null;
+        TransitionDTO transition = null;
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> queryMap = new HashMap<>();
+        String payload = null;
+        callback = demographicsSettingsCallBack;
+        editProfile = false;
+
+        final Gson gson = new Gson();
+        final MyHealthDto myHealthDto = gson.fromJson(ApplicationPreferences.getInstance().getMyHealthDto(), MyHealthDto.class);
+        transition = myHealthDto.getMetadata().getLinks().getProfileUpdate();
+
+        // transition = transitionProfile;
+        if (transition == null || transition.getUrl() == null) {
+            return;
+        }
+        if (payload != null) {
+            //do transition with payload
+            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
+        } else if (headersMap.isEmpty()) {
+            //do regular transition
+            getWorkflowServiceHelper().execute(transition, callback, queryMap);
+        } else {
+            //do transition with headers since no query params are required we can ignore them
+            getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
         }
     }
 
@@ -292,8 +329,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case CarePayConstants.INTELLIGENT_SCHEDULER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     if (data != null && data.hasExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY)) {
-                       // VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
-                       // viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
+                        // VisitTypeDTO visitTypeDTO = (VisitTypeDTO) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
+                        // viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
 
                         VisitTypeQuestions visitTypeDTO = (VisitTypeQuestions) data.getSerializableExtra(CarePayConstants.INTELLIGENT_SCHEDULER_VISIT_TYPE_KEY);
                         viewModel.setAutoScheduleVisitTypeObservable(visitTypeDTO);
@@ -321,7 +358,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             @Override
             public void onFinish() {
                 onBackPressed();
-               refreshAppointments();
+                refreshAppointments();
             }
         }.start();
     }

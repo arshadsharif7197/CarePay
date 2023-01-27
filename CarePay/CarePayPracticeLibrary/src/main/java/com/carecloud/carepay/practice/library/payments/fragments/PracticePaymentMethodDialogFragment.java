@@ -3,23 +3,31 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.dialogs.ConfirmCashDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +87,23 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         title.setLayoutParams(layoutParams);
         title.setGravity(Gravity.CENTER_HORIZONTAL);
+        LinearLayout no_data_layout =  view.findViewById(com.carecloud.carepaylibrary.R.id.no_data_layout);
+        CarePayTextView noDataMessage = (CarePayTextView) view.findViewById(com.carecloud.carepaylibrary.R.id.noDataMessage);
+        CarePayTextView noDataMessage1 = (CarePayTextView) view.findViewById(com.carecloud.carepaylibrary.R.id.noDataMessage1);
+        ListView paymentMethodList = view.findViewById(com.carecloud.carepaylibrary.R.id.list_payment_types);
+        String practiceName = paymentsModel.getPaymentPayload().getUserPractices().get(0).getPracticeName();
+        List<PaymentsMethodsDTO> paymentsMethodsDTOList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
+        if (paymentsMethodsDTOList == null || paymentsMethodsDTOList.size() == 0) {
+            String label = Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.title");
+            String label2 = Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.description");
+            if (noDataMessage != null) {
+                no_data_layout.setVisibility(View.VISIBLE);
+                noDataMessage.setText(String.format(label,practiceName) );
+                noDataMessage1.setText(label2);
+                paymentMethodList.setVisibility(View.GONE);
+
+            }
+        }
     }
 
     @Override
