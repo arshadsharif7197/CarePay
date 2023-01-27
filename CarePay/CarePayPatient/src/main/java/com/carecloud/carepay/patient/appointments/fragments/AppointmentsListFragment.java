@@ -236,7 +236,8 @@ public class AppointmentsListFragment extends BaseFragment
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         hideProgressDialog();
                         DemographicDTO demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
-                        if (demographicDTO != null && demographicDTO.getPayload().getMissingFieldsList().size() > 0) {
+                        if (demographicDTO != null && demographicDTO.getPayload().getMissingFieldsList().size() > 0 &&
+                                !demographicDTO.getPayload().getMissingFieldsList().get(0).getPersonalDetails().get(0).getMessage().contains("referral_source")) {
                             startDemographicActivity(workflowDTO);
                         } else {
                             checkCreateAppointmentChecks();

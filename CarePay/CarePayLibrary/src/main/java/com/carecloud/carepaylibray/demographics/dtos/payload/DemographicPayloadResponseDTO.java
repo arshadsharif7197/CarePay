@@ -50,8 +50,9 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("cognito")
     private UnifiedCognitoInfo cognito = new UnifiedCognitoInfo();
 
+    @Expose
     @SerializedName("missingFields")
-    private List<DemographicsInfoDto> missingFieldsList = new ArrayList<>();
+    private List<PersonalDetail> missingFieldsList = new ArrayList<>();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -131,11 +132,51 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
         this.twoFactorAuth = twoFactorAuth;
     }
 
-    public List<DemographicsInfoDto> getMissingFieldsList() {
+    public List<PersonalDetail> getMissingFieldsList() {
         return missingFieldsList;
     }
 
-    public void setMissingFieldsList(List<DemographicsInfoDto> missingFieldsList) {
+    public void setMissingFieldsList(List<PersonalDetail> missingFieldsList) {
         this.missingFieldsList = missingFieldsList;
     }
+
+    public class PersonalDetail {
+        @Expose
+        @SerializedName("required")
+        private Boolean required;
+
+        @Expose
+        @SerializedName("message")
+        private String message;
+
+        @Expose
+        @SerializedName("personal_details")
+        private List<PersonalDetail> personalDetails;
+
+        public List<PersonalDetail> getPersonalDetails() {
+            return personalDetails;
+        }
+
+        public void setPersonalDetails(List<PersonalDetail> personalDetails) {
+            this.personalDetails = personalDetails;
+        }
+
+        public Boolean getRequired() {
+            return required;
+        }
+
+        public void setRequired(Boolean required) {
+            this.required = required;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
 }
+
+
