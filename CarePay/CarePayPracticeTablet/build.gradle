@@ -9,8 +9,8 @@ android {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 31
-        versionCode 208
-        versionName "1.4.7"
+        versionCode 210
+        versionName "1.4.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
