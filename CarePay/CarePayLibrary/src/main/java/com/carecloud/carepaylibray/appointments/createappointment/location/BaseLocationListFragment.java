@@ -99,6 +99,9 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
         //.......................................
         if (selectedVisitType != null) {
             queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
+            // added 2 params for https://jira.carecloud.com/browse/BREEZ-2081
+            queryMap.put("video_option", String.valueOf(selectedVisitType.hasVideoOption()));
+            queryMap.put("from_intelligent_scheduler", String.valueOf(selectedVisitType.isFromIntelligentScheduler()));
         }
         getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override

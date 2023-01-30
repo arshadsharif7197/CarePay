@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -28,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.GetPatientTypeResponse;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.PatientType;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeQuestions;
@@ -233,8 +235,8 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
                         getScheduleResourceOrder().getOrder().startsWith("location")) {
             if ((!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isSchedulerEnabled() &&
                     appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getIntelligent_scheduler_questions() == null)
-                    ||(!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isEstablishedPatientSchedulerEnabled() &&
-                    appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getEstablishedPatientIntelligentSchedulerQuestions()==null)){
+                    || (!appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).isEstablishedPatientSchedulerEnabled() &&
+                    appointmentsModelDto.getPayload().getIntelligent_scheduler().get(0).getEstablishedPatientIntelligentSchedulerQuestions() == null)) {
                 isLocationOnTop = true;
                 setLocationVisibility(isLocationOnTop);
             }
@@ -395,7 +397,6 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     }
 
 
-
     @Override
     public void setLocation(LocationDTO locationDTO) {
         ImageView deleteImageView;
@@ -459,16 +460,19 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
     private void resetProvider() {
         selectedResource = null;
-        card_provider.setVisibility(View.VISIBLE);
-        auto_provider_container.setVisibility(View.GONE);
+        if(!getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE)){
+            card_provider.setVisibility(View.VISIBLE);
+            auto_provider_container.setVisibility(View.GONE);
+        }
+
         providerContainer.setVisibility(View.GONE);
         providersNoDataTextView.setVisibility(View.VISIBLE);
-        if (isLocationOnTop&&!isSchedulerEnabled) {
+        if (isLocationOnTop && !isSchedulerEnabled) {
             resetVisitType();
         } else {
-            if (isSchedulerEnabled&&autoVisitType!=null&&autoVisitType.getCheckbox().getLocationSameAsLast()){
+            if (isSchedulerEnabled && autoVisitType != null && autoVisitType.getCheckbox().getLocationSameAsLast()) {
 
-            }else {
+            } else {
                 locationNoDataTextView.setEnabled(false);
                 resetVisitType();
                 resetLocation();
@@ -480,9 +484,10 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private void resetLocation() {
         selectedLocation = null;
 
-        auto_location_container.setVisibility(View.GONE);
-        card_location.setVisibility(View.VISIBLE);
-        card_location.setVisibility(View.VISIBLE);
+        if(!getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE)){
+            auto_location_container.setVisibility(View.GONE);
+            card_location.setVisibility(View.VISIBLE);
+        }
         locationContainer.setVisibility(View.GONE);
         if (locationContainer1 != null)
             locationContainer1.setVisibility(View.GONE);

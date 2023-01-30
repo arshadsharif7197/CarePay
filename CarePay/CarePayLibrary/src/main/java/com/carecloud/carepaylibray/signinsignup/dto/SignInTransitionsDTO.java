@@ -14,6 +14,10 @@ public class SignInTransitionsDTO {
     @Expose
     private TransitionDTO authenticate = new TransitionDTO();
 
+    @SerializedName("send_otp")
+    @Expose
+    private TransitionDTO send_otp = new TransitionDTO();
+
     @SerializedName("language")
     @Expose
     private TransitionDTO language = new TransitionDTO();
@@ -116,5 +120,13 @@ public class SignInTransitionsDTO {
 
     public void setForgotPassword(TransitionDTO forgotPassword) {
         this.forgotPassword = forgotPassword;
+    }
+
+    public TransitionDTO getSend_otp() {
+        return send_otp;
+    }
+
+    public void setSend_otp(TransitionDTO send_otp) {
+        this.send_otp = send_otp;
     }
 }

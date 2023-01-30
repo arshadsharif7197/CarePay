@@ -2,12 +2,16 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -56,9 +60,14 @@ public class UpdateEmailFragment extends BaseFragment {
     private TextInputLayout emailLabelLayout;
     private TextInputLayout passwordLabelLayout;
     private View rootView;
-
+    private ChangeEmailDialogFragment changeEmailDialogFragment;
     public UpdateEmailFragment() {
 
+    }
+
+    //For callback
+    public interface LargeAlertInterface {
+        void onActionButton(String code);
     }
 
     /**
@@ -107,6 +116,7 @@ public class UpdateEmailFragment extends BaseFragment {
 
         setPersonalDetails();
         setClickListeners(view);
+
     }
 
     private void setEditTexts(View view) {
@@ -197,39 +207,41 @@ public class UpdateEmailFragment extends BaseFragment {
         updateEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEmailValid() && isPasswordValid()) {
-                    DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsDTO
-                            .getMetadata().getTransitions().getChangeLoginEmail()
-                            .getHeader().getMaintenance().getProperties();
-                    DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
-                    DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
-                    DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
-
-                    demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
-                    demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
-                    demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
-
-                    Map<String, String> properties = new HashMap<>();
-
-                    properties.put("login_email", getCurrentEmail());
-                    properties.put("proposed_email", emailEditText.getText().toString().trim());
-                    properties.put("current_password", passwordEditText.getText().toString().trim());
-                    JSONObject attributes = new JSONObject(properties);
-                    String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
-                    Map<String, String> header = new HashMap<>();
-                    header.put("maintenance", encodedAttributes);
-
-                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                    if (demographicsSettingsPayloadDTO != null) {
-                        getWorkflowServiceHelper().execute(demographicsSettingsDTO
-                                        .getMetadata().getTransitions().getChangeLoginEmail(),
-                                updateEmailCallback, null, null, header);
-                    }
-                }
+                getOtpForEmailUpdate();
             }
         });
     }
+private void getOtpForEmailUpdate(){
+    if (isEmailValid() && isPasswordValid()) {
+        DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsDTO
+                .getMetadata().getTransitions().getChangeLoginEmail()
+                .getHeader().getMaintenance().getProperties();
+        DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
+        DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
+        DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
 
+        demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
+        demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
+        demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
+
+        Map<String, String> properties = new HashMap<>();
+
+        properties.put("login_email", getCurrentEmail());
+        properties.put("proposed_email", emailEditText.getText().toString().trim());
+        properties.put("current_password", passwordEditText.getText().toString().trim());
+        JSONObject attributes = new JSONObject(properties);
+        String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
+        Map<String, String> header = new HashMap<>();
+        header.put("maintenance", encodedAttributes);
+
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        if (demographicsSettingsPayloadDTO != null) {
+            getWorkflowServiceHelper().execute(demographicsSettingsDTO
+                            .getMetadata().getTransitions().getChangeLoginEmail(),
+                    updateEmailCallback, null, null, header);
+        }
+    }
+}
     WorkflowServiceCallback updateEmailCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -241,17 +253,83 @@ public class UpdateEmailFragment extends BaseFragment {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
             DemographicDTO updatedSettings = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
-            String newEmail = updatedSettings.getPayload().getCurrentEmail();
-            demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
-            getApplicationPreferences().setUserId(newEmail);
+            //String newEmail = updatedSettings.getPayload().getCurrentEmail();
+            // demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
+            // getApplicationPreferences().setUserId(newEmail);
             getAppAuthorizationHelper().setAuthorizationTokens(updatedSettings.getPayload().getCognito().getAuthenticationTokens());
-            getAppAuthorizationHelper().setUser(newEmail);
+            //  getAppAuthorizationHelper().setUser(newEmail);
             getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
 
             MixPanelUtil.logEvent(getString(R.string.event_change_email));
 
-            getActivity().onBackPressed();
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+            //getActivity().onBackPressed();
+
+            if (updatedSettings.getPayload().getOtp_sent() && !updatedSettings.getPayload().getOtp_verified()) {
+                showChangeEmailDialog(emailEditText.getText().toString());
+            } else if (!updatedSettings.getPayload().getOtp_sent() && updatedSettings.getPayload().getOtp_verified()) {
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+                String newEmail = updatedSettings.getPayload().getCurrentEmail();
+                demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
+                getApplicationPreferences().setUserId(newEmail);
+                getAppAuthorizationHelper().setUser(newEmail);
+                changeEmailDialogFragment.timer.cancel();
+                changeEmailDialogFragment.cancel();
+                getActivity().onBackPressed();
+            }
+
+        }
+
+        private void showChangeEmailDialog(String currentEmail) {
+             changeEmailDialogFragment = ChangeEmailDialogFragment.newInstance("updateEmail", currentEmail);
+            changeEmailDialogFragment.setLargeAlertInterface(new UpdateEmailFragment.LargeAlertInterface() {
+                @Override
+                public void onActionButton(String code) {
+                    if (code.equals("resend")){
+                        getOtpForEmailUpdate();
+                    }else {
+                        verifyOtp(code);
+                    }
+
+                }
+
+
+            });
+
+            changeEmailDialogFragment.show(getActivity().getSupportFragmentManager(), changeEmailDialogFragment.getClass().getName());
+        }
+
+        private void verifyOtp(String code) {
+
+            if (isEmailValid() && isPasswordValid() && code != null) {
+                DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsDTO
+                        .getMetadata().getTransitions().getChangeLoginEmail()
+                        .getHeader().getMaintenance().getProperties();
+                DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
+                DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
+                DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
+
+                demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
+                demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
+                demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
+
+                Map<String, String> properties = new HashMap<>();
+
+                properties.put("login_email", getCurrentEmail());
+                properties.put("proposed_email", emailEditText.getText().toString().trim());
+                properties.put("current_password", passwordEditText.getText().toString().trim());
+                properties.put("otp", code);
+                JSONObject attributes = new JSONObject(properties);
+                String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
+                Map<String, String> header = new HashMap<>();
+                header.put("maintenance", encodedAttributes);
+
+                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                if (demographicsSettingsPayloadDTO != null) {
+                    getWorkflowServiceHelper().execute(demographicsSettingsDTO
+                                    .getMetadata().getTransitions().getChangeLoginEmail(),
+                            updateEmailCallback, null, null, header);
+                }
+            }
         }
 
         @Override
@@ -259,7 +337,7 @@ public class UpdateEmailFragment extends BaseFragment {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -267,5 +345,7 @@ public class UpdateEmailFragment extends BaseFragment {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         return demographicsSettingsPayloadDTO.getCurrentEmail();
     }
+
+
 }
 

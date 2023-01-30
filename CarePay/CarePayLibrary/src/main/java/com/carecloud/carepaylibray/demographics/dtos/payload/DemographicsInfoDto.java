@@ -19,6 +19,10 @@ public class DemographicsInfoDto {
     @SerializedName("optional_either_fields")
     private List<String> optionalEitherFields = new ArrayList<String>();
 
+    @Expose
+    @SerializedName("message")
+    private String message;
+
     public String getName() {
         return name;
     }
@@ -41,5 +45,13 @@ public class DemographicsInfoDto {
 
     public void setOptionalEitherFields(List<String> optionalEitherFields) {
         this.optionalEitherFields = optionalEitherFields;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

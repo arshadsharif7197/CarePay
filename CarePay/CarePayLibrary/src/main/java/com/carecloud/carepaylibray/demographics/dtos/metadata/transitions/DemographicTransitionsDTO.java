@@ -13,6 +13,16 @@ public class DemographicTransitionsDTO {
     @Expose
     private TransitionDTO confirmDemographics = new TransitionDTO();
 
+    @SerializedName("update_two_factor_authentication_settings")
+    @Expose
+    private TransitionDTO update_two_factor_authentication_settings = new TransitionDTO();
+
+
+    @SerializedName("send_otp")
+    @Expose
+    private TransitionDTO send_otp = new TransitionDTO();
+
+
     @SerializedName("update_demographics")
     @Expose
     private TransitionDTO updateDemographics = new TransitionDTO();
@@ -156,5 +166,13 @@ public class DemographicTransitionsDTO {
 
     public void setUpdatePermissions(TransitionDTO updatePermissions) {
         this.updatePermissions = updatePermissions;
+    }
+
+    public TransitionDTO getUpdate_two_factor_authentication_settings() {
+        return update_two_factor_authentication_settings;
+    }
+
+    public TransitionDTO getSend_otp() {
+        return send_otp;
     }
 }

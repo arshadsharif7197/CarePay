@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:text="Questions"
             android:textStyle="bold"
+            android:textSize="@dimen/toolbarTitleTextSize"
             android:visibility="visible"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="intelligent_scheduler_questions_title" />
