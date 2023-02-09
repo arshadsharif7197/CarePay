@@ -31,6 +31,8 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -49,6 +51,9 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
@@ -65,6 +70,7 @@ import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewM
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -79,11 +85,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private PaymentsModel paymentDTO;
     private View[] checkInFlowViews;
     private MediaResultListener resultListener;
-
     private WorkflowDTO continuePaymentsDTO;
     private boolean paymentStarted = false;
     private WorkflowDTO paymentConfirmationWorkflow;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private String practiceManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
+        practiceManagement = getApplicationPreferences().getStartPracticeManagement();
+
 
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         patientResponsibilityViewModel = new ViewModelProvider(this).get(PatientResponsibilityViewModel.class);
@@ -307,6 +315,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             View view = checkInFlowViews[i];
             ((TextView) view.findViewById(R.id.checkin_flow_title)).setText(labels[i]);
         }
+
+        hideIntakeView();
+
+    }
+
+    private void hideIntakeView() {
+        // Hide intakeView for talkEHR Practices on Phase 1 integration
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR))
+            findViewById(R.id.checkin_flow_intake).setVisibility(View.GONE);
     }
 
     /**
@@ -570,6 +587,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
+        hideIntakeView();
+
         for (int i = 0; i < checkInFlowViews.length; i++) {
             View flowView = checkInFlowViews[i];
             CarePayTextView section = flowView.findViewById(R.id.checkin_flow_title);
@@ -609,6 +628,26 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             cce.printStackTrace();
             super.onBackPressed();
             return;
+        }
+        if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsFragment")) {
+            MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                    fragmentManager.findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+            MedicationsFragment medicationsFragment = (MedicationsFragment) fragment;
+            if (medicationsFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+                fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+            }
+
+        }
+        if (fragment.getClass().getName().equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.AllergiesFragment")) {
+            MedicationsAllergiesEmptyFragment medicationsAllergiesEmptyFragment = (MedicationsAllergiesEmptyFragment)
+                    fragmentManager.findFragmentByTag("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment");
+
+            AllergiesFragment allergiesFragment = (AllergiesFragment) fragment;
+            if (allergiesFragment.shouldRemove && medicationsAllergiesEmptyFragment != null) {
+                fragmentManager.popBackStack(medicationsAllergiesEmptyFragment.getClass().getName(), false ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
+            }
+
         }
         if (fragment == null || !fragment.navigateBack()) {
             super.onBackPressed();

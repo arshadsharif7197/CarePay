@@ -9,8 +9,12 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/17/17
@@ -62,7 +66,16 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.enter_amount_button && callback != null) {
-            if (balanceItem != null) {
+                if (balanceItem != null && (view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
+                    double amount = Double.parseDouble(numberStr);
+                    if (amount > balanceItem.getAmount()) {
+                        String errorMessage = Label.getLabel("payment_partial_max_error")
+                                + NumberFormat.getCurrencyInstance(Locale.US).format(balanceItem.getAmount());
+                        CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage,
+                                CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                        toast.show();
+                        return;
+                    }
                 callback.applyAmountToBalanceItem(getDoubleAmountForEntry(), balanceItem);
             } else if (chargeItem != null) {
                 callback.addNewCharge(getDoubleAmountForEntry(), chargeItem);

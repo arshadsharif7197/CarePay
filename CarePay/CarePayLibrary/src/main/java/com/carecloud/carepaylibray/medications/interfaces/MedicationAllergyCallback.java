@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.medications.interfaces;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 
 public interface MedicationAllergyCallback {
     void showMedicationAllergySearchFragment(int searchType);

@@ -16,6 +16,10 @@ public class UnifiedSignInTransitions {
     @SerializedName("accept_connect_invite")
     private TransitionDTO acceptConnectInvite = new TransitionDTO();
 
+    @SerializedName("authenticate")
+    @Expose
+    private TransitionDTO authenticate = new TransitionDTO();
+
     public TransitionDTO getBadgeCounter() {
         return badgeCounter;
     }
@@ -30,5 +34,13 @@ public class UnifiedSignInTransitions {
 
     public void setAcceptConnectInvite(TransitionDTO acceptConnectInvite) {
         this.acceptConnectInvite = acceptConnectInvite;
+    }
+
+    public TransitionDTO getAuthenticate() {
+        return authenticate;
+    }
+
+    public void setAuthenticate(TransitionDTO authenticate) {
+        this.authenticate = authenticate;
     }
 }

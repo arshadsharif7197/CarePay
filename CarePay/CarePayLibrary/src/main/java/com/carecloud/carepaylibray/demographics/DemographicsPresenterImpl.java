@@ -3,11 +3,11 @@ package com.carecloud.carepaylibray.demographics;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.Toolbar;
-
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -46,6 +46,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsOnlyResultModel;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
@@ -63,13 +64,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-
+    private MedicationsOnlyResultModel medicationsOnlyResultModel;
     //demographics nav
     private int currentDemographicStep = 1;
-
     private boolean startCheckIn = false;
     public String appointmentId;
-
     private Fragment currentFragment;
 
     /**
@@ -295,7 +294,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         String tag = fragment.getClass().getName();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null && !tag.equalsIgnoreCase("com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment")) {
             fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
@@ -347,19 +345,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void navigateToMedications(WorkflowDTO workflowDTO, boolean checkEmpty) {
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
+        medicationsOnlyResultModel = DtoHelper.getConvertedDTO(MedicationsOnlyResultModel.class,
                 workflowDTO);
         Fragment fragment;
-        if (checkEmpty && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
-            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
+        if (checkEmpty && medicationsOnlyResultModel.getPayload().getMedications().getPayload().isEmpty()) {
+            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,medicationsOnlyResultModel,
                     MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
         } else {
-            fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO);
+            fragment = MedicationsFragment.newInstance(medicationsOnlyResultModel);
         }
         navigateToFragment(fragment, true);
 
-        if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
-                && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
+        if (!checkEmpty && !medicationsOnlyResultModel.getPayload().getCheckinSettings().isAllowMedicationPicture()
+                && medicationsOnlyResultModel.getPayload().getMedications().getPayload().isEmpty()) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
 
@@ -373,7 +371,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Fragment fragment;
         if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
             fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
-                    MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
+                    medicationsOnlyResultModel, MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
         } else {
             fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
         }
@@ -476,15 +474,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void showMedicationAllergySearchFragment(int searchType) {
 
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO, searchType);
+                .newInstance(medicationsAllergiesDTO, medicationsOnlyResultModel, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 
     @Override
-    public void showMedicationAllergySearchFragment(int searchType,MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
-
+    public void showMedicationAllergySearchFragment(int searchType, MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
         MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
-                .newInstance(medicationsAllergiesDTO, searchType);
+                .newInstance(medicationsAllergiesDTO, medicationsOnlyResultModel, searchType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 

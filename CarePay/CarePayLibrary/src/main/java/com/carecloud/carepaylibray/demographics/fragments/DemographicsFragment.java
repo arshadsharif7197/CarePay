@@ -9,10 +9,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
@@ -75,7 +77,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
-
     private EditText employerAddressEditText;
     private EditText employerAddressEditText2;
     private EditText zipCodeEditText;
@@ -738,7 +739,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
 
             TextInputLayout socialSecurityInputLayout = view.findViewById(R.id.socialSecurityInputLayout);
-            if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+            if (dataModel.getDemographic().getPersonalDetails().getProperties()
+                    .getSocialSecurityNumber().isRequired() && socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(ssnEditText.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(ssnEditText.getText().toString().trim(),
                             ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
@@ -773,6 +775,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emailContainer));
                     setFieldError(emailLayout, Label.getLabel("demographics_email_validation_msg"), isUserAction());
                 }
+                nextButton.setEnabled(true);
+                nextButton.setClickable(true);
                 return false;
             } else {
                 unsetFieldError(emailLayout);
@@ -1235,4 +1239,5 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 dataModel.getDemographic().getEmploymentInfo().getProperties().getEmploymentStatus().getOptions());
 
     }
+
 }

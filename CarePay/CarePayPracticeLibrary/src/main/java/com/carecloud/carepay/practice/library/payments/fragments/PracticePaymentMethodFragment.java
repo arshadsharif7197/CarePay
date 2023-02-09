@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
@@ -35,7 +38,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
-
+    public long mLastClickTime = 0;
     private ShamrockPaymentsCallback shamrockCallback;
 
     /**
@@ -90,12 +93,19 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         final boolean isPracticeMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE;
         final boolean isDemo = HttpConstants.getEnvironment().equalsIgnoreCase("Demo");
         Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
+        if (Defs.START_PM_TALKEHR!=null&&getApplicationPreferences().getStartPracticeManagement().equalsIgnoreCase(Defs.START_PM_TALKEHR)){
+            swipeCreditCarNowButton.setVisibility(View.GONE);
+        }
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         swipeCreditCarNowButton.setEnabled(isCloverDevice || (isPracticeMode && !isDemo));
         swipeCreditCardNowLayout.setVisibility(isCloverDevice || (isPracticeMode && !isDemo) ? View.VISIBLE : View.GONE);
         swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 2000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 if (isCloverDevice) {
                     handleSwipeCard();
                 } else if (isPracticeMode) {

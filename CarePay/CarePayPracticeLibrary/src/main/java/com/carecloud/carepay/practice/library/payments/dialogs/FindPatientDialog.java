@@ -181,7 +181,6 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
            // hideProgressDialog();
             loader_container.setVisibility(View.INVISIBLE);
             if (isAdded()) {

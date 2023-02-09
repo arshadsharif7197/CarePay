@@ -36,7 +36,6 @@ import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFra
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -84,7 +83,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityFragmentDialog.PayResponsibilityCallback,
         PaymentDetailInterface,
         VideoAppointmentCallback, SwipeRefreshLayout.OnRefreshListener {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 1500;
     private FilterModel filterModel;
 
     private CheckInDTO checkInDTO;
@@ -98,6 +98,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private TextView patientCountLabelTextView;
     private FilterDialog filterDialog;
     private PatientResponsibilityViewModel patientResponsibilityViewModel;
+    private PaymentsModel patientDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,8 +162,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         findViewById(R.id.practice_go_back).setOnClickListener(view -> onBackPressed());
 
+        patientCountLabelTextView.setText(Label.getLabel("pending_label"));
         final TextView showPendingAppointmentTextView = findViewById(R.id.showPendingAppointmentTextView);
         showPendingAppointmentTextView.setOnClickListener(v -> {
+            if (isAlreadyClicked())
+                return;
             showPendingAppointmentTextView.setSelected(!showPendingAppointmentTextView.isSelected());
             if (showPendingAppointmentTextView.isSelected()) {
                 showViewById(R.id.practice_pending_count);
@@ -227,6 +231,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @NonNull
     private View.OnClickListener onFilterIconClick() {
         return view -> {
+            if (isAlreadyClicked())
+                return;
             filterDialog = new FilterDialog(getContext(),
                     findViewById(R.id.activity_practice_appointments), filterModel);
 
@@ -300,7 +306,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void initializePracticeSelectDateRange() {
         findViewById(R.id.activity_practice_appointments_change_date_range_label)
                 .setOnClickListener(view -> {
-
+                    if (isAlreadyClicked())
+                        return;
                     DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                             Label.getLabel("date_range_picker_dialog_title"),
                             Label.getLabel("date_range_picker_dialog_close"),
@@ -347,6 +354,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
         return view -> {
+            if (isAlreadyClicked())
+                return;
             needsToConfirmAppointmentCreation = needsConfirmation;
             TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
             FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
@@ -384,7 +393,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                PaymentsModel patientDetails = DtoHelper
+                patientDetails = DtoHelper
                         .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
                 patient.setProfilePhoto(patientDetails.getPaymentPayload().getPatientBalances().get(0)
                         .getDemographics().getPayload().getPersonalDetails().getProfilePhoto());
@@ -434,6 +443,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
+        if (isAlreadyClicked() || getSupportFragmentManager().getBackStackEntryCount() > 0)
+            return;
         AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
         AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -442,7 +453,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckIn()) {
             dialogStyle = AppointmentDisplayStyle.PENDING;
 
-        } else if (appointmentPayloadDTO.canCheckOut() /*|| appointmentPayloadDTO.getVisitType().hasVideoOption()*/) {
+        } else if (appointmentPayloadDTO.canCheckIn()) {
+            dialogStyle = AppointmentDisplayStyle.PENDING;
+
+        } else if (appointmentPayloadDTO.canCheckOut()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
         } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
@@ -451,9 +465,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
-        } else if (appointmentPayloadDTO.canCheckIn()) {
-            dialogStyle = AppointmentDisplayStyle.PENDING;
-
         }
 
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
@@ -461,19 +472,36 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 appointmentDTO,
                 checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions()
         );
-        displayDialogFragment(dialog, true);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog");
+        if (fragment == null || !fragment.getClass().getName().equals("com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog")) {
+            if (getSupportFragmentManager().getBackStackEntryCount() < 1)
+                displayDialogFragment(dialog, true);
+        }
+
         setPatient(appointmentDTO.getPayload().getPatient());
+    }
+
+    private boolean isAlreadyClicked() {
+        //to prevent mutli click at the same time
+        boolean returnbool = false;
+        long nowMs = System.currentTimeMillis();
+        if (lastClickMs != 0 && (nowMs - lastClickMs) < TOO_SOON_DURATION_MS) {
+            returnbool = true;
+        }
+        lastClickMs = nowMs;
+//......................
+        return returnbool;
     }
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         patientResponsibilityViewModel.setPaymentsModel(paymentsModel);
-        FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
+        FormsResponsibilityFragmentDialog formsResponsibilityFragmentDialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
                         checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                         headerModel, paymentsModel.getPaymentPayload().getPatientBalances().get(0));
-        dialog.show(getSupportFragmentManager(), tag);
+        formsResponsibilityFragmentDialog.show(getSupportFragmentManager(), tag);
     }
 
     public void onAppointmentRequestSuccess() {
@@ -526,7 +554,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
-        newAppointment();
+        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance(getPatient());
+        fragment.setOnCancelListener(dialogInterface -> showResponsibilityFragment(paymentsModel));
+        showFragment(fragment);
     }
 
     @Override

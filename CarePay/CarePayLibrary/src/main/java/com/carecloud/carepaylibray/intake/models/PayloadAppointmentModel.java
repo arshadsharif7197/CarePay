@@ -77,7 +77,7 @@ public class PayloadAppointmentModel {
     private Object referringPhysicianNpi;
     @SerializedName("visit_reason_id")
     @Expose
-    private Integer visitReasonId;
+    private String visitReasonId;
     @SerializedName("resource_id")
     @Expose
     private Integer resourceId;
@@ -510,7 +510,7 @@ public class PayloadAppointmentModel {
      * @return
      *     The visitReasonId
      */
-    public Integer getVisitReasonId() {
+    public String getVisitReasonId() {
         return visitReasonId;
     }
 
@@ -520,7 +520,7 @@ public class PayloadAppointmentModel {
      *     The visit_reason_id
      */
     public void setVisitReasonId(Integer visitReasonId) {
-        this.visitReasonId = visitReasonId;
+       // this.visitReasonId = visitReasonId;
     }
 
     /**

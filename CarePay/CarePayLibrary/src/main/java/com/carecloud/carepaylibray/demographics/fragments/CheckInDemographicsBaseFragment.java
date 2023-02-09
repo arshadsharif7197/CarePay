@@ -16,10 +16,12 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -40,6 +42,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicsInfoDto;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.viewModel.PatientResponsibilityViewModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -47,7 +50,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,14 +71,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     private ScrollView scrollView;
     protected CheckinFlowCallback checkinFlowCallback;
     protected Button nextButton;
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         demographicDTO = checkinFlowCallback.getDemographicDTO();
         dataModel = demographicDTO.getMetadata().getNewDataModel();
-    }
 
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
@@ -112,8 +113,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    getActivity().onBackPressed();
+                    if (nextButton.isClickable()&&nextButton.isEnabled()){
+                        SystemUtil.hideSoftKeyboard(getActivity());
+                        getActivity().onBackPressed();
+                    }
+
                 }
             });
         }
@@ -165,6 +169,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void onClick(View buttonView) {
                 setUserAction(true);
+                nextButton.setEnabled(false);
+                nextButton.setClickable(false);
                 if (buttonView.isSelected() && passConstraints(view)) {
                     DemographicDTO demographicDTO = updateDemographicDTO(view);
 
@@ -282,6 +288,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected abstract DemographicDTO updateDemographicDTO(View view);
 
     protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
+        patientResponsibilityViewModel.setDemographicDTOModel(demographicDTO);
         Map<String, String> queries = new HashMap<>();
         if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
@@ -310,13 +317,16 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
+                if (getActivityProxy()!=null)
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
             } else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
+                if (getActivityProxy()!=null)
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
             }
 
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
-                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
+                if (getActivityProxy()!=null)
+                    MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
                 if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                         || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
                     onUpdate(checkinFlowCallback, workflowDTO);
@@ -330,12 +340,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
 
             }
-
+            nextButton.setEnabled(true);
+            nextButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            nextButton.setEnabled(true);
+            nextButton.setClickable(true);
             showErrorNotification(exceptionMessage);
             if (getActivity() != null) {
                 Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
@@ -380,6 +393,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
                 this.count = sequence.length();
+
             }
 
             @Override
@@ -389,6 +403,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
             @Override
             public void afterTextChanged(Editable editable) {
+
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
@@ -647,6 +662,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
                               String value, boolean isRequired, View requiredView) {
+
+
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
         setVisibility(textInputLayout, isVisible);
         editText.setText(StringUtil.captialize(value).trim());

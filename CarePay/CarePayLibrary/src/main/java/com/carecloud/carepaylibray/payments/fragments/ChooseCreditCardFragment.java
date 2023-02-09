@@ -54,13 +54,12 @@ import java.util.Map;
  */
 
 public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
-
+    private WorkflowDTO workflowDTO1;
     protected Button nextButton;
-
+    private boolean isCalledSaveInstance = false;
     protected PaymentCreditCardsPayloadDTO selectedCreditCard;
     private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
-
     protected String titleLabel;
     protected ChooseCreditCardInterface callback;
 
@@ -107,6 +106,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         super.onResume();
         if (callback == null) {
             attachCallback(getContext());
+        }
+        if (workflowDTO1 != null && getDialog() != null) {
+            dismiss();
+            showConfirmation(workflowDTO1);
         }
     }
 
@@ -329,6 +332,12 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         return papiPaymentMethod;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideProgressDialog();
+    }
+
 
     protected WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
@@ -338,11 +347,12 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            workflowDTO1=workflowDTO;
             isOnPostCalled = true;
             hideProgressDialog();
             nextButton.setEnabled(true);
 
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+          PaymentsModel  paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
             if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
@@ -356,10 +366,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
             }
 
-            if (getDialog() != null) {
+            if (getDialog() != null && !isCalledSaveInstance) {
                 dismiss();
+                showConfirmation(workflowDTO1);
+            }else {
+                showConfirmation(workflowDTO1);
             }
-            showConfirmation(workflowDTO);
+
 
         }
 
@@ -370,7 +383,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             nextButton.setEnabled(true);
             System.out.print(exceptionMessage);
 
-            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+            String[] params = {getActivity().getString(R.string.param_payment_amount), getActivity().getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
 
@@ -378,7 +391,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             if (!isOnPostCalled) {
                 showConfirmation(null);
             } else {
-                if (getDialog() != null) {
+                if (getDialog() != null&&!isCalledSaveInstance) {
                     dismiss();
                 }
             }
@@ -410,4 +423,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         callback.showPaymentConfirmation(workflowDTO);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        isCalledSaveInstance = true;
+
+    }
 }

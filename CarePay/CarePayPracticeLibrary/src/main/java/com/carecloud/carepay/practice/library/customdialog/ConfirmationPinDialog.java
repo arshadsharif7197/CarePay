@@ -41,7 +41,7 @@ import java.util.Map;
 
 public class ConfirmationPinDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final int FULLSCREEN_VALUE = 0x1000000;
 
     private EditText pinEditText;
     private CarePayTextView headerLabel;

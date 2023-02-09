@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,9 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -57,6 +61,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int sizeFilteredPatients;
     private int sizeFilteredPendingPatients;
     private Section currentSection;
+
     private enum Section {
         APPOINTMENTS,
         PAYMENTS
@@ -144,7 +149,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
         holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
-        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
+        if (this.currentSection == Section.APPOINTMENTS) {
+            holder.setCellAvatar(patient);
+        }
 
         PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
                 this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
@@ -238,11 +245,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
         Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(patientBalances);
         Map<String, Double> totalBalanceMap = PracticeUtil.getTotalBalanceMap(patientBalances);
-        this.allPatients = new ArrayList<>(appointments.size());
 
+        // removing TeleHealth Appointments for talkEHR Practice
+        // https://jira.carecloud.com/browse/BREEZ-987
+        appointments = filterOfficeAppointments(appointments);
+
+        this.allPatients = new ArrayList<>(appointments.size());
         for (AppointmentDTO appointmentDTO : appointments) {
             if (!appointmentDTO.getPayload().getAppointmentStatus().getCode().equals("C")) {
-
                 // Set profile photo
                 PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
                 patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
@@ -253,6 +263,21 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         sortListByDate(this.allPatients);
+    }
+
+    private List<AppointmentDTO> filterOfficeAppointments(List<AppointmentDTO> allAppointments) {
+        List<AppointmentDTO> officeAppointments = new ArrayList<>();
+        String practiceManagement = ((IApplicationSession) context.getApplicationContext()).getApplicationPreferences().getStartPracticeManagement();
+        if (practiceManagement.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            for (AppointmentDTO appointmentDTO : allAppointments) {
+                if (!appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                    officeAppointments.add(appointmentDTO);
+                }
+            }
+            return officeAppointments;
+        } else {
+            return allAppointments;
+        }
     }
 
     private void loadPatients(PaymentsModel paymentsModel) {
@@ -383,6 +408,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView provider;
         TextView balance;
         TextView timeTextView;
+        TextView appointmentStatusTextView;
         ImageView profilePicture;
         View videoVisitIndicator;
         ImageView cellAvatar;
@@ -402,6 +428,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             profilePicture = view.findViewById(R.id.patient_pic_image_view);
             cellAvatar = view.findViewById(R.id.cellAvatarImageView);
             videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+            appointmentStatusTextView = view.findViewById(R.id.appointment_status_text_view);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {
@@ -421,76 +448,91 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             timeTextView.setText(dateFormat.format(patient.appointmentStartTime));
-            if (patient.isRequested) {
-                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (patient.isAppointmentOver) {
-                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
-            } else {
-                timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
-            }
-
             timeTextView.setVisibility(View.VISIBLE);
         }
 
         void setCellAvatar(CardViewPatient patient) {
             AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(((AppointmentDTO) patient.raw).getPayload());
+            appointmentStatusTextView.setVisibility(View.VISIBLE);
             switch (style) {
                 case CHECKED_IN: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_checked_in"));
                     break;
                 }
                 case PENDING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_ready_checkin"));
+
                     break;
                 }
                 case REQUESTED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    appointmentStatusTextView.setText(StringUtil.capitalize(Label.getLabel("request_pending_label")));
+
                     break;
                 }
                 case MISSED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_red);
+                    timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_missed"));
                     break;
                 }
                 case CANCELED: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                     initials.setBackgroundResource(R.drawable.round_list_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_cancelled"));
+
                     break;
                 }
                 case PENDING_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                     initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_ready_checkin"));
                     break;
                 }
                 case REQUESTED_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    appointmentStatusTextView.setText(StringUtil.capitalize(Label.getLabel("request_pending_label")));
                     break;
                 }
                 case CANCELED_UPCOMING: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                     initials.setBackgroundResource(R.drawable.round_list_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_cancelled"));
                     break;
                 }
                 case CHECKED_OUT: {
                     initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                     initials.setBackgroundResource(R.drawable.round_tv);
+                    timeTextView.setBackgroundResource(R.drawable.bg_gray_overlay);
                     cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_checked_out"));
                     break;
                 }
                 default: {
                     cellAvatar.setVisibility(View.GONE);
+                    appointmentStatusTextView.setText(Label.getLabel("appointment_status_pending"));
                 }
             }
 

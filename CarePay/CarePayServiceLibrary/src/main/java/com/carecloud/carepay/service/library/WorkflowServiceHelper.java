@@ -50,6 +50,7 @@ public class WorkflowServiceHelper {
     private static final String REVOKED = "revoked";
     private static final String EXPIRED = "expired";
     private static final String UNAUTHORIZED = "unauthorized";
+    private static final String AUTHENTICATIONERROR = "authenticationerror";
 
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
@@ -80,6 +81,7 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
 
         if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
                 && (ApplicationPreferences.getInstance().getProfileId() != null)
@@ -369,7 +371,11 @@ public class WorkflowServiceHelper {
                         !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
                 } else {
-                    executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                    if (errorBodyString.contains(AUTHENTICATIONERROR)) {
+                        onFailure(response);
+                    } else {
+                        executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                    }
                 }
             }
 
@@ -459,8 +465,10 @@ public class WorkflowServiceHelper {
 
         Gson gson = new Gson();
         String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", applicationPreferences.getStartPracticeManagement());
 
-        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, null, getApplicationStartHeaders());
+        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, queryMap, getApplicationStartHeaders());
     }
 
     private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,

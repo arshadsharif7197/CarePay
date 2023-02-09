@@ -64,11 +64,11 @@ public class PayeezyCall {
                 public void onFailure(Call<TokenizeResponse> call, Throwable t) {
                     callback.onAuthorizeCreditCard(null);
                     Log.e("Breeze", t.getMessage());
-                    callback.onAuthorizeCreditCard(null);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            callback.onAuthorizeCreditCard(null);
         }
 
     }

@@ -45,6 +45,11 @@ public class PatientWarningSessionActivity extends WarningSessionActivity {
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         isInForeground = false;

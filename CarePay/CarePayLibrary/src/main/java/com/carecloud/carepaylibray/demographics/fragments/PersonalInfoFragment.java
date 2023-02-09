@@ -19,12 +19,14 @@ import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -61,7 +63,7 @@ import java.io.IOException;
  * Created by jorge on 27/02/17
  */
 
-public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
+public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface{
 
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
@@ -117,28 +119,24 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
-
         setUpField((TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput),
                 (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed(),
                 demographicPayload.getPersonalDetails().getFirstName(),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired(),
                 view.findViewById(R.id.firstNameRequired));
-
         setUpField((TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout),
                 (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed(),
                 demographicPayload.getPersonalDetails().getMiddleName(),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired(),
                 null);
-
         setUpField((TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput),
                 (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed(),
                 demographicPayload.getPersonalDetails().getLastName(),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired(),
                 view.findViewById(R.id.lastNameRequired));
-
         TextInputLayout dateBirthInputLayout = view.findViewById(R.id.reviewdemogrDOBTextInput);
         final EditText dateOfBirthEditText = view.findViewById(R.id.revewidemogrDOBEdit);
         boolean isDOBRequired = dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired();
@@ -194,7 +192,13 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
             setUpBottomSheet(view);
         } else {
-            buttonChangeCurrentPhoto.setOnClickListener(view1 -> mediaScannerPresenter.handlePictureAction());
+            buttonChangeCurrentPhoto.setOnClickListener(view1 ->
+            {
+                mediaScannerPresenter.handlePictureAction();
+
+            });
+
+
         }
         if (demographicDTO != null) {
             String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
@@ -353,8 +357,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         if (demographicPersDetailsPayloadDTO == null) {
             demographicPersDetailsPayloadDTO = new PatientModel();
         }
-
-
         EditText firstNameText = view.findViewById(R.id.reviewdemogrFirstNameEdit);
         String firstName = firstNameText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(firstName)) {
@@ -376,13 +378,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true).toStringWithFormatYyyyDashMmDashDd());
         }
-
         if (!StringUtil.isNullOrEmpty(base64ProfileImage)) {
             demographicPersDetailsPayloadDTO.setProfilePhoto(base64ProfileImage);
         }
-
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
-
         DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         // save address
         if (demographicAddressPayloadDTO == null) {
@@ -394,12 +393,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawFormat(phoneNumber));
         }
-
         String phoneType = selectedPhoneType.getName();
         if (!StringUtil.isNullOrEmpty(phoneType)) {
             demographicAddressPayloadDTO.setPhoneNumberType(phoneType);
         }
-
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
@@ -517,7 +514,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             if (bitmap != null) {
                 base64ProfileImage = SystemUtil.convertBitmapToString(
                         SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
-                        Bitmap.CompressFormat.JPEG, 90);
+                        Bitmap.CompressFormat.JPEG, 30);
                 hasNewImage = false;
             }
         }
@@ -558,6 +555,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         buttonChangeCurrentPhoto.setOnClickListener(view15 -> {
             bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
             shadow.setClickable(true);
+
         });
 
         Button cancelButton = view.findViewById(R.id.cancelButton);
@@ -581,4 +579,5 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
         bottomSheetBehavior.setState(stateHidden);
     }
+
 }

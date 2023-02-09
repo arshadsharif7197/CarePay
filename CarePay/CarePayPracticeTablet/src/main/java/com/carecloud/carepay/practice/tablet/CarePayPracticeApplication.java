@@ -137,7 +137,6 @@ public class CarePayPracticeApplication extends CarePayApplication {
                 ExistingWorkPolicy.REPLACE,
                 sessionWorkerRequest);
     }
-
     public void cancelSession() {
         PracticeSessionWorker.isServiceStarted = false;
         PracticeSessionWorker.isLogoutNeeded = false;
@@ -147,7 +146,6 @@ public class CarePayPracticeApplication extends CarePayApplication {
             SessionWorker.handler.removeMessages(0);
         }
     }
-
     private void callLogoutService(Activity activity) {
         ((CarePayApplication) getApplicationContext()).getWorkflowServiceHelper().execute(
                 ((((SessionedActivityInterface) activity).getLogoutTransition())), new WorkflowServiceCallback() {

@@ -176,13 +176,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.setPaymentsModel(paymentsModel);
         patientListView.setCallback(dto -> {
             if (!isFragmentAdded && getSupportFragmentManager().getBackStackEntryCount() < 1) {
-
                 PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
                 PatientModel patient = new PatientModel();
                 patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
                 patientId = patient.getPatientId();
                 getPatientBalanceDetails(patientId);
             }
+
         });
         applyFilter();
     }

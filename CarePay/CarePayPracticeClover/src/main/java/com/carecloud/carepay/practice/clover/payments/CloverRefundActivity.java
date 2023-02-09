@@ -159,6 +159,11 @@ public class CloverRefundActivity extends BaseActivity {
     }
 
     @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         // not implemented for Clover Payment App... no workflow here
     }

@@ -55,7 +55,14 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
                     .equalsIgnoreCase(CarePayConstants.CHECKED_IN))
                     || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                     || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
-                callback.displayCheckInSuccess(workflowDTO);
+
+                if ( NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
+                        || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())){
+                    callback.displayCheckInSuccess(workflowDTO);
+                }else {
+                    callback.navigateToWorkflow(workflowDTO);
+                }
+
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }

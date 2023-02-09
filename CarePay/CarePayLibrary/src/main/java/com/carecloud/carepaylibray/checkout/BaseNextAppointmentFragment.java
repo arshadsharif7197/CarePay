@@ -48,7 +48,8 @@ import java.util.Map;
 
 public abstract class BaseNextAppointmentFragment extends BaseFragment
         implements TranslatableFragment, CreateAppointmentFragmentInterface {
-
+    private long lastClickMs = 0;
+    private long TOO_SOON_DURATION_MS = 1500;
     protected CheckOutInterface callback;
     protected AppointmentsResultModel appointmentsResultModel;
     protected VisitTypeDTO selectedVisitType;

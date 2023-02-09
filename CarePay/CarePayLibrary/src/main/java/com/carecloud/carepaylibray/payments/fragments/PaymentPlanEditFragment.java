@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -361,6 +362,8 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
+        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
+        creditCardModel.setCard_number(creditCardsPayloadDTO.getCompleteNumber());
 
         @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
                 .getTokenizationService().toString();
@@ -370,6 +373,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
+        String pm = getApplicationPreferences().getStartPracticeManagement();
+        if (pm != null && pm.equalsIgnoreCase(Defs.START_PM_TALKEHR)) {
+            // No need to Tokenize with Payeezy call
+            creditCard.setToken(creditCard.getCompleteNumber());
+            onAuthorizeCreditCardSuccess();
+            return;
+        }
         String cvv = creditCard.getCvv();
         String expiryDate = creditCard.getExpireDt();
         String name = creditCard.getNameOnCard();

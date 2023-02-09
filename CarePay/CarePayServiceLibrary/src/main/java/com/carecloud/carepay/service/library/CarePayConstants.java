@@ -146,7 +146,7 @@ public class CarePayConstants {
     public static final String KEY_PRACTICE_PATIENT_IDS = "practice_patient_ids";
 
     public static final String CONNECTION_ISSUE_ERROR_MESSAGE = "<b>Connection issue.</b> There was a problem with your request. Please try again later.";
-    public static final String INVALID_LOGIN_ERROR_MESSAGE = "<b>Sign-in failed.</b> Invalid user id or password.";
+    public static final String INVALID_LOGIN_ERROR_MESSAGE = "<b>Login failed.</b> Invalid username or password.";
 
     //FCM
     public static final String FCM_TOKEN = "fcmToken";

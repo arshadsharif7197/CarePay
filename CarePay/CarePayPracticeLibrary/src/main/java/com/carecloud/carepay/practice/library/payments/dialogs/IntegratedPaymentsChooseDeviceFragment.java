@@ -3,9 +3,11 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -71,7 +73,7 @@ import java.util.concurrent.Executors;
 
 public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment implements IntegratedPaymentsChooseDeviceAdapter.ChooseDeviceCallback {
     public static final String KEY_LAST_SELECTED_LOCATION = "last_selected_payments_location";
-
+    View closeButton;
     private double paymentAmount;
     private UserPracticeDTO practiceInfo;
     private ShamrockPaymentsCallback callback;
@@ -169,7 +171,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     private void initToolbar(View view) {
-        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -352,6 +354,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private WorkflowServiceCallback initPaymentRequestCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            closeButton.setEnabled(false);
             showProgressDialog();
         }
 
@@ -364,6 +367,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             selectedDevice.setPaymentRequestId(postModel.getDeepstreamId());
             DeviceInfo.updateDevice(userId, authToken, selectedDevice.getDeviceId(), selectedDevice);
             ClientPayment.trackPaymentRequest(userId, authToken, selectedDevice.getPaymentRequestId(), paymentRequestCallback);
+            closeButton.setEnabled(true);
         }
 
         @Override
@@ -371,6 +375,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             hideProgressDialog();
             toggleSelectDevice(false);
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+            closeButton.setEnabled(true);
         }
     };
 
@@ -450,6 +455,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onPreExecute() {
             showProgressDialog();
+            closeButton.setEnabled(false);
+
         }
 
         @Override
@@ -466,12 +473,15 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             if (isVisible()) {
                 updateSelectedLocation();
             }
+            closeButton.setEnabled(true);
         }
 
         @Override
         public void onFailure(String errorMessage) {
+            new CustomMessageToast(getActivity(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
             hideProgressDialog();
-            new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+            closeButton.setEnabled(true);
+
         }
     };
 
@@ -480,6 +490,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             @Override
             public void onPreExecute() {
                 showProgressDialog();
+                closeButton.setEnabled(false);
             }
 
             @Override
@@ -487,6 +498,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 hideProgressDialog();
                 callback.showPaymentConfirmation(workflowDTO);
                 dismiss();
+                closeButton.setEnabled(true);
             }
 
             @Override
@@ -503,6 +515,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 WorkflowDTO workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(paymentsModel));
                 callback.showPaymentConfirmation(workflowDTO);
                 dismiss();
+                closeButton.setEnabled(true);
             }
         };
     }
@@ -510,7 +523,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private ListDeviceCallback listDeviceCallback = new ListDeviceCallback() {
         @Override
         public void onPreExecute() {
-
+            showProgressDialog();
+            closeButton.setEnabled(false);
         }
 
         @Override
@@ -518,11 +532,14 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             availableDevices = devices;
             initDeviceMap();
             setAdapter();
+            closeButton.setEnabled(true);
         }
 
         @Override
         public void onFailure(String errorMessage) {
+
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+            closeButton.setEnabled(true);
         }
 
         @Override
@@ -534,6 +551,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     private ConnectionActionCallback connectionActionCallback = new ConnectionActionCallback() {
         @Override
         public void onConnectionError(String deviceName, String errorCode, String errorMessage) {
+
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 
