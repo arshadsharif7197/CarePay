@@ -953,7 +953,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 balanceItem.getLocation().setId(Integer.valueOf(locationID));
             }
             if (balanceItem.getProvider() != null && balanceItem.getProvider().getId() == null && providerID!=null){
-                balanceItem.getProvider().setId(Integer.valueOf(providerID));
+                balanceItem.getProvider().setId(String.valueOf(providerID));
             }
             if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                 isValid = false;
