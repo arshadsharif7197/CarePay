@@ -98,8 +98,13 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             holder.initials.setText(StringUtil.getShortName(provider.getName()));
         }
         holder.doctorName.setText(StringUtil.getLabelForView(provider.getName()));
-        holder.doctorType.setText(StringUtil.getLabelForView(provider.getSpecialty().getName()));
-
+        String speciality=provider.getSpecialty().getName();
+        if (speciality==null||speciality.equalsIgnoreCase("Not Defined")){
+            holder.doctorType.setText("");
+        }else {
+            holder.doctorType.setText(speciality);
+        }
+        //holder.doctorType.setText(StringUtil.getLabelForView(provider.getSpecialty().getName()));
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
         AppointmentDisplayStyle style = getDisplayStyle(appointmentsPayload);
 

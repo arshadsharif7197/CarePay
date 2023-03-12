@@ -39,7 +39,14 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ViewHo
         final AppointmentResourcesItemDTO resource = resources.get(position);
         holder.doctorNameTextView.setText(StringUtil.capitalize(resource.getProvider().getFullName()));
         holder.shortNameTextView.setText(StringUtil.getShortName(resource.getProvider().getName()));
-        holder.doctorTypeTextView.setText(resource.getProvider().getSpecialty().getName());
+        String speciality=resource.getProvider().getSpecialty().getName();
+
+        if (speciality==null||speciality.equalsIgnoreCase("Not Defined")){
+            holder.doctorTypeTextView.setText("");
+        }else {
+            holder.doctorTypeTextView.setText(speciality);
+        }
+
         PicassoHelper.get().loadImage(holder.providerPicImageView.getContext(), holder.providerPicImageView,
                 holder.shortNameTextView, resource.getProvider().getPhoto());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

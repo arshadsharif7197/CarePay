@@ -61,7 +61,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
-                tools:text="Pulmonology"
+                tools:text=""
                 app:customAssetFont="proxima_nova_regular" />
         </LinearLayout>
     </RelativeLayout>
