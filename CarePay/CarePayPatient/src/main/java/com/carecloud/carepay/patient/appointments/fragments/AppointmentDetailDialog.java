@@ -297,7 +297,13 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
         providerInitials.setText(StringUtil.getShortName(provider.getName()));
         providerName.setText(provider.getName());
-        providerSpecialty.setText(provider.getSpecialty().getName());
+        String name=provider.getSpecialty().getName();
+        if(name!=null&&!name.equals("Not Defined")){
+            providerSpecialty.setText(provider.getSpecialty().getName());
+        }else {
+            providerSpecialty.setText("");
+        }
+
         callButton.setEnabled(!StringUtil.isNullOrEmpty(getPhoneNumber()));
 
         int size = getResources().getDimensionPixelSize(R.dimen.apt_dl_image_ht_wdh);
